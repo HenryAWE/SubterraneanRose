@@ -1,3 +1,10 @@
+# SubterraneanRose Source
+
+add_subdirectory(./wm)
+add_subdirectory(./gpu)
+add_subdirectory(./srose)
+add_subdirectory(./editor)
+
 aux_source_directory(. src_list)
 
 add_executable(srose ${src_list})
