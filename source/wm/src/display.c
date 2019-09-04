@@ -4,7 +4,7 @@
  * @brief Window Manager
  */
 
-#include "../display.h"
+#include <sr/wm/display.h>
 #include <stddef.h>
 #include <stdlib.h>
 

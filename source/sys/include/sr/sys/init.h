@@ -7,7 +7,7 @@
 #ifndef SROSE_SYS_init_h_
 #define SROSE_SYS_init_h_
 
-#include "macros.h"
+#include <sr/sys/macros.h>
 
 #ifdef __cplusplus
 extern "C" {

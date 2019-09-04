@@ -4,7 +4,7 @@
  * @brief Initialization 
  */
 
-#include "../init.h"
+#include <sr/sys/init.h>
 #include <SDL.h>
 
 
