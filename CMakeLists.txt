@@ -17,5 +17,4 @@ if(MSVC)
 	add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 endif()
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
-add_subdirectory(./sr)
+add_subdirectory(./source)
