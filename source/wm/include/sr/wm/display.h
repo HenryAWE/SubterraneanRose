@@ -17,18 +17,30 @@ extern "C" {
 
 typedef struct SR_WM_display_
 {
-    SDL_Window* win;
-    SDL_Renderer* renderer;
-    SDL_GLContext* glctx;
+    SDL_Window* win; // Window
+    SDL_Renderer* renderer; // SDL Renderer
+    SDL_GLContext* glctx; // OpenGL context
 } SR_WM_display;
 
+/**
+ * @brief Create display
+ * 
+ * @param title Title string in UTF-8 encoding
+ * @param additional_flags Addtional flags passed to SDL_CreateWindow
+ * @return SR_WM_display* The created display, or NULL if failed 
+ */
 SR_WM_display* SRSCALL SR_WM_CreateDisplay(
     const char* title,
     int additional_flags
 );
 
+/**
+ * @brief Destroy the created display
+ * 
+ * @param display The instance to delete
+ */
 void SRSCALL SR_WM_DestroyDisplay(
-    SR_WM_display* display
+    const SR_WM_display* display
 );
 
 

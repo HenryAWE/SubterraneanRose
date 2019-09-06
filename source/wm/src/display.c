@@ -7,6 +7,7 @@
 #include <sr/wm/display.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <assert.h>
 
 
 SR_WM_display* SRSCALL SR_WM_CreateDisplay(
@@ -30,10 +31,10 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
         additional_flags
     );
     if(!display->win)
-    {
+    { // Create window failed
         SDL_LogError(
             SDL_LOG_CATEGORY_APPLICATION,
-            "SDL_CreateWindow() failed: %s",
+            "[WM] SDL_CreateWindow() failed: %s",
             SDL_GetError()
         );
 
@@ -44,14 +45,14 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
 
     display->renderer = SDL_CreateRenderer(display->win, -1, SDL_RENDERER_PRESENTVSYNC);
     if(display->renderer)
-    {   SDL_RendererInfo render_info;
+    { // Renderer successfully created
+        SDL_RendererInfo render_info;
         memset(&render_info, 0, sizeof(SDL_RendererInfo));
         SDL_GetRendererInfo(display->renderer, &render_info);
 
         SDL_LogInfo(
             SDL_LOG_CATEGORY_APPLICATION,
-            "SDL_CreateRenderer() succeeded\n"
-            "Renderer name: %s",
+            "[WM] SDL_CreateRenderer() successfully created %s renderer\n",
             render_info.name
         );
     }
@@ -59,7 +60,7 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
     { // Create renderer failed
         SDL_LogError(
             SDL_LOG_CATEGORY_APPLICATION,
-            "SDL_CreateRenderer() failed: %s",
+            "[WM] SDL_CreateRenderer() failed: %s",
             SDL_GetError()
         );
 
@@ -67,14 +68,39 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
         free(display);
         return NULL;
     }
+    
+    /*Create OpenGL context */
+    display->glctx = SDL_GL_CreateContext(display->win);
+    if(!display->glctx)
+    { // Create context failed
+        SDL_LogError(
+            SDL_LOG_CATEGORY_APPLICATION,
+            "[WM] SDL_GL_CreateContext() failed: %s",
+            SDL_GetError()
+        );
 
+        SDL_DestroyRenderer(display->renderer);
+        SDL_DestroyWindow(display->win);
+        free(display);
+        return NULL;
+    }
+    else
+    {
+        SDL_LogInfo(
+            SDL_LOG_CATEGORY_APPLICATION,
+            "[WM] SDL_CreateRenderer() successfully created OpenGL context\n"
+        );
+    }
+
+    /*Return the result */
     return display;
 }
 
 void SRSCALL SR_WM_DestroyDisplay(
-    SR_WM_display* display
+    const SR_WM_display* display
 ) {
     if(!display) return;
+    if(display->glctx) SDL_GL_DeleteContext(display->glctx);
     if(display->renderer) SDL_DestroyRenderer(display->renderer);
     if(display->win) SDL_DestroyWindow(display->win);
     free(display);
