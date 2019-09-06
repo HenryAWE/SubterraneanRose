@@ -40,7 +40,7 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
  * @param display The instance to delete
  */
 void SRSCALL SR_WM_DestroyDisplay(
-    const SR_WM_display* display
+    SR_WM_display* display
 );
 
 
