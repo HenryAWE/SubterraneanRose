@@ -46,8 +46,16 @@ int SRSCALL SR_SYS_InitSDL(int msgbox_on_err)
                 NULL
             );
         }
+        SDL_Quit();
+
         return 1;
     }
 
     return 0;
+}
+
+void SRSCALL SR_SYS_QuitSDL()
+{
+    Mix_Quit();
+    SDL_Quit();
 }

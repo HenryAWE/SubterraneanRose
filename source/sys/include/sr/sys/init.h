@@ -21,6 +21,11 @@ extern "C" {
  */
 int SRSCALL SR_SYS_InitSDL(int msgbox_on_err);
 
+/**
+ * @brief Deinitialize SDL and other SDL library
+ */
+void SRSCALL SR_SYS_QuitSDL();
+
 #ifdef __cplusplus
 }
 #endif
