@@ -4,10 +4,12 @@
  * @brief Program entry on windows desktop
  */
 
+#include <assert.h>
 #include <stdlib.h>
 #include <SDL.h>
 #include <sr/sys/init.h>
 #include <sr/wm/display.h>
+#include <sr/player/entry.h>
 
 
 #ifdef _WIN32
@@ -56,5 +58,11 @@ int entry_windows(int argc, char* argv[])
     SR_WM_DestroyDisplay(display);
     SR_SYS_QuitSDL();
     return EXIT_SUCCESS;
+}
+#else
+int entry_windows(int argc, char* argv[]) 
+{ // Dummy
+    assert(false);
+    return EXIT_FAILURE;
 }
 #endif
