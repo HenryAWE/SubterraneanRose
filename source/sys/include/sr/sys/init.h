@@ -13,7 +13,13 @@
 extern "C" {
 #endif
 
-int SRSCALL SR_SYS_InitSDL();
+/**
+ * @brief Initialize SDL and other SDL library
+ * 
+ * @param msgbox_on_err Show message box on error
+ * @return int Zero for success, other value means an error occurred
+ */
+int SRSCALL SR_SYS_InitSDL(int msgbox_on_err);
 
 #ifdef __cplusplus
 }
