@@ -13,6 +13,8 @@
 
 #define SR_WM_SafeAssign(ptr, val) do{ if((ptr)) *ptr=val; }while(0)
 
+/*Begin Display Creation */
+
 /**
  * @brief [Internal] Get the window size that suit the framework
  * 
@@ -38,19 +40,19 @@ static void SRSCALL SR_WM_GetSRoseWindowSize(int* out_w, int* out_h, int flags, 
     #define SR_WM_CALC_WINDOW_SIZE(comparator) \
     do \
     { \
-        if(SR_WM_COMP_DISPLAY_SIZE(comparator, 1920, 1080)) \
+        if (SR_WM_COMP_DISPLAY_SIZE(comparator, 1920, 1080)) \
         { /*1920x1080 */ \
             SR_WM_SafeAssign(out_w, 1920); \
             SR_WM_SafeAssign(out_h, 1080); \
             return; \
         } \
-        else if(SR_WM_COMP_DISPLAY_SIZE(comparator, 1280, 960)) \
+        else if (SR_WM_COMP_DISPLAY_SIZE(comparator, 1280, 960)) \
         { /*1280x960 */ \
             SR_WM_SafeAssign(out_w, 1280); \
             SR_WM_SafeAssign(out_h, 960); \
             return; \
         } \
-        else if(SR_WM_COMP_DISPLAY_SIZE(comparator, 640, 480)) \
+        else if (SR_WM_COMP_DISPLAY_SIZE(comparator, 640, 480)) \
         { /*640x480 */ \
             SR_WM_SafeAssign(out_w, 640); \
             SR_WM_SafeAssign(out_h, 480); \
@@ -70,7 +72,7 @@ static void SRSCALL SR_WM_GetSRoseWindowSize(int* out_w, int* out_h, int flags, 
         } \
     }while(0) /*End of the big macro */
 
-    if(flags&SDL_WINDOW_FULLSCREEN)
+    if (flags&SDL_WINDOW_FULLSCREEN)
         SR_WM_CALC_WINDOW_SIZE(>=);
     else
         SR_WM_CALC_WINDOW_SIZE(>);
@@ -93,12 +95,12 @@ static int SRSCALL SR_WM_GetOpenGLRendererDriver()
         SDL_zero(info);
         SDL_GetRenderDriverInfo(i, &info);
         //TODO: Use OpenGL ES on mobile platform
-        if(strspn(info.name, "opengl") != 0)
+        if (strspn(info.name, "opengl") != 0)
             return i;
     }
 
     SDL_LogError(
-        SDL_LOG_CATEGORY_VIDEO,
+        SDL_LOG_CATEGORY_APPLICATION,
         "[WM] Cannot find a OpenGL render driver"
     );
     return -1;
@@ -112,10 +114,8 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
     SDL_zerop(display);
 
     /*Set the OpenGL attributes for window&context creation*/
-    SDL_GL_ResetAttributes();
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
 
     /*Create window */
     additional_flags |= SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI; // Add necessary flags
@@ -138,7 +138,7 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
         window_h,
         additional_flags
     );
-    if(!display->win)
+    if (!display->win)
     { // Create window failed
         SDL_LogError(
             SDL_LOG_CATEGORY_APPLICATION,
@@ -152,15 +152,17 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "[WM] SDL_CreateWindow() succeeded");
 
     int renderer_index = SR_WM_GetOpenGLRendererDriver();
-    if(renderer_index == -1)
+    if (renderer_index == -1)
     {
         SDL_DestroyWindow(display->win);
         free(display);
         return NULL;
     }
     display->renderer = SDL_CreateRenderer(display->win, renderer_index, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
-    if(display->renderer)
+    if (display->renderer)
     { // Renderer successfully created
+        display->glctx =  SDL_GL_GetCurrentContext();
+
         SDL_RendererInfo render_info;
         memset(&render_info, 0, sizeof(SDL_RendererInfo));
         SDL_GetRendererInfo(display->renderer, &render_info);
@@ -170,6 +172,20 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
             "[WM] SDL_CreateRenderer() successfully created %s renderer\n",
             render_info.name
         );
+
+        if (display->glctx)
+        {
+            int major, minor, profile;
+            SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
+            SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &minor);
+            SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &profile);
+            SDL_LogInfo(
+                SDL_LOG_CATEGORY_APPLICATION,
+                "[WM] OpenGL %d.%d %s",
+                major, minor,
+                (profile&SDL_GL_CONTEXT_PROFILE_CORE?"core":(profile&SDL_GL_CONTEXT_PROFILE_ES?"es":"compatibility"))
+            );
+        }
     }
     else
     { // Create renderer failed
@@ -184,29 +200,6 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
         return NULL;
     }
 
-    /*Create OpenGL context */
-    display->glctx = SDL_GL_CreateContext(display->win);
-    if(!display->glctx)
-    { // Create context failed
-        SDL_LogError(
-            SDL_LOG_CATEGORY_APPLICATION,
-            "[WM] SDL_GL_CreateContext() failed: %s",
-            SDL_GetError()
-        );
-
-        SDL_DestroyRenderer(display->renderer);
-        SDL_DestroyWindow(display->win);
-        free(display);
-        return NULL;
-    }
-    else
-    {
-        SDL_LogInfo(
-            SDL_LOG_CATEGORY_APPLICATION,
-            "[WM] SDL_CreateRenderer() succeeded\n"
-        );
-    }
-
     /*Return the result */
     return display;
 }
@@ -214,9 +207,10 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
 void SRSCALL SR_WM_DestroyDisplay(
     SR_WM_display* display
 ) {
-    if(!display) return;
-    if(display->glctx) SDL_GL_DeleteContext(display->glctx);
-    if(display->renderer) SDL_DestroyRenderer(display->renderer);
-    if(display->win) SDL_DestroyWindow(display->win);
+    if (!display) return;
+    if (display->glctx) SDL_GL_DeleteContext(display->glctx);
+    if (display->renderer) SDL_DestroyRenderer(display->renderer);
+    if (display->win) SDL_DestroyWindow(display->win);
     free(display);
 }
+/*End Display Creation*/
