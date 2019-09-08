@@ -11,5 +11,5 @@
 int SDL_main(int argc, char* argv[])
 {
     //TODO: Handling other platform
-    return entry_windows(argc, argv);
+    return program_entry(argc, argv);
 }

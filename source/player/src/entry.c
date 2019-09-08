@@ -10,10 +10,10 @@
 #include <sr/sys/init.h>
 #include <sr/wm/display.h>
 #include <sr/player/entry.h>
+#include "main_loop.h"
 
 
-#ifdef _WIN32
-int entry_windows(int argc, char* argv[])
+int program_entry(int argc, char* argv[])
 {
     if(SR_SYS_InitSDL(SDL_TRUE) != 0)
     {
@@ -21,9 +21,8 @@ int entry_windows(int argc, char* argv[])
     }
     else
     {
-        at_quick_exit(&SR_SYS_QuitSDL); // 
+        at_quick_exit(&SR_SYS_QuitSDL); // We'll handle deinitialization on normal exit
     }
-    
 
     SR_WM_display* display = SR_WM_CreateDisplay("Subterranean Rose", 0);
     if(!display)
@@ -38,31 +37,9 @@ int entry_windows(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    int loop = SDL_TRUE;
-    SDL_Event event;
-    SDL_zero(event);
-    while(loop)
-    {
-        while(SDL_PollEvent(&event))
-        {
-            switch(event.type)
-            {
-            case SDL_QUIT:
-                loop = SDL_FALSE;
-            }
-        }
-
-        SDL_RenderPresent(display->renderer);
-    }
+    main_loop(display);
 
     SR_WM_DestroyDisplay(display);
     SR_SYS_QuitSDL();
     return EXIT_SUCCESS;
 }
-#else
-int entry_windows(int argc, char* argv[]) 
-{ // Dummy
-    assert(false);
-    return EXIT_FAILURE;
-}
-#endif
