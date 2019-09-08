@@ -1,6 +1,10 @@
 # SubterraneanRose Source
 find_package(SDL2 CONFIG REQUIRED)
 
+add_compile_definitions(SR_VERSION_MAJOR=${CMAKE_PROJECT_VERSION_MAJOR})
+add_compile_definitions(SR_VERSION_MINOR=${CMAKE_PROJECT_VERSION_MINOR})
+add_compile_definitions(SR_VERSION_PATCH=${CMAKE_PROJECT_VERSION_PATCH})
+
 add_subdirectory(./sys)
 add_subdirectory(./wm)
 add_subdirectory(./gpu)
