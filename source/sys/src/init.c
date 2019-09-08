@@ -54,7 +54,7 @@ int SRSCALL SR_SYS_InitSDL(int msgbox_on_err)
     return 0;
 }
 
-void SRSCALL SR_SYS_QuitSDL()
+void SRSCALL SR_SYS_QuitSDL(void)
 {
     Mix_Quit();
     SDL_Quit();

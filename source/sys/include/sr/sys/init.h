@@ -7,6 +7,7 @@
 #ifndef SROSE_SYS_init_h_
 #define SROSE_SYS_init_h_
 
+
 #include <sr/sys/macros.h>
 
 #ifdef __cplusplus
@@ -24,7 +25,7 @@ int SRSCALL SR_SYS_InitSDL(int msgbox_on_err);
 /**
  * @brief Deinitialize SDL and other SDL library
  */
-void SRSCALL SR_SYS_QuitSDL();
+void SRSCALL SR_SYS_QuitSDL(void);
 
 #ifdef __cplusplus
 }
