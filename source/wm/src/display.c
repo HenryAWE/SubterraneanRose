@@ -208,7 +208,6 @@ void SRSCALL SR_WM_DestroyDisplay(
     SR_WM_display* display
 ) {
     if (!display) return;
-    if (display->glctx) SDL_GL_DeleteContext(display->glctx);
     if (display->renderer) SDL_DestroyRenderer(display->renderer);
     if (display->win) SDL_DestroyWindow(display->win);
     free(display);
