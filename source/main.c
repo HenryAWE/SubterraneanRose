@@ -8,7 +8,7 @@
 
 
 /*Program entry */
-int SDL_main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
     //TODO: Handling other platform
     return program_entry(argc, argv);
