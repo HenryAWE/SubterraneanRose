@@ -5,8 +5,9 @@
 - 2D 弹幕编辑器/播放器
 
 ## 依赖
-- SDL2
-- SDL2-mixer
+- [SDL](https://www.libsdl.org/)
+- [SDL_mixer](https://www.libsdl.org/projects/SDL_mixer/)
+- [SDL_image](https://www.libsdl.org/projects/SDL_image/)
 
 ## 我们的目标
 - 开源
