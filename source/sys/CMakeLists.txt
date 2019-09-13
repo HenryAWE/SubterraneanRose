@@ -1,6 +1,7 @@
 # SubterraneanRose Core Module
 find_package(SDL2 CONFIG REQUIRED)
 find_package(sdl2-mixer CONFIG REQUIRED)
+find_package(sdl2-image CONFIG REQUIRED)
 
 aux_source_directory(./src sys_src_list)
 # Generate GIT information in C source
@@ -9,6 +10,7 @@ execute_process(
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     OUTPUT_VARIABLE commit_id_str
 )
+# Remove the quotes around the hash value
 string(REPLACE "\"" "" commit_id ${commit_id_str})
 message(STATUS "Git commit id: ${commit_id}")
 string(CONCAT git_info
@@ -26,3 +28,5 @@ target_include_directories("srose-sys" PUBLIC ./include)
 
 target_link_libraries("srose-sys" PUBLIC SDL2::SDL2)
 target_link_libraries("srose-sys" PUBLIC SDL2::SDL2_mixer)
+target_link_libraries("srose-sys" PUBLIC SDL2::SDL2_image)
+
