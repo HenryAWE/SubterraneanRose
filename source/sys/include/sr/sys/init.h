@@ -27,6 +27,15 @@ int SRSCALL SR_SYS_InitSDL(int msgbox_on_err);
  */
 void SRSCALL SR_SYS_QuitSDL(void);
 
+/**
+ * @brief Initialize OpenGL render context
+ * 
+ * @warning MUST BE CALLED FROM A THREAD WITH GL CONTEXT!!!
+ * 
+ * @return int Zero for success, other value means an error occurred
+ */
+int SRSCALL SR_SYS_InitGL();
+
 #ifdef __cplusplus
 }
 #endif

@@ -8,6 +8,7 @@
 - [SDL](https://www.libsdl.org/)
 - [SDL_mixer](https://www.libsdl.org/projects/SDL_mixer/)
 - [SDL_image](https://www.libsdl.org/projects/SDL_image/)
+- [GLEW](http://glew.sourceforge.net/)
 
 ## What's Our Goal
 - Open source

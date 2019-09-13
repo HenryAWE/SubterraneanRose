@@ -10,6 +10,7 @@
 #include <string.h>
 #include <assert.h>
 #include <sr/sys/version_info.h>
+#include <sr/sys/init.h>
 
 
 #define SR_WM_SafeAssign(ptr, val) do{ if((ptr)) *ptr=val; }while(0)
@@ -174,8 +175,6 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
     display->renderer = SDL_CreateRenderer(display->win, renderer_index, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (display->renderer)
     { // Renderer successfully created
-        display->glctx =  SDL_GL_GetCurrentContext();
-
         SDL_RendererInfo render_info;
         memset(&render_info, 0, sizeof(SDL_RendererInfo));
         SDL_GetRendererInfo(display->renderer, &render_info);
@@ -185,20 +184,6 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
             "[WM] SDL_CreateRenderer() successfully created %s renderer\n",
             render_info.name
         );
-
-        if (display->glctx)
-        {
-            int major, minor, profile;
-            SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
-            SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &minor);
-            SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &profile);
-            SDL_LogInfo(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[WM] OpenGL %d.%d %s",
-                major, minor,
-                (profile&SDL_GL_CONTEXT_PROFILE_CORE?"core":(profile&SDL_GL_CONTEXT_PROFILE_ES?"es":"compatibility"))
-            );
-        }
     }
     else
     { // Create renderer failed
@@ -211,6 +196,31 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
         SDL_DestroyWindow(display->win);
         free(display);
         return NULL;
+    }
+    
+    /*Setup OpenGL */
+    display->glctx =  SDL_GL_GetCurrentContext();
+    if (display->glctx)
+    {
+        int major, minor, profile;
+        SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
+        SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &minor);
+        SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &profile);
+        SDL_LogInfo(
+            SDL_LOG_CATEGORY_APPLICATION,
+            "[WM] OpenGL %d.%d %s",
+            major, minor,
+            (profile&SDL_GL_CONTEXT_PROFILE_CORE?"core":(profile&SDL_GL_CONTEXT_PROFILE_ES?"es":"compatibility"))
+        );
+
+        if(SR_SYS_InitGL() != 0)
+        { // Failed
+            SDL_DestroyRenderer(display->renderer);
+            SDL_DestroyWindow(display->win);
+            free(display);
+
+            return NULL;
+        }
     }
 
     /*Return the result */
