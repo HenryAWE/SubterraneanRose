@@ -7,6 +7,9 @@
 #include <sr/sys/version_info.h>
 #include <stdio.h>
 
+
+extern uint64_t sr_git_commit_id;
+
 const char* SRSCALL SR_SYS_GetVersionString()
 {
     static char buf[32];
@@ -17,4 +20,9 @@ const char* SRSCALL SR_SYS_GetVersionString()
     );
 
     return buf;
+}
+
+uint64_t SRSCALL SR_SYS_GitCommitID()
+{
+    return sr_git_commit_id;
 }
