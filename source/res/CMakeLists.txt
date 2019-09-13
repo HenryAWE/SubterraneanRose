@@ -1,0 +1,1 @@
+# SubterraneanRose Resource Manager Module
