@@ -122,7 +122,7 @@ int SRSCALL SR_SYS_InitSDL(int msgbox_on_err)
     return 0;
 }
 
-int SRSCALL SR_SYS_InitGL()
+int SRSCALL SR_SYS_InitGL(void)
 {
     glewExperimental = GL_TRUE;
     GLenum glew_state = glewInit();

@@ -20,14 +20,14 @@ extern "C" {
  * 
  * @return const char* A string that contain version information
  */
-const char* SRSCALL SR_SYS_GetVersionString();
+const char* SRSCALL SR_SYS_GetVersionString(void);
 
 /**
  * @brief Get the GIT commit id of current build
  * 
  * @return uint64_t The hash value of the commit
  */
-uint64_t SRSCALL SR_SYS_GitCommitID();
+uint64_t SRSCALL SR_SYS_GitCommitID(void);
 
 
 #ifdef __cplusplus

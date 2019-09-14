@@ -10,7 +10,7 @@
 
 extern uint64_t sr_git_commit_id;
 
-const char* SRSCALL SR_SYS_GetVersionString()
+const char* SRSCALL SR_SYS_GetVersionString(void)
 {
     static char buf[32];
     snprintf(
@@ -22,7 +22,7 @@ const char* SRSCALL SR_SYS_GetVersionString()
     return buf;
 }
 
-uint64_t SRSCALL SR_SYS_GitCommitID()
+uint64_t SRSCALL SR_SYS_GitCommitID(void)
 {
     return sr_git_commit_id;
 }

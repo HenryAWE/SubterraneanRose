@@ -34,7 +34,7 @@ void SRSCALL SR_SYS_QuitSDL(void);
  * 
  * @return int Zero for success, other value means an error occurred
  */
-int SRSCALL SR_SYS_InitGL();
+int SRSCALL SR_SYS_InitGL(void);
 
 /**
  * @brief Initialize everything
