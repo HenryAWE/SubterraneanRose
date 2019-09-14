@@ -4,6 +4,7 @@
  * @brief Initialization 
  */
 
+#include <gl/glew.h>
 #include <sr/sys/init.h>
 #include <SDL.h>
 #include <SDL_mixer.h>
@@ -121,6 +122,25 @@ int SRSCALL SR_SYS_InitSDL(int msgbox_on_err)
     return 0;
 }
 
+int SRSCALL SR_SYS_InitGL()
+{
+    glewExperimental = GL_TRUE;
+    GLenum glew_state = glewInit();
+    if(glew_state != GLEW_OK)
+    {
+        SDL_LogError(
+            SDL_LOG_CATEGORY_APPLICATION,
+            "[SYS] glewInit() failed  with %ud - %s",
+            glew_state,
+            (const char*)glewGetErrorString(glew_state)
+        );
+
+        return (int)glew_state;
+    }
+
+    return 0;
+}
+
 void SRSCALL SR_SYS_QuitSDL(void)
 {
     IMG_Quit();
@@ -147,4 +167,12 @@ int SRSCALL SR_SYS_Init(int argc, char* argv[], int msgbox_on_error)
 void SRSCALL SR_SYS_Quit(void)
 {
     SR_SYS_QuitSDL();
+
+    SDL_LogInfo(
+        SDL_LOG_CATEGORY_APPLICATION,
+        "[SYS] glewInit() succeeded\n"
+        "GLEW Info:\n"
+        "  Version: %s",
+        (const char*)glewGetString(GLEW_VERSION)
+    );
 }
