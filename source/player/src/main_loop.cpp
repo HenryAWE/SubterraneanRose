@@ -1,10 +1,10 @@
 /**
- * @file main_loop.c
+ * @file main_loop.cpp
  * @author HenryAWE
  * @brief 
  */
 
-#include "main_loop.h"
+#include "main_loop.hpp"
 #include <stdlib.h>
 
 

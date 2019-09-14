@@ -1,5 +1,5 @@
 /**
- * @file main_loop.h
+ * @file main_loop.hpp
  * @author HenryAWE
  * @brief Main loop
  */
@@ -11,14 +11,7 @@
 #include <sr/sys/macros.h>
 #include <sr/wm/display.h>
 
-#ifdef __cpluscplus
-extern "C" {
-#endif
-
 int SRSCALL main_loop(SR_WM_display* display);
 
-#ifdef __cpluscplus
-}
-#endif
 
 #endif
