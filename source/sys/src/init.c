@@ -8,6 +8,7 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <SDL_image.h>
+#include <sr/sys/version_info.h>
 
 
 int SRSCALL SR_SYS_InitSDL(int msgbox_on_err)
@@ -125,4 +126,25 @@ void SRSCALL SR_SYS_QuitSDL(void)
     IMG_Quit();
     Mix_Quit();
     SDL_Quit();
+}
+
+int SRSCALL SR_SYS_Init(int argc, char* argv[], int msgbox_on_error)
+{
+    printf(
+        "Subterranean Rose Project:\n"
+        "  Version %s - %I64x\n\n"
+        "  Please visit https://github.com/HenryAWE/SubterraneanRose for more up-to-date information",
+        SR_SYS_GetVersionString(), SR_SYS_GitCommitID()
+    );
+    if(SR_SYS_InitSDL(msgbox_on_error) != 0)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+void SRSCALL SR_SYS_Quit(void)
+{
+    SR_SYS_QuitSDL();
 }

@@ -27,6 +27,14 @@ int SRSCALL SR_SYS_InitSDL(int msgbox_on_err);
  */
 void SRSCALL SR_SYS_QuitSDL(void);
 
+/**
+ * @brief Initialize everything
+ * 
+ * @param msgbox_on_err Show message box on error
+ * @return int Zero for success, other value means an error occurred
+ */
+int SRSCALL SR_SYS_Init(int argc, char* argv[], int msgbox_on_error);
+
 #ifdef __cplusplus
 }
 #endif
