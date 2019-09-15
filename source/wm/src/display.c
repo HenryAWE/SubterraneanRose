@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <sr/sys/version_info.h>
 #include <sr/sys/init.h>
+#include <sr/wm/event.h>
 
 
 #define SR_WM_SafeAssign(ptr, val) do{ if((ptr)) *ptr=val; }while(0)
@@ -223,6 +224,15 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
         }
     }
 
+    /*ImGui */
+    if(SR_WM_InitEventSystem(display) != 0)
+    {
+        SDL_DestroyRenderer(display->renderer);
+        SDL_DestroyWindow(display->win);
+        free(display);
+        return NULL;
+    }
+
     /*Return the result */
     return display;
 }
@@ -231,6 +241,7 @@ void SRSCALL SR_WM_DestroyDisplay(
     SR_WM_display* display
 ) {
     if (!display) return;
+    SR_WM_QuitEventSystem();
     if (display->renderer) SDL_DestroyRenderer(display->renderer);
     if (display->win) SDL_DestroyWindow(display->win);
     free(display);

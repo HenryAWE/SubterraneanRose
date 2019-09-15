@@ -6,25 +6,20 @@
 
 #include "main_loop.hpp"
 #include <stdlib.h>
+#include <sr/wm/event.h>
+#include <imgui.h>
 
 
 int SRSCALL main_loop(SR_WM_display* display)
 {
     int loop = SDL_TRUE;
-    SDL_Event event;
-    SDL_zero(event);
-
     while(loop)
     {
-        while(SDL_PollEvent(&event))
-        {
-            switch(event.type)
-            {
-            case SDL_QUIT:
-                loop = SDL_FALSE;
-            }
-        }
-
+        loop = SR_WM_ProcessEvent();
+        SR_WM_NewFrame();
+        ImGui::ShowDemoWindow();
+        SR_WM_EndFrame();
+        SR_WM_RenderFrame();
         SDL_RenderPresent(display->renderer);
     }
 

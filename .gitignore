@@ -5,3 +5,6 @@
 
 # CMake
 build/
+
+# Program generated
+imgui.ini

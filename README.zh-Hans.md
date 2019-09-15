@@ -9,6 +9,7 @@
 - [SDL_mixer](https://www.libsdl.org/projects/SDL_mixer/)
 - [SDL_image](https://www.libsdl.org/projects/SDL_image/)
 - [GLEW](http://glew.sourceforge.net/)
+- [Dear ImGui](https://github.com/Tyyppi77/imgui_sdl)
 
 ## 我们的目标
 - 开源
