@@ -4,11 +4,12 @@
  * @brief Initialization 
  */
 
-#include <gl/glew.h>
+#include <glad/glad.h>
 #include <sr/sys/init.h>
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <SDL_image.h>
+#include <SDL_video.h>
 #include <sr/sys/version_info.h>
 
 
@@ -124,18 +125,14 @@ int SRSCALL SR_SYS_InitSDL(int msgbox_on_err)
 
 int SRSCALL SR_SYS_InitGL(void)
 {
-    glewExperimental = GL_TRUE;
-    GLenum glew_state = glewInit();
-    if(glew_state != GLEW_OK)
+    if(!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
     {
         SDL_LogError(
             SDL_LOG_CATEGORY_APPLICATION,
-            "[SYS] glewInit() failed  with %ud - %s",
-            glew_state,
-            (const char*)glewGetErrorString(glew_state)
+            "[SYS] GLAD failed"
         );
 
-        return (int)glew_state;
+        return -1;
     }
 
     return 0;
@@ -167,12 +164,4 @@ int SRSCALL SR_SYS_Init(int argc, char* argv[], int msgbox_on_error)
 void SRSCALL SR_SYS_Quit(void)
 {
     SR_SYS_QuitSDL();
-
-    SDL_LogInfo(
-        SDL_LOG_CATEGORY_APPLICATION,
-        "[SYS] glewInit() succeeded\n"
-        "GLEW Info:\n"
-        "  Version: %s",
-        (const char*)glewGetString(GLEW_VERSION)
-    );
 }
