@@ -17,6 +17,7 @@ add_subdirectory(./res)
 add_subdirectory(./srose)
 add_subdirectory(./player)
 add_subdirectory(./editor)
+add_subdirectory(./ui)
 
 aux_source_directory(. src_list)
 
@@ -26,6 +27,7 @@ target_link_libraries("srose-exec" PRIVATE SDL2::SDL2 SDL2::SDL2main)
 target_link_libraries("srose-exec" PRIVATE "srose-core")
 target_link_libraries("srose-exec" PRIVATE "srose-wm")
 target_link_libraries("srose-exec" PRIVATE "srose-player")
+target_link_libraries("srose-exec" PRIVATE "srose-ui")
 
 install(
     TARGETS "srose-exec"

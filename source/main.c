@@ -4,7 +4,7 @@
  * @brief Program entry
  */
 
-#include <sr/player/entry.h>
+#include <sr/ui/entry.h>
 
 
 /*Program entry */

@@ -10,7 +10,7 @@
 #include <typeinfo>
 #include <sr/sys/init.h>
 #include <sr/wm/display.h>
-#include <sr/player/entry.h>
+#include <sr/ui/entry.h>
 #include "main_loop.hpp"
 
 

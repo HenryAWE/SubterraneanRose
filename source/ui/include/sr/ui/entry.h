@@ -4,8 +4,8 @@
  * @brief Program entry
  */
 
-#ifndef SROSE_PLAYER_entry_h_
-#define SROSE_PLAYER_entry_h_
+#ifndef SROSE_UI_entry_h_
+#define SROSE_UI_entry_h_
 
 #include <sr/sys/macros.h>
 
