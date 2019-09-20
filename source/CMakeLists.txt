@@ -10,7 +10,7 @@ add_compile_definitions(SR_VERSION_MAJOR=${CMAKE_PROJECT_VERSION_MAJOR})
 add_compile_definitions(SR_VERSION_MINOR=${CMAKE_PROJECT_VERSION_MINOR})
 add_compile_definitions(SR_VERSION_PATCH=${CMAKE_PROJECT_VERSION_PATCH})
 
-add_subdirectory(./sys)
+add_subdirectory(./core)
 add_subdirectory(./wm)
 add_subdirectory(./gpu)
 add_subdirectory(./res)
@@ -23,7 +23,7 @@ aux_source_directory(. src_list)
 add_executable("srose-exec" ${src_list})
 
 target_link_libraries("srose-exec" PRIVATE SDL2::SDL2 SDL2::SDL2main)
-target_link_libraries("srose-exec" PRIVATE "srose-sys")
+target_link_libraries("srose-exec" PRIVATE "srose-core")
 target_link_libraries("srose-exec" PRIVATE "srose-wm")
 target_link_libraries("srose-exec" PRIVATE "srose-player")
 

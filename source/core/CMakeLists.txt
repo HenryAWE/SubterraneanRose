@@ -23,9 +23,9 @@ file(
     ${git_info}
 )
 
-add_library("srose-sys" STATIC ${sys_src_list} ${CMAKE_CURRENT_BINARY_DIR}/git_info.c)
-target_include_directories("srose-sys" PUBLIC ./include)
+add_library("srose-core" STATIC ${sys_src_list} ${CMAKE_CURRENT_BINARY_DIR}/git_info.c)
+target_include_directories("srose-core" PUBLIC ./include)
 
-target_link_libraries("srose-sys" PUBLIC SDL2::SDL2)
-target_link_libraries("srose-sys" PUBLIC SDL2::SDL2_mixer)
-target_link_libraries("srose-sys" PUBLIC SDL2::SDL2_image)
+target_link_libraries("srose-core" PUBLIC SDL2::SDL2)
+target_link_libraries("srose-core" PUBLIC SDL2::SDL2_mixer)
+target_link_libraries("srose-core" PUBLIC SDL2::SDL2_image)
