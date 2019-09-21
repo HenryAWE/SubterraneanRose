@@ -133,18 +133,8 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
         SDL_GetDisplayName(display_index)
     );
 
-    size_t full_title_len = strlen(title) + 64;
-    char* full_title = (char*)malloc(full_title_len);
-    snprintf(
-        full_title, full_title_len,
-        "%s - %s %llx",
-        title,
-        SR_SYS_GetVersionString(),
-        SR_SYS_GitCommitID()
-    );
-
     display->win = SDL_CreateWindow(
-        full_title,
+        title,
         SDL_WINDOWPOS_CENTERED_DISPLAY(display_index),
         SDL_WINDOWPOS_CENTERED_DISPLAY(display_index),
         window_w,
@@ -159,11 +149,9 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
             SDL_GetError()
         );
 
-        free(full_title);
         free(display);
         return NULL;
     }
-    free(full_title);
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "[WM] SDL_CreateWindow() succeeded");
 
     int renderer_index = SR_WM_GetOpenGLRendererDriver();
