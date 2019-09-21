@@ -11,6 +11,7 @@ add_compile_definitions(SR_VERSION_MINOR=${CMAKE_PROJECT_VERSION_MINOR})
 add_compile_definitions(SR_VERSION_PATCH=${CMAKE_PROJECT_VERSION_PATCH})
 
 add_subdirectory(./core)
+add_subdirectory(./util)
 add_subdirectory(./wm)
 add_subdirectory(./gpu)
 add_subdirectory(./res)
