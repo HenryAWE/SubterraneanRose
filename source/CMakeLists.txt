@@ -28,9 +28,27 @@ target_link_libraries("srose-exec" PRIVATE "srose-core")
 target_link_libraries("srose-exec" PRIVATE "srose-wm")
 target_link_libraries("srose-exec" PRIVATE "srose-player")
 target_link_libraries("srose-exec" PRIVATE "srose-ui")
+set_target_properties("srose-exec" PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
 install(
     TARGETS "srose-exec"
     RUNTIME DESTINATION bin
 )
+
+# Set the information of the package
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/license.txt")
+install(FILES "${PROJECT_SOURCE_DIR}/license.txt" DESTINATION ./)
 include(CPack)
+if(WIN32)
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION bin)
+    if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+        set(CMAKE_INSTALL_DEBUG_LIBRARIES TRUE CONFIGURATIONS Debug)
+        set(CMAKE_INSTALL_DEBUG_LIBRARIES_ONLY TRUE CONFIGURATIONS Debug)
+    endif()
+    include(InstallRequiredSystemLibraries)
+    install(
+        DIRECTORY ${PROJECT_BINARY_DIR}/bin
+        DESTINATION .
+        FILES_MATCHING PATTERN "*.dll"
+    )
+endif()
