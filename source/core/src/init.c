@@ -149,9 +149,9 @@ int SRSCALL SR_SYS_Init(int argc, char* argv[], int msgbox_on_error)
 {
     printf(
         "Subterranean Rose Project:\n"
-        "  Version %s - %I64x\n\n"
+        "  Version %s - %s\n\n"
         "  Please visit https://github.com/HenryAWE/SubterraneanRose for more up-to-date information",
-        SR_SYS_GetVersionString(), SR_SYS_GitCommitID()
+        SR_SYS_GetVersionString(), SR_SYS_GitCommitShortID()
     );
     if(SR_SYS_InitSDL(msgbox_on_error) != 0)
     {

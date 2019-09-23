@@ -23,11 +23,11 @@ extern "C" {
 const char* SRSCALL SR_SYS_GetVersionString(void);
 
 /**
- * @brief Get the GIT commit id of current build
+ * @brief Get the short GIT commit id of current build
  * 
- * @return uint64_t The hash value of the commit
+ * @return const char* The string represent the short hash value of the commit
  */
-uint64_t SRSCALL SR_SYS_GitCommitID(void);
+const char* SRSCALL SR_SYS_GitCommitShortID(void);
 
 
 #ifdef __cplusplus

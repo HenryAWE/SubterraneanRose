@@ -88,8 +88,8 @@ int SRSCALL main_loop(SR_WM_display* display)
             ImGui::TextWrapped(
                 "2D particle editor and player\n"
                 "Home page: https://github.com/HenryAWE/SubterraneanRose\n\n"
-                "Git commit ID: %I64x",
-                SR_SYS_GitCommitID()
+                "Short Git Commit ID: %s",
+                SR_SYS_GitCommitShortID()
             );
             ImGui::End();
         }

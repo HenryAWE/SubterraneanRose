@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 
-extern uint64_t sr_git_commit_id;
+extern const char* sr_git_commit_id_short;
 
 const char* SRSCALL SR_SYS_GetVersionString(void)
 {
@@ -22,7 +22,7 @@ const char* SRSCALL SR_SYS_GetVersionString(void)
     return buf;
 }
 
-uint64_t SRSCALL SR_SYS_GitCommitID(void)
+const char* SRSCALL SR_SYS_GitCommitShortID(void)
 {
-    return sr_git_commit_id;
+    return sr_git_commit_id_short;
 }
