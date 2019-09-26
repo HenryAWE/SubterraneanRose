@@ -12,10 +12,19 @@
 #include <sr/wm/display.h>
 #include <sr/ui/entry.h>
 #include "main_loop.hpp"
+#ifdef SR_ENABLE_CUI
+#   include <sr/ui/console/progopt.h>
+#endif
 
 
 int SRSCALL program_entry(int argc, char* argv[])
 {
+    #ifdef SR_ENABLE_CUI
+    if(SR_UI_CONSOLE_ParseArg(argc, argv) == 1)
+    {
+        return EXIT_SUCCESS;
+    }
+    #endif
     int exit_code = EXIT_SUCCESS;
 
     if(SR_SYS_InitSDL(SDL_TRUE) != 0)
