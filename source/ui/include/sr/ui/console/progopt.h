@@ -7,7 +7,7 @@
 #ifndef SROSE_UI_CONSOLE_progopt_h_
 #define SROSE_UI_CONSOLE_progopt_h_
 
-#include <sr/sys/macros.h>
+#include <sr/core/macros.h>
 
 
 #ifndef __cplusplus

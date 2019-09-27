@@ -7,7 +7,7 @@
 #ifndef SROSE_WM_event_h_
 #define SROSE_WM_event_h_
 
-#include <sr/sys/macros.h>
+#include <sr/core/macros.h>
 #include <sr/wm/display.h>
 
 

@@ -4,8 +4,8 @@
  * @brief Macros
  */
 
-#ifndef SROSE_SYS_macros_h_
-#define SROSE_SYS_macros_h_
+#ifndef SROSE_CORE_macros_h_
+#define SROSE_CORE_macros_h_
 
 #include <SDL_platform.h>
 

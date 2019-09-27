@@ -4,13 +4,13 @@
  * @brief Version information
  */
 
-#include <sr/sys/version_info.h>
+#include <sr/core/version_info.h>
 #include <stdio.h>
 
 
 extern const char* sr_git_commit_id_short;
 
-const char* SRSCALL SR_SYS_GetVersionString(void)
+const char* SRSCALL SR_CORE_GetVersionString(void)
 {
     static char buf[32];
     snprintf(
@@ -22,7 +22,7 @@ const char* SRSCALL SR_SYS_GetVersionString(void)
     return buf;
 }
 
-const char* SRSCALL SR_SYS_GitCommitShortID(void)
+const char* SRSCALL SR_CORE_GitCommitShortID(void)
 {
     return sr_git_commit_id_short;
 }

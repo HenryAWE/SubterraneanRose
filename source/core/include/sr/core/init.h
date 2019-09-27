@@ -4,11 +4,11 @@
  * @brief Initializaton
  */
 
-#ifndef SROSE_SYS_init_h_
-#define SROSE_SYS_init_h_
+#ifndef SROSE_CORE_init_h_
+#define SROSE_CORE_init_h_
 
 
-#include <sr/sys/macros.h>
+#include <sr/core/macros.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,12 +20,12 @@ extern "C" {
  * @param msgbox_on_err Show message box on error
  * @return int Zero for success, other value means an error occurred
  */
-int SRSCALL SR_SYS_InitSDL(int msgbox_on_err);
+int SRSCALL SR_CORE_InitSDL(int msgbox_on_err);
 
 /**
  * @brief Deinitialize SDL and other SDL library
  */
-void SRSCALL SR_SYS_QuitSDL(void);
+void SRSCALL SR_CORE_QuitSDL(void);
 
 /**
  * @brief Initialize OpenGL render context
@@ -34,7 +34,7 @@ void SRSCALL SR_SYS_QuitSDL(void);
  * 
  * @return int Zero for success, other value means an error occurred
  */
-int SRSCALL SR_SYS_InitGL(void);
+int SRSCALL SR_CORE_InitGL(void);
 
 /**
  * @brief Initialize everything
@@ -42,12 +42,12 @@ int SRSCALL SR_SYS_InitGL(void);
  * @param msgbox_on_err Show message box on error
  * @return int Zero for success, other value means an error occurred
  */
-int SRSCALL SR_SYS_Init(int argc, char* argv[], int msgbox_on_error);
+int SRSCALL SR_CORE_Init(int argc, char* argv[], int msgbox_on_error);
 
 /**
  * @brief Deinitialize everything
  */
-void SRSCALL SR_SYS_Quit(void);
+void SRSCALL SR_CORE_Quit(void);
 
 #ifdef __cplusplus
 }

@@ -8,7 +8,7 @@
 #include <boost/program_options.hpp>
 #include <sstream>
 #include <cstdio>
-#include <sr/sys/version_info.h>
+#include <sr/core/version_info.h>
 #ifndef SR_ENABLE_CUI
 #   error Build CUI module without defining requested macro
 #endif
@@ -42,7 +42,7 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
             std::printf(
                 "%d.%d.%d - %s\n",
                 SR_VERSION_MAJOR, SR_VERSION_MINOR, SR_VERSION_PATCH,
-                SR_SYS_GitCommitShortID()
+                SR_CORE_GitCommitShortID()
             );
 
             return 1;

@@ -9,7 +9,7 @@
 
 
 #include <SDL.h>
-#include <sr/sys/macros.h>
+#include <sr/core/macros.h>
 
 #ifdef __cplusplus
 extern "C" {

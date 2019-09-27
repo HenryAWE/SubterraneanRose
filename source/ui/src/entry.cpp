@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <SDL.h>
 #include <typeinfo>
-#include <sr/sys/init.h>
+#include <sr/core/init.h>
 #include <sr/wm/display.h>
 #include <sr/ui/entry.h>
 #include "main_loop.hpp"
@@ -27,13 +27,13 @@ int SRSCALL program_entry(int argc, char* argv[])
     #endif
     int exit_code = EXIT_SUCCESS;
 
-    if(SR_SYS_InitSDL(SDL_TRUE) != 0)
+    if(SR_CORE_InitSDL(SDL_TRUE) != 0)
     {
         return exit_code;
     }
     else
     {
-        at_quick_exit(&SR_SYS_QuitSDL); // We'll handle deinitialization on normal exit
+        at_quick_exit(&SR_CORE_QuitSDL); // We'll handle deinitialization on normal exit
     }
 
     SR_WM_display* display = SR_WM_CreateDisplay("Subterranean Rose", 0);
@@ -89,6 +89,6 @@ int SRSCALL program_entry(int argc, char* argv[])
 
 quit_program:
     SR_WM_DestroyDisplay(display);
-    SR_SYS_QuitSDL();
+    SR_CORE_QuitSDL();
     return exit_code;
 }

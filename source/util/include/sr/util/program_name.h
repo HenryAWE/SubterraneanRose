@@ -7,7 +7,7 @@
 #ifndef SROSE_UTIL_program_name_h_
 #define SROSE_UTIL_program_name_h_
 
-#include <sr/sys/macros.h>
+#include <sr/core/macros.h>
 
 
 #ifdef __cplusplus

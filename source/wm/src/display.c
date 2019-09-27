@@ -9,8 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include <sr/sys/version_info.h>
-#include <sr/sys/init.h>
+#include <sr/core/version_info.h>
+#include <sr/core/init.h>
 #include <sr/wm/event.h>
 
 
@@ -202,7 +202,7 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
             (profile&SDL_GL_CONTEXT_PROFILE_CORE?"core":(profile&SDL_GL_CONTEXT_PROFILE_ES?"es":"compatibility"))
         );
 
-        if(SR_SYS_InitGL() != 0)
+        if(SR_CORE_InitGL() != 0)
         { // Failed
             SDL_DestroyRenderer(display->renderer);
             SDL_DestroyWindow(display->win);

@@ -7,7 +7,7 @@
 #include "main_loop.hpp"
 #include <cstdlib>
 #include <sr/wm/event.h>
-#include <sr/sys/version_info.h>
+#include <sr/core/version_info.h>
 #include <imgui.h>
 
 
@@ -89,7 +89,7 @@ int SRSCALL main_loop(SR_WM_display* display)
                 "2D particle editor and player\n"
                 "Home page: https://github.com/HenryAWE/SubterraneanRose\n\n"
                 "Short Git Commit ID: %s",
-                SR_SYS_GitCommitShortID()
+                SR_CORE_GitCommitShortID()
             );
             ImGui::End();
         }

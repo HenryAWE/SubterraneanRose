@@ -7,7 +7,7 @@
 #ifndef SROSE_UI_entry_h_
 #define SROSE_UI_entry_h_
 
-#include <sr/sys/macros.h>
+#include <sr/core/macros.h>
 
 
 #ifdef __cplusplus
