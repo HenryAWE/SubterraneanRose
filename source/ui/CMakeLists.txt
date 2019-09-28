@@ -1,6 +1,8 @@
 # SubterraneanRose User Interface Module
 
 aux_source_directory(./src ui_src_list)
+aux_source_directory(./src/main_menu ui_main_menu_src_list)
+list(APPEND ui_src_list ${ui_main_menu_src_list})
 
 option(ENABLE_CUI "Enable console inferface" ON)
 if(${ENABLE_CUI})
@@ -13,6 +15,7 @@ add_library("srose-ui" STATIC ${ui_src_list})
 target_include_directories("srose-ui" PUBLIC ./include)
 
 target_link_libraries("srose-ui" PUBLIC "srose-core")
+target_link_libraries("srose-ui" PUBLIC "srose-util")
 target_link_libraries("srose-ui" PUBLIC "srose-wm")
 if(${ENABLE_CUI})
     target_link_libraries("srose-ui" PUBLIC Boost::program_options)
