@@ -23,8 +23,8 @@ void SRSCALL SR_UTIL_OpenInBrowser(const char* url)
     /*Convert URL to wide char to avoid encoding issue */
     int cbMultiByte = (int)strlen(url);
     int cchWideChar = MultiByteToWideChar(CP_UTF8, 0 , url, cbMultiByte, NULL, 0);
-    WCHAR* wurl = malloc((cchWideChar)*sizeof(WCHAR));
-    wmemset(wurl, 0, cchWideChar);
+    WCHAR* wurl = malloc((cchWideChar+1)*sizeof(WCHAR));
+    wmemset(wurl, 0, cchWideChar+1);
     if(MultiByteToWideChar(CP_UTF8, 0, url, cbMultiByte, wurl, cchWideChar) <= 0)
     { // Error
         return;
