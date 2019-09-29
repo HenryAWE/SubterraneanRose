@@ -43,8 +43,8 @@ void SRSCALL SR_UTIL_OpenInBrowser(const char* url)
 
 #elif defined __LINUX__
     size_t buflen = strlen(url) + 10;
-    char* buf = malloc()
-    snprintf(buf, buflen, "xdg-open %s");
+    char* buf = malloc(sizeof(char)*buflen);
+    snprintf(buf, buflen, "xdg-open %s", url);
     system(buf);
 
     free(buf);
