@@ -56,7 +56,7 @@ int SRSCALL SR_CORE_InitSDL(int msgbox_on_err)
             "[CORE] Mix_Init() failed: %s",
             SDL_GetError()
         );
-        if(msgbox_on_err)
+        if(0)
         {
             SDL_ShowSimpleMessageBox(
                 SDL_MESSAGEBOX_ERROR,
@@ -65,9 +65,9 @@ int SRSCALL SR_CORE_InitSDL(int msgbox_on_err)
                 NULL
             );
         }
-        SDL_Quit();
+        // SDL_Quit();
 
-        return 1;
+        // return 1;
     }
 
     SDL_version mixer_version;
