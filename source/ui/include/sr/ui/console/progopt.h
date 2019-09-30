@@ -23,6 +23,13 @@ extern "C"{
  */
 int SRSCALL SR_UI_CONSOLE_ParseArg(int argc,char* argv[]);
 
+/**
+ * @brief 
+ * 
+ * @return int 1 means fullscrenn mode is required
+ */
+int SRSCALL SR_UI_CONSOLE_FullscreenRequired();
+
 #ifndef __cplusplus
 }
 #endif
