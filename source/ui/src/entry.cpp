@@ -36,7 +36,11 @@ int SRSCALL program_entry(int argc, char* argv[])
         at_quick_exit(&SR_CORE_QuitSDL); // We'll handle deinitialization on normal exit
     }
 
-    SR_WM_display* display = SR_WM_CreateDisplay("Subterranean Rose", 0);
+    int window_flags = 0;
+    #ifdef SR_ENABLE_CUI
+    window_flags |= SR_UI_CONSOLE_FullscreenRequired()?SDL_WINDOW_FULLSCREEN:0;
+    #endif
+    SR_WM_display* display = SR_WM_CreateDisplay("Subterranean Rose", window_flags);
     if(!display)
     {
         exit_code = EXIT_FAILURE;
