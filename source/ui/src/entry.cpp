@@ -12,19 +12,15 @@
 #include <sr/wm/display.h>
 #include <sr/ui/entry.h>
 #include "main_loop.hpp"
-#ifdef SR_ENABLE_CUI
-#   include <sr/ui/console/progopt.h>
-#endif
+#include <sr/ui/console/progopt.h>
 
 
 int SRSCALL program_entry(int argc, char* argv[])
 {
-    #ifdef SR_ENABLE_CUI
     if(SR_UI_CONSOLE_ParseArg(argc, argv) == 1)
     {
         return EXIT_SUCCESS;
     }
-    #endif
     int exit_code = EXIT_SUCCESS;
 
     if(SR_CORE_InitSDL(SDL_TRUE) != 0)
@@ -37,9 +33,7 @@ int SRSCALL program_entry(int argc, char* argv[])
     }
 
     int window_flags = 0;
-    #ifdef SR_ENABLE_CUI
     window_flags |= SR_UI_CONSOLE_FullscreenRequired()?SDL_WINDOW_FULLSCREEN:0;
-    #endif
     SR_WM_display* display = SR_WM_CreateDisplay("Subterranean Rose", window_flags);
     if(!display)
     {

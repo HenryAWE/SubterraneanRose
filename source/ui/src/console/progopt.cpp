@@ -4,6 +4,8 @@
  * @brief Program options
  */
 
+#if defined SR_ENABLE_CUI // Controlled by the build flag SROSE_ENABLE_CUI
+
 #include <sr/ui/console/progopt.h>
 #include <boost/program_options.hpp>
 #include <memory>
@@ -11,9 +13,6 @@
 #include <cstdio>
 #include <cassert>
 #include <sr/core/version_info.h>
-#ifndef SR_ENABLE_CUI
-#   error Build CUI module without defining requested macro
-#endif
 #include <SDL.h>
 
 
@@ -144,3 +143,28 @@ int SRSCALL SR_UI_CONSOLE_FullscreenRequired()
     assert(vm&&"Call SR_UI_CONSOLE_ParseArg() first!!!");
     return (bool)vm->count("fullscreen");
 }
+
+#else
+/*Dummy implementation for disabled CUI module */
+#pragma message("Use dummy implementation for CUI")
+#include <sr/core/macros.h>
+#include <cstdio>
+
+
+int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
+{
+    if(argc > 1)
+    {
+        std::printf(
+            "The program was built with SROSE_ENABLE_CUI set to OFF\n"
+            "If you want the functionality of the command line UI, "
+            "please re-build the program with SROSE_ENABLE_CUI set to ON\n"
+        );
+    }
+
+    return 0;
+}
+
+int SRSCALL SR_UI_CONSOLE_FullscreenRequired() { return false; }
+
+#endif
