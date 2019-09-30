@@ -57,14 +57,14 @@ int SRSCALL program_entry(int argc, char* argv[])
         exit_code = EXIT_FAILURE;
         SDL_LogError(
             SDL_LOG_CATEGORY_APPLICATION,
-            "[PLAYER] Caught exception \"%s\": %s",
+            "[UI] Caught exception \"%s\": %s",
             typeid(ex).name(),
             ex.what()
         );
         SDL_ShowSimpleMessageBox(
             SDL_MESSAGEBOX_ERROR,
             typeid(ex).name(),
-           ex.what(),
+            ex.what(),
             NULL
         );
 
@@ -74,7 +74,7 @@ int SRSCALL program_entry(int argc, char* argv[])
     {
         SDL_LogError(
             SDL_LOG_CATEGORY_APPLICATION,
-            "[PLAYER] Caught unknown exception"
+            "[UI] Caught unknown exception"
         );
 
         SDL_ShowSimpleMessageBox(
