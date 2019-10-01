@@ -1,20 +1,8 @@
-# Subterranean Rose Project
-- Other Language: [简体中文(Simplified Chinese)](./README.zh-Hans.md)
+# Subterranean Rose
+## 欢迎 / Welcome
+- 欢迎来到**地底蔷薇计划**的项目主页，更多信息请[访问此处](./README.zh-CN.md) 
+- Welcome to the home page of the **Subterranean Rose Project**, you can [visit here](./README.en.md) for further information.
 
-## About
-- 2D particle editor and player
-
-## Dependencies
-- [SDL](https://www.libsdl.org/)
-- [SDL_mixer](https://www.libsdl.org/projects/SDL_mixer/)
-- [SDL_image](https://www.libsdl.org/projects/SDL_image/)
-- [GLEW](http://glew.sourceforge.net/)
-- [Dear ImGui](https://github.com/Tyyppi77/imgui_sdl)
-
-## What's Our Goal
-- Open source
-- Cross-platform
-- Easy-to-use
-
-## License
-- Code: [GNU General Public License v3.0 (GPLv3)](./license.txt)
+## 语言 / Languages
+- [简体中文](./README.zh-CN.md)
+- [English](./README.en.md)
