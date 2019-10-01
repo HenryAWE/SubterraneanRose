@@ -5,7 +5,6 @@ aux_source_directory(./src/main_menu ui_main_menu_src_list)
 list(APPEND ui_src_list ${ui_main_menu_src_list})
 
 # Console UI
-option(SROSE_ENABLE_CUI "Enable console inferface" ON)
 if(${SROSE_ENABLE_CUI})
     find_package(Boost REQUIRED COMPONENTS program_options)
 endif()
