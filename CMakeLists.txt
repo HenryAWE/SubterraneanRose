@@ -7,9 +7,15 @@ if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     message(STATUS "Use vcpkg toolchain from $ENV{VCPKG_ROOT}")
 endif()
 
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/cmake/")
+
 project(
     "Subterranean Rose"
     VERSION 0.1.0
+    DESCRIPTION "The Subterranean Rose Project"
+    HOMEPAGE_URL "https://github.com/HenryAWE/SubterraneanRose"
+
+    LANGUAGES C CXX
 )
 
 add_subdirectory(./source)

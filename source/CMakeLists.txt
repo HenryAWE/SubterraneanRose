@@ -11,10 +11,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Build options
 option(SROSE_ENABLE_CUI "Enable console inferface" ON)
 
+
+# Definitions
 add_compile_definitions(SR_VERSION_MAJOR=${CMAKE_PROJECT_VERSION_MAJOR})
 add_compile_definitions(SR_VERSION_MINOR=${CMAKE_PROJECT_VERSION_MINOR})
 add_compile_definitions(SR_VERSION_PATCH=${CMAKE_PROJECT_VERSION_PATCH})
 
+add_compile_definitions(SR_HOMEPAGE_URL=${CMAKE_PROJECT_HOMEPAGE_URL})
+
+
+# Libraries
 add_subdirectory(./core)
 add_subdirectory(./util)
 add_subdirectory(./wm)
@@ -25,8 +31,9 @@ add_subdirectory(./player)
 add_subdirectory(./editor)
 add_subdirectory(./ui)
 
-aux_source_directory(. src_list)
 
+# Executable
+aux_source_directory(. src_list)
 add_executable("srose-exec" ${src_list})
 
 target_link_libraries("srose-exec" PRIVATE SDL2::SDL2 SDL2::SDL2main)
@@ -36,6 +43,8 @@ target_link_libraries("srose-exec" PRIVATE "srose-player")
 target_link_libraries("srose-exec" PRIVATE "srose-ui")
 set_target_properties("srose-exec" PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
+
+# Installation
 install(
     TARGETS "srose-exec"
     RUNTIME DESTINATION bin
