@@ -11,7 +11,7 @@
 #include <SDL.h>
 #include <cassert>
 #include <imgui_impl_sdl.h>
-#include "imgui_sdl.hpp"
+#include <imgui_impl_opengl3.h>
 #include <sr/wm/event.h>
 #include <SDL_events.h>
 
@@ -32,8 +32,11 @@ int SRSCALL SR_WM_InitEventSystem(SR_WM_display* display)
 
     int w = 640, h = 480;
     SDL_GetRendererOutputSize(display->renderer, &w, &h);
-    ImGuiSDL::Initialize(display->renderer, w, h);
     if(!ImGui_ImplSDL2_InitForOpenGL(display->win, display->glctx))
+    {
+        return -1;
+    }
+    if(!ImGui_ImplOpenGL3_Init(nullptr))
     {
         return -1;
     }
@@ -45,7 +48,7 @@ void SRSCALL SR_WM_QuitEventSystem()
 {
     assert(g_imctx);
 
-    ImGuiSDL::Deinitialize();
+    ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext(g_imctx);
     g_imctx = nullptr;
@@ -74,6 +77,7 @@ int SRSCALL SR_WM_ProcessEvent()
 
 void SRSCALL SR_WM_NewFrame()
 {
+    ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame(g_window);
     ImGui::NewFrame();
 }
@@ -86,5 +90,5 @@ void SRSCALL SR_WM_EndFrame()
 void SRSCALL SR_WM_RenderFrame()
 {
     ImGui::Render();
-    ImGuiSDL::Render(ImGui::GetDrawData());
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
