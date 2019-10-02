@@ -53,8 +53,8 @@ install(
 )
 
 # Set the information of the package
-set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/license.txt")
-install(FILES "${PROJECT_SOURCE_DIR}/license.txt" DESTINATION ./)
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE.txt")
+install(FILES "${PROJECT_SOURCE_DIR}/LICENSE.txt" DESTINATION ./)
 include(CPack)
 if(WIN32)
     set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION bin)
