@@ -8,8 +8,10 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 # Build options
 option(SROSE_ENABLE_CUI "Enable console inferface" ON)
+set(SROSE_RENDER_BACKEND "OpenGL3" CACHE STRING "Choose a render backend from: OpenGL3")
 
 
 # Definitions

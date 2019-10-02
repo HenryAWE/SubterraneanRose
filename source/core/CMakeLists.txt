@@ -21,8 +21,9 @@ configure_file(
 )
 
 
-add_library("srose-core" STATIC ${core_src_list} ${CMAKE_CURRENT_BINARY_DIR}/git_info.c)
+add_library("srose-core" STATIC ${core_src_list} ${CMAKE_CURRENT_BINARY_DIR}/git_info.c ./glad/glad.c)
 target_include_directories("srose-core" PUBLIC ./include)
+target_include_directories("srose-core" PUBLIC ./glad)
 
 target_link_libraries("srose-core" PUBLIC SDL2::SDL2)
 target_link_libraries("srose-core" PUBLIC SDL2::SDL2_mixer)
