@@ -27,4 +27,4 @@ target_include_directories("srose-core" PUBLIC ./glad)
 
 target_link_libraries("srose-core" PUBLIC SDL2::SDL2)
 target_link_libraries("srose-core" PUBLIC SDL2::SDL2_mixer)
-target_link_libraries("srose-core" PUBLIC SDL2::SDL2_image)
+

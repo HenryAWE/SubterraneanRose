@@ -117,6 +117,9 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
     SDL_zerop(display);
 
     /*Set the OpenGL attributes for window&context creation*/
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
 
@@ -153,71 +156,38 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
         return NULL;
     }
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "[WM] SDL_CreateWindow() succeeded");
-
-    int renderer_index = SR_WM_GetOpenGLRendererDriver();
-    if (renderer_index == -1)
+    
+    /*Setup OpenGL */
+    display->glctx = SDL_GL_CreateContext(display->win);
+    if(!display->glctx)
     {
-        SDL_DestroyWindow(display->win);
-        free(display);
-        return NULL;
-    }
-    display->renderer = SDL_CreateRenderer(display->win, renderer_index, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
-    if (display->renderer)
-    { // Renderer successfully created
-        SDL_RendererInfo render_info;
-        memset(&render_info, 0, sizeof(SDL_RendererInfo));
-        SDL_GetRendererInfo(display->renderer, &render_info);
-
-        SDL_LogInfo(
-            SDL_LOG_CATEGORY_APPLICATION,
-            "[WM] SDL_CreateRenderer() successfully created %s renderer\n",
-            render_info.name
-        );
-    }
-    else
-    { // Create renderer failed
         SDL_LogError(
             SDL_LOG_CATEGORY_APPLICATION,
-            "[WM] SDL_CreateRenderer() failed: %s",
+            "[WM] SDL_GL_CreateContext() failed: %s",
             SDL_GetError()
         );
 
         SDL_DestroyWindow(display->win);
         free(display);
-        return NULL;
     }
-    
-    /*Setup OpenGL */
-    display->glctx =  SDL_GL_GetCurrentContext();
-    if (display->glctx)
-    {
-        int major, minor, profile;
-        SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
-        SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &minor);
-        SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &profile);
-        SDL_LogInfo(
-            SDL_LOG_CATEGORY_APPLICATION,
-            "[WM] OpenGL %d.%d %s",
-            major, minor,
-            (profile&SDL_GL_CONTEXT_PROFILE_CORE?"core":(profile&SDL_GL_CONTEXT_PROFILE_ES?"es":"compatibility"))
-        );
+    if(SR_CORE_InitGL() != 0)
+    { // Failed
+        SDL_GL_MakeCurrent(display->win, NULL);
+        SDL_GL_DeleteContext(display->glctx);
+        SDL_DestroyWindow(display->win);
+        free(display);
 
-        if(SR_CORE_InitGL() != 0)
-        { // Failed
-            SDL_DestroyRenderer(display->renderer);
-            SDL_DestroyWindow(display->win);
-            free(display);
-
-            return NULL;
-        }
+        return NULL;
     }
 
     /*ImGui */
     if(SR_WM_InitEventSystem(display) != 0)
     {
-        SDL_DestroyRenderer(display->renderer);
+        SDL_GL_MakeCurrent(display->win, NULL);
+        SDL_GL_DeleteContext(display->glctx);
         SDL_DestroyWindow(display->win);
         free(display);
+
         return NULL;
     }
 
@@ -230,7 +200,11 @@ void SRSCALL SR_WM_DestroyDisplay(
 ) {
     if (!display) return;
     SR_WM_QuitEventSystem();
-    if (display->renderer) SDL_DestroyRenderer(display->renderer);
+    if(display->glctx)
+    {
+        SDL_GL_MakeCurrent(display->win, NULL);
+        SDL_GL_DeleteContext(display->glctx);
+    }
     if (display->win) SDL_DestroyWindow(display->win);
     free(display);
 }
