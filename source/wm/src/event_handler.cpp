@@ -31,7 +31,7 @@ int SRSCALL SR_WM_InitEventSystem(SR_WM_display* display)
     }
 
     int w = 640, h = 480;
-    SDL_GetRendererOutputSize(display->renderer, &w, &h);
+    SDL_GetWindowSize(display->win, &w, &h);
     if(!ImGui_ImplSDL2_InitForOpenGL(display->win, display->glctx))
     {
         return -1;

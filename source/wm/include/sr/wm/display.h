@@ -18,8 +18,7 @@ extern "C" {
 typedef struct SR_WM_display_
 {
     SDL_Window* win; // Window
-    SDL_Renderer* renderer; // SDL Renderer
-    SDL_GLContext* glctx; // OpenGL context
+    SDL_GLContext* glctx; // OpenGL context (if we're using OpenGL render backend)
 } SR_WM_display;
 
 /**

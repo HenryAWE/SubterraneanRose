@@ -4,11 +4,13 @@
  * @brief 
  */
 
+#include <glad/glad.h>
 #include "main_loop.hpp"
 #include <cstdlib>
 #include <sr/wm/event.h>
 #include <imgui.h>
 #include "main_menu/main_menu_bar.hpp"
+#include <sr/gpu/opengl3/texture.hpp>
 
 
 int SRSCALL main_loop(SR_WM_display* display)
@@ -17,6 +19,7 @@ int SRSCALL main_loop(SR_WM_display* display)
 
     main_menu::MainMenuBarContext main_menu_ctx{};
 
+    glClearColor(0, 0, 0, 1);
     int loop = SDL_TRUE;
     while(loop)
     {
@@ -31,10 +34,9 @@ int SRSCALL main_loop(SR_WM_display* display)
         SR_WM_EndFrame();
 
         /*Rendering */
-        SDL_SetRenderDrawColor(display->renderer, 0, 0, 0, 255);
-        SDL_RenderClear(display->renderer);
+        glClear(GL_COLOR_BUFFER_BIT);
         SR_WM_RenderFrame();
-        SDL_RenderPresent(display->renderer);
+        SDL_GL_SwapWindow(display->win);
     }
 
     return EXIT_SUCCESS;
