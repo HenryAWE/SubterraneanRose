@@ -32,11 +32,11 @@ void SRSCALL SR_UTIL_OpenInBrowser(const char* url)
 
     ShellExecuteW(
         NULL,
-        NULL,
-        L"explorer.exe",
+        L"open",
         wurl,
-        L".",
-        SW_NORMAL
+        NULL,
+        NULL,
+        SW_SHOWNORMAL
     );
 
     free(wurl);
@@ -48,5 +48,7 @@ void SRSCALL SR_UTIL_OpenInBrowser(const char* url)
     system(buf);
 
     free(buf);
+#else
+#   pragma message("Use dummy implementation for OpenInBrowser()")
 #endif
 }
