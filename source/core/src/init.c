@@ -8,7 +8,6 @@
 #include <sr/core/init.h>
 #include <SDL.h>
 #include <SDL_mixer.h>
-#include <SDL_image.h>
 #include <SDL_video.h>
 #include <sr/core/version_info.h>
 
@@ -84,42 +83,6 @@ int SRSCALL SR_CORE_InitSDL(int msgbox_on_err)
         VERSION_NUMBER_2_ARG(*mixer_version_linked)
     );
 
-    if(IMG_Init(IMG_INIT_PNG) == 0)
-    {
-        SDL_LogError(
-            SDL_LOG_CATEGORY_APPLICATION,
-            "[CORE] IMG_Init() failed: %s",
-            IMG_GetError()
-        );
-        if(msgbox_on_err)
-        {
-            SDL_ShowSimpleMessageBox(
-                SDL_MESSAGEBOX_ERROR,
-                "IMG_Init() failed",
-                IMG_GetError(),
-                NULL
-            );
-        }
-        Mix_Quit();
-        SDL_Quit();
-
-        return 1;
-    }
-
-    SDL_version image_version;
-    const SDL_version* image_version_linked;
-    SDL_IMAGE_VERSION(&image_version);
-    image_version_linked = IMG_Linked_Version();
-    SDL_LogInfo(
-        SDL_LOG_CATEGORY_APPLICATION,
-        "[CORE] IMG_Init() success\n"
-        "Image Info:\n"
-        "  Version %d.%d.%d\n"
-        "  Runtime Version: %d.%d.%d",
-        VERSION_NUMBER_2_ARG(image_version),
-        VERSION_NUMBER_2_ARG(*image_version_linked)
-    );
-
     return 0;
 }
 
@@ -140,7 +103,6 @@ int SRSCALL SR_CORE_InitGL(void)
 
 void SRSCALL SR_CORE_QuitSDL(void)
 {
-    IMG_Quit();
     Mix_Quit();
     SDL_Quit();
 }

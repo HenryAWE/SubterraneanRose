@@ -7,9 +7,8 @@
 #include <glad/glad.h>
 #include <sr/gpu/opengl3/texture.hpp>
 #include <cassert>
-#include <SDL_surface.h>
-#include <SDL_image.h>
-#include <SDL_pixels.h>
+#include <SDL.h>
+#include <stb_image.h>
 
 
 namespace srose::gpu::opengl3
@@ -32,34 +31,8 @@ namespace srose::gpu::opengl3
 
     bool Texture::LoadFromFile(const char* path)
     {
-        SDL_Surface* loaded = IMG_Load(path);
-        if(!loaded)
-        {
-            SDL_LogError(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[OpenGL3] Texture::LoadFromFile() load %s failed %s",
-                path,
-                IMG_GetError()
-            );
-            return false;
-        }
-
-        SDL_Surface* surface = loaded;
-        if(surface->format->format != SDL_PIXELFORMAT_RGBA8888)
-        {
-            surface = SDL_ConvertSurfaceFormat(loaded, SDL_PIXELFORMAT_RGBA8888, 0);
-            if(!surface)
-            {
-                SDL_LogError(
-                    SDL_LOG_CATEGORY_APPLICATION,
-                    "[OpenGL3] Texture::LoadFromFile() convert data from %s to RGBA8888 failed",
-                    SDL_GetPixelFormatName(surface->format->format)
-                );
-
-                SDL_FreeSurface(loaded);
-                return false;
-            }
-        }
+        int width, height;
+        stbi_uc* data = stbi_load(path, &width, &height, nullptr, STBI_rgb_alpha);
 
         if(!m_handle) Generate();
         glBindTexture(GL_TEXTURE_2D, m_handle);
@@ -67,12 +40,12 @@ namespace srose::gpu::opengl3
             GL_TEXTURE_2D,
             0,
             GL_RGBA,
-            surface->w,
-            surface->h,
+            width,
+            height,
             0,
             GL_RGBA,
             GL_UNSIGNED_BYTE,
-            surface->pixels
+            data
         );
         assert(glGetError() == GL_NO_ERROR);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -80,9 +53,9 @@ namespace srose::gpu::opengl3
         glBindTexture(GL_TEXTURE_2D, 0);
         assert(glGetError() == GL_NO_ERROR);
 
-        m_size = {surface->w, surface->h};
+        m_size = {width, height};
 
-        if(surface != loaded) SDL_FreeSurface(surface);
+        stbi_image_free(data);
 
         return true;
     }
