@@ -4,29 +4,33 @@
  * @brief Translation file parser
  */
 
+#define BOOST_SPIRIT_UNICODE 1
 #include <sr/locale/parser.hpp>
 #ifdef _MSC_VER
 #   pragma warning(disable:4828) // Disable code page warning
 #endif
+#include <cwctype>
 #include <sstream>
 #include <string>
 #include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/support_standard_wide.hpp>
 #include <boost/phoenix/fusion.hpp>
 #include <boost/phoenix.hpp>
+#include <boost/locale/encoding_utf.hpp>
 
 
 namespace srose::locale
 {
     struct translation
     {
-        std::string identifier, text;
+        std::wstring identifier, text;
     };
 } // namespace srose::locale
 
 BOOST_FUSION_ADAPT_STRUCT(
     srose::locale::translation,
-    (std::string, identifier)
-    (std::string, text)
+    (std::wstring, identifier)
+    (std::wstring, text)
 );
 
 namespace srose::locale
@@ -34,25 +38,25 @@ namespace srose::locale
     using namespace boost::spirit;
 
     template <typename Iterator>
-    class translation_parser : public qi::grammar<Iterator, translation(), ascii::space_type>
+    class translation_parser : public qi::grammar<Iterator, translation(), standard_wide::space_type>
     {
-        qi::rule<Iterator, std::string(), ascii::space_type> identifier;
-        qi::rule<Iterator, std::string(), ascii::space_type> quoted_strings;
-        qi::rule<Iterator, translation(), ascii::space_type> start;
+        qi::rule<Iterator, std::wstring(), standard_wide::space_type> identifier;
+        qi::rule<Iterator, std::wstring(), standard_wide::space_type> quoted_strings;
+        qi::rule<Iterator, translation(), standard_wide::space_type> start;
     public:
         translation_parser() : translation_parser::base_type(start)
         {
-            identifier %= qi::lexeme[+(ascii::char_ - '"' - '=' -'@' -' ')];
-            quoted_strings %= qi::lexeme[+('"' >> +(ascii::char_ - '"') >> '"')];
+            identifier %= qi::lexeme[+(standard_wide::char_ - '"' - '=' -'@' -' ')];
+            quoted_strings %= qi::lexeme[+('"' >> +(standard_wide::char_ - '"') >> '"')];
 
             start %= '@' >> identifier >> '=' >> quoted_strings;
         }
     };
 
-    void parse_content(util::string_tree<std::string>& context, const std::string& content)
+    void parse_string(util::string_tree<std::string>& context, const std::wstring& content)
     {
-        using boost::spirit::ascii::space;
-        typedef std::string::const_iterator iterator_type;
+        using boost::spirit::standard_wide::space;
+        typedef std::wstring::const_iterator iterator_type;
         typedef translation_parser<iterator_type> parser_type;
         parser_type grammer;
 
@@ -63,6 +67,39 @@ namespace srose::locale
             return;
         }
 
-        context.emplace_at(tr.identifier, std::move(tr.text));
+        context.emplace_at(
+            boost::locale::conv::utf_to_utf<char>(tr.identifier),
+            boost::locale::conv::utf_to_utf<char>(tr.text)
+        );
+    }
+
+    bool is_comment(const std::wstring& str)
+    {
+        for(wchar_t c : str)
+        {
+            if(std::iswspace(c)) continue;
+            else if(c == '#') return true; // Comment
+
+            return false;
+        }
+        return true; // Empty string, also treat it as comment
+    }
+
+    util::string_tree<std::string> parse_stream(std::istream& is)
+    {
+        util::string_tree<std::string> result;
+        std::wstring wstr;
+        while(!is.eof())
+        {
+            std::string str;
+            std::getline(is, str);
+
+            wstr = boost::locale::conv::utf_to_utf<wchar_t>(str);
+            if(is_comment(wstr)) continue;
+
+            parse_string(result, wstr);
+        }
+
+        return std::move(result);
     }
 } // namespace srose::locale

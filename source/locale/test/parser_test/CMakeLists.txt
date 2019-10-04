@@ -5,6 +5,7 @@ add_executable(
     parser_test.cpp
 )
 target_link_libraries(parser_test PRIVATE "srose-locale")
+target_link_libraries(parser_test PRIVATE Boost::locale)
 
 add_test(
     NAME "TestParser"
