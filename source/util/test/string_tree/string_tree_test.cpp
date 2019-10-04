@@ -3,11 +3,24 @@
 #include <cassert>
 #include <iostream>
 
+using namespace std;
+using namespace srose::util;
+
+void test_ctor()
+{
+    string_tree<int, '/'> base;
+    base.emplace_at("srose/value/1", 233);
+    string_tree<int, '/'> copied(base);
+    assert(copied.get_value("srose/value/1") == 233);
+
+    auto moved(std::move(base));
+    assert(base.size() == 0);
+    assert(moved.get_value("srose/value/1") == 233);
+}
 
 int main()
 {
-    using namespace std;
-    using namespace srose::util;
+    test_ctor();
 
     // Test emplacement
     string_tree<int, '/'> st(5);

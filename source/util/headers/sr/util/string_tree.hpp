@@ -59,9 +59,11 @@ namespace srose::util
         mapped_type m_data; // Data stored by current nod
 
     public:
-        basic_string_tree() {}
+        basic_string_tree() = default;
         basic_string_tree(const basic_string_tree& rhs)
-            : m_children(rhs.m_children), m_data(rhs) {}
+            : m_children(rhs.m_children), m_data(rhs.m_data) {}
+        basic_string_tree(basic_string_tree&& move)
+            : m_children(std::move(move.m_children)), m_data(std::move(move.m_data)) {}
         basic_string_tree(value_type&& move)
             : m_children(), m_data(std::move(move)) {}
         basic_string_tree(const value_type& rhs)
