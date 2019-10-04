@@ -1,0 +1,3 @@
+# Language Information
+@srose.language.name = "English"
+@srose.language.iso639 = "en"
