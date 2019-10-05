@@ -1,0 +1,5 @@
+# 测试中文
+@srose.language.name = "简体中文"
+@srose.language.iso639 = "zh-CN"
+
+@chinese.text = "来自中文的问候：你好！"

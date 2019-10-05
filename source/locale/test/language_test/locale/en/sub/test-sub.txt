@@ -1,0 +1,2 @@
+# Test sub-directory
+@test.sub.hello = "Greeting from sub-directory!"
