@@ -16,6 +16,7 @@ namespace srose::locale
     void parse_string(util::string_tree<std::string>& context, const std::wstring& content);
 
     util::string_tree<std::string> parse_stream(std::istream& is);
+    util::string_tree<std::string> parse_wstream(std::wistream& is);
 } // namespace srose::locale
 
 

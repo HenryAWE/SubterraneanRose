@@ -14,6 +14,14 @@ R"(
 @srose.second = "第二条信息"
 )";
 
+const wchar_t wtranslations[] =
+LR"(
+# 这是一条注释
+@text.zh = "中文"
+@text.ru = "Россия"
+@text.ja = "にほんご"
+)";
+
 
 int main()
 {
@@ -31,6 +39,13 @@ int main()
     assert(result2.get_value("srose.first") == "First Message");
     assert(boost::locale::conv::utf_to_utf<wchar_t>(result2.get_value("srose.second")) == L"第二条信息");
     assert(result2.get_value("srose.second") == "第二条信息");
+
+    std::wstringstream wss;
+    wss.str(wtranslations);
+    auto result3 = parse_wstream(wss);
+    assert(result3.get_value("text.zh") == "中文");
+    assert(result3.get_value("text.ru") == "Россия");
+    assert(result3.get_value("text.ja") == "にほんご");
 
     return 0;
 }

@@ -78,7 +78,7 @@ namespace srose::locale
         for(wchar_t c : str)
         {
             if(std::iswspace(c)) continue;
-            else if(c == '#') return true; // Comment
+            else if(c == 'L#') return true; // Comment
 
             return false;
         }
@@ -95,6 +95,20 @@ namespace srose::locale
             std::getline(is, str);
 
             wstr = boost::locale::conv::utf_to_utf<wchar_t>(str);
+            if(is_comment(wstr)) continue;
+
+            parse_string(result, wstr);
+        }
+
+        return std::move(result);
+    }
+    util::string_tree<std::string> parse_wstream(std::wistream& is)
+    {
+        util::string_tree<std::string> result;
+        std::wstring wstr;
+        while(!is.eof())
+        {
+            std::getline(is, wstr);
             if(is_comment(wstr)) continue;
 
             parse_string(result, wstr);
