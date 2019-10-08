@@ -13,9 +13,10 @@
 
 namespace srose::ui::main_menu
 {
-    static void SRSCALL AboutPopup()
+    static void SRSCALL AboutPopup(MainMenuBarContext* ctx)
     {
-        if(ImGui::BeginPopupModal("About Subterranean Rose", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        ImGui::SetNextWindowPosCenter(true);
+        if(ImGui::BeginPopupModal("About Subterranean Rose", nullptr, ImGuiWindowFlags_NoResize))
         {
             ImGui::TextColored(
                 {0.01f, 0.549f, 0.85f, 1}, // Deep blue
@@ -32,6 +33,7 @@ namespace srose::ui::main_menu
 
             if(ImGui::Button("OK"))
             {
+                ctx->show_about = false;
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
@@ -74,19 +76,27 @@ namespace srose::ui::main_menu
 
                 ImGui::EndMenu();
             }
+            if(ImGui::BeginMenu("Developer##SRMMB"))
+            {
+                if(ImGui::Checkbox("Show ImGui demo", &ctx->show_imgui_demo)){}
+
+                ImGui::EndMenu();
+            }
             if(ImGui::BeginMenu("Help##SRMMB"))
             {
                 if(ImGui::MenuItem("Home page"))
                 {
                     SR_UTIL_OpenInBrowser("https://github.com/HenryAWE/SubterraneanRose");
                 }
-                if(ImGui::Checkbox("Show ImGui demo", &ctx->show_imgui_demo)){}
+
+                if(ImGui::MenuItem("About"))
+                    ctx->show_about = true;
                 ImGui::EndMenu();
             }
 
-           if(ImGui::MenuItem("About"))
-               ImGui::OpenPopup("About Subterranean Rose");
-           AboutPopup();
+            if(ctx->show_about)
+                ImGui::OpenPopup("About Subterranean Rose");
+            AboutPopup(ctx);
 
             ImGui::EndMainMenuBar();
         }

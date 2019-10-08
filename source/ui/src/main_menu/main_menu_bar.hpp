@@ -15,6 +15,7 @@ namespace srose::ui::main_menu
 {
     struct MainMenuBarContext
     {
+        bool show_about = false;
         bool show_imgui_demo = false;
     };
 
