@@ -1,7 +1,6 @@
 # SubterraneanRose Core Module
 find_package(SDL2 CONFIG REQUIRED)
 find_package(sdl2-mixer CONFIG REQUIRED)
-find_package(sdl2-image CONFIG REQUIRED)
 
 aux_source_directory(./src core_src_list)
 # Generate GIT information in C source
