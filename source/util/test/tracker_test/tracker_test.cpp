@@ -42,10 +42,10 @@ int main()
     assert(tr_str_2.value() == "will be moved too");
 
     std::string moved_str_3 = "third one";
-    tracked<std::string> tr_str_3(init_as_clean, std::move(moved_str_2));
+    tracked<std::string> tr_str_3(init_as_clean, std::move(moved_str_3));
     assert(tr_str_3.clean());
     assert(moved_str_3.empty());
-    assert(tr_str_3.value() == "third onr");
+    assert(tr_str_3.value() == "third one");
 
     return 0;
 }
