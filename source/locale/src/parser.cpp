@@ -78,7 +78,7 @@ namespace srose::locale
         for(wchar_t c : str)
         {
             if(std::iswspace(c)) continue;
-            else if(c == 'L#') return true; // Comment
+            else if(c == L'#') return true; // Comment
 
             return false;
         }

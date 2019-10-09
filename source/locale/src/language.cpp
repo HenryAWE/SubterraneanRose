@@ -19,7 +19,7 @@ namespace srose::locale
         {
             if(fs::is_regular_file(pt) && pt.path().extension()==".txt")
             {
-                std::ifstream ifs(pt, std::ios_base::binary);
+                std::ifstream ifs(pt.path(), std::ios_base::binary);
                 if(ifs.good())
                     m_tr.merge(parse_stream(ifs));
             }
