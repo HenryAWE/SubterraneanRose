@@ -11,6 +11,7 @@
 #include <imgui.h>
 #include "main_menu/main_menu_bar.hpp"
 #include <sr/gpu/opengl3/texture.hpp>
+#include <sr/locale/locale.hpp>
 
 
 int SRSCALL main_loop(SR_WM_display* display)
