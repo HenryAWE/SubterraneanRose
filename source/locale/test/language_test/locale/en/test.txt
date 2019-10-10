@@ -1,6 +1,6 @@
 # English
 @srose.language.name = "English"
-@srose.language.iso639 = "en-US"
+@srose.language.iso = "en"
 
 # Testing fallback
 @only.exist.in.English = "This will only appear in English"
