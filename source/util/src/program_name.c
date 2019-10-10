@@ -8,9 +8,7 @@
 #include <string.h>
 #include <SDL_platform.h>
 #include <SDL_syswm.h>
-#ifdef __LINUX__
-#   include <unistd.h>
-#endif
+#include <unistd.h>
 
 
 const char* SRSCALL SR_UTIL_GetProgramName()
@@ -29,8 +27,8 @@ const char* SRSCALL SR_UTIL_GetProgramName()
     return buffer;
 #else
     static char buffer[512];
-    strcpy(buffer, getcwd());
-    strcat(buffer, "srose-exec");
+    getcwd(buffer, 512);
+    strcat(buffer, "/srose-exec");
 
     return buffer;
 #endif
