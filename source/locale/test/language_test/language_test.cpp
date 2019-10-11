@@ -13,6 +13,7 @@ int main()
 
     locale::language en("./locale/en/");
     assert(en.gettext("srose.language.name") == "English");
+    assert(en.gettext("srose.language.name", "ERROR") == "English");
     assert(en.gettext("@not.found", "You'll get me") == "You'll get me");
     assert(en.gettext("test.sub.hello") == "Greeting from sub-directory!");
 

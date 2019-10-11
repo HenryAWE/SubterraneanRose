@@ -32,7 +32,7 @@ namespace srose::locale
     }
     std::string language::gettext(std::string_view path, std::string_view alternate)
     {
-        auto opt = m_tr.get_value_optional();
-        return opt ? *opt : std::string(alternate);
+        auto opt = m_tr.get_value_optional(path);
+        return opt.has_value() ? *opt : std::string(alternate);
     }
 } // namespace srose::locale
