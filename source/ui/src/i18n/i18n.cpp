@@ -17,6 +17,8 @@ namespace srose::ui
     void LoadAllLanguage(const std::filesystem::path& lcres)
     {
         namespace fs = std::filesystem;
+        if(!fs::exists(lcres))
+            return;
         fs::directory_iterator iter(lcres);
 
         for(auto dt : fs::directory_iterator(lcres))
