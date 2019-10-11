@@ -12,6 +12,7 @@
 #include "main_menu/main_menu_bar.hpp"
 #include <sr/gpu/opengl3/texture.hpp>
 #include <sr/locale/locale.hpp>
+#include "i18n/i18n.hpp"
 
 
 int SRSCALL main_loop(SR_WM_display* display)
@@ -19,6 +20,8 @@ int SRSCALL main_loop(SR_WM_display* display)
     using namespace srose::ui;
 
     main_menu::MainMenuBarContext main_menu_ctx{};
+
+    LoadAllLanguage("locale");
 
     glClearColor(0, 0, 0, 1);
     int loop = SDL_TRUE;

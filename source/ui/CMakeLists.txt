@@ -3,6 +3,9 @@
 aux_source_directory(./src ui_src_list)
 aux_source_directory(./src/main_menu ui_main_menu_src_list)
 list(APPEND ui_src_list ${ui_main_menu_src_list})
+aux_source_directory(./src/i18n ui_i18n_src_list)
+list(APPEND ui_src_list ${ui_i18n_src_list})
+
 
 # Console UI
 if(${SROSE_ENABLE_CUI})
