@@ -19,6 +19,7 @@
 int SRSCALL program_entry(int argc, char* argv[])
 {
     using namespace srose::ui;
+    std::filesystem::current_path(std::filesystem::path(argv[0]).parent_path());
     LoadAllLanguage("locale");
 
     if(SR_UI_CONSOLE_ParseArg(argc, argv) == 1)

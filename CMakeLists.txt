@@ -20,3 +20,4 @@ project(
 
 enable_testing()
 add_subdirectory(./source)
+add_subdirectory(./locale)
