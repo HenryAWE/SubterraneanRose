@@ -11,6 +11,12 @@
 
 namespace srose::locale
 {
+    language::language()
+    {
+        m_tr.emplace_at("srose.language.name", "Default");
+        m_tr.emplace_at("srose.language.iso", "C");
+    }
+
     language::language(const std::filesystem::path& directory)
     {
         namespace fs = std::filesystem;

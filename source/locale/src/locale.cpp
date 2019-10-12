@@ -14,6 +14,10 @@ namespace srose::locale
     {
         using namespace boost::locale;
         generator gen;
-        return gen(boost::locale::util::get_system_locale(utf8));
+
+        std::string name = util::get_system_locale(utf8);
+
+        std::locale lc = gen.generate(name);
+        return util::create_info(lc, name);
     }
 } // namespace srose::locale

@@ -21,8 +21,6 @@ int SRSCALL main_loop(SR_WM_display* display)
 
     main_menu::MainMenuBarContext main_menu_ctx{};
 
-    LoadAllLanguage("locale");
-
     glClearColor(0, 0, 0, 1);
     int loop = SDL_TRUE;
     while(loop)

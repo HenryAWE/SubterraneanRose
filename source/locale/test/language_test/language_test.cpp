@@ -11,6 +11,10 @@ int main()
     using namespace srose;
     using namespace srose::util;
 
+    locale::language default_lc;
+    assert(default_lc.gettext("srose.language.name") == "Default");
+    assert(default_lc.gettext("srose.language.iso") == "C");
+
     locale::language en("./locale/en/");
     assert(en.gettext("srose.language.name") == "English");
     assert(en.gettext("srose.language.name", "ERROR") == "English");

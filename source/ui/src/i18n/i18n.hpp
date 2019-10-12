@@ -8,11 +8,15 @@
 #define SROSE_UI_I18N_i18n_hpp_
 
 #include <filesystem>
+#include <sr/locale/language.hpp>
 
 
 namespace srose::ui
 {
     void LoadAllLanguage(const std::filesystem::path& lcres);
+
+    std::shared_ptr<locale::language> GetDefaultLanguage();
+    std::shared_ptr<locale::language> GetNearestLanguage(std::locale lc);
 } // namespace srose::ui
 
 

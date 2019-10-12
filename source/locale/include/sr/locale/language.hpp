@@ -17,6 +17,7 @@ namespace srose::locale
     class language
     {
     public:
+        language();
         language(language&& move) noexcept
             : m_tr(std::move(move.m_tr)) {}
         language(const std::filesystem::path& directory);

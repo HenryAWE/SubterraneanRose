@@ -1,3 +1,5 @@
 # Language Information
 @srose.language.name = "English"
 @srose.language.iso = "en"
+
+@srose = "Subterranean Rose ~ Dream of Unconscious"

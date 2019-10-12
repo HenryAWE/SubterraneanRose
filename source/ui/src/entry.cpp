@@ -11,12 +11,16 @@
 #include <sr/core/init.h>
 #include <sr/wm/display.h>
 #include <sr/ui/entry.h>
-#include "main_loop.hpp"
 #include <sr/ui/console/progopt.h>
+#include "main_loop.hpp"
+#include "i18n/i18n.hpp"
 
 
 int SRSCALL program_entry(int argc, char* argv[])
 {
+    using namespace srose::ui;
+    LoadAllLanguage("locale");
+
     if(SR_UI_CONSOLE_ParseArg(argc, argv) == 1)
     {
         return EXIT_SUCCESS;
@@ -34,7 +38,10 @@ int SRSCALL program_entry(int argc, char* argv[])
 
     int window_flags = 0;
     window_flags |= SR_UI_CONSOLE_FullscreenRequired()?SDL_WINDOW_FULLSCREEN:0;
-    SR_WM_display* display = SR_WM_CreateDisplay("Subterranean Rose", window_flags);
+    SR_WM_display* display = SR_WM_CreateDisplay(
+        srose::ui::GetDefaultLanguage()->gettext("srose", "Subterranean Rose").c_str(),
+        window_flags
+    );
     if(!display)
     {
         exit_code = EXIT_FAILURE;
