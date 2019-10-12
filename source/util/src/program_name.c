@@ -8,7 +8,9 @@
 #include <string.h>
 #include <SDL_platform.h>
 #include <SDL_syswm.h>
-#include <unistd.h>
+#ifndef __WINDOWS__
+#   include <unistd.h>
+#endif
 
 
 const char* SRSCALL SR_UTIL_GetProgramName()
