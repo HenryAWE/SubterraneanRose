@@ -9,10 +9,20 @@
 #include <SDL.h>
 #include <sr/core/version_info.h>
 #include <sr/util/open_in_browser.h>
+#include "../i18n/i18n.hpp"
 
 
 namespace srose::ui::main_menu
 {
+    void SRSCALL LoadStrings(MainMenuBarContext* ctx)
+    {
+        assert(ctx);
+        ctx->file = GetDefaultLanguage()->gettext("srose.ui.main-menu.file", "File") + "##SRMMB";
+        ctx->window = GetDefaultLanguage()->gettext("srose.ui.main-menu.window", "Window") + "##SRMMB";
+        ctx->dev = GetDefaultLanguage()->gettext("srose.ui.main-menu.dev", "Developer") + "##SRMMB";
+        ctx->help = GetDefaultLanguage()->gettext("srose.ui.main-menu.help", "Help") + "##SRMMB";
+    }
+
     static void SRSCALL AboutPopup(MainMenuBarContext* ctx)
     {
         ImGui::SetNextWindowPosCenter(true);
@@ -53,7 +63,7 @@ namespace srose::ui::main_menu
             ImGui::Separator();
             /*---------- */
 
-            if(ImGui::BeginMenu("File##SRMMB"))
+            if(ImGui::BeginMenu(ctx->file.c_str()))
             {
                 if(ImGui::MenuItem("Quit"))
                 {
@@ -64,7 +74,7 @@ namespace srose::ui::main_menu
 
                 ImGui::EndMenu();
             }
-            if(ImGui::BeginMenu("Window##SRMMB"))
+            if(ImGui::BeginMenu(ctx->window.c_str()))
             {
                 if(ImGui::MenuItem("Toggle fullscreen"))
                 {
@@ -76,13 +86,13 @@ namespace srose::ui::main_menu
 
                 ImGui::EndMenu();
             }
-            if(ImGui::BeginMenu("Developer##SRMMB"))
+            if(ImGui::BeginMenu(ctx->dev.c_str()))
             {
                 if(ImGui::Checkbox("Show ImGui demo", &ctx->show_imgui_demo)){}
 
                 ImGui::EndMenu();
             }
-            if(ImGui::BeginMenu("Help##SRMMB"))
+            if(ImGui::BeginMenu(ctx->help.c_str()))
             {
                 if(ImGui::MenuItem("Home page"))
                 {

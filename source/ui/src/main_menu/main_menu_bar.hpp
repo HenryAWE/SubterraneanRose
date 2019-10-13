@@ -7,6 +7,7 @@
 #ifndef SROSE_UI_MAIN_MENU_main_menu_bar_hpp_
 #define SROSE_UI_MAIN_MENU_main_menu_bar_hpp_
 
+#include <string>
 #include <sr/core/macros.h>
 #include <sr/wm/display.h>
 
@@ -17,7 +18,10 @@ namespace srose::ui::main_menu
     {
         bool show_about = false;
         bool show_imgui_demo = false;
+        std::string file, window, dev, help;
     };
+
+    void SRSCALL LoadStrings(MainMenuBarContext* ctx);
 
     /**
      * @brief Main menu
