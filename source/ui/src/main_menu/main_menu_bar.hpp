@@ -18,7 +18,10 @@ namespace srose::ui::main_menu
     {
         bool show_about = false;
         bool show_imgui_demo = false;
-        std::string file, window, dev, help;
+        std::string file, quit;
+        std::string window, toggle_screen;
+        std::string dev;
+        std::string help, home_page, about_sr;
     };
 
     void SRSCALL LoadStrings(MainMenuBarContext* ctx);

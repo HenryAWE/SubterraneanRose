@@ -18,9 +18,13 @@ namespace srose::ui::main_menu
     {
         assert(ctx);
         ctx->file = GetDefaultLanguage()->gettext("srose.ui.main-menu.file", "File") + "##SRMMB";
+        ctx->quit = GetDefaultLanguage()->gettext("srose.ui.main-menu.file.quit", "Quit");
         ctx->window = GetDefaultLanguage()->gettext("srose.ui.main-menu.window", "Window") + "##SRMMB";
+        ctx->toggle_screen = GetDefaultLanguage()->gettext("srose.ui.main-menu.window.toggle-screen", "Toggle Fullscreen");
         ctx->dev = GetDefaultLanguage()->gettext("srose.ui.main-menu.dev", "Developer") + "##SRMMB";
         ctx->help = GetDefaultLanguage()->gettext("srose.ui.main-menu.help", "Help") + "##SRMMB";
+        ctx->home_page = GetDefaultLanguage()->gettext("srose.ui.main-menu.help.home-page", "Home page");
+        ctx->about_sr = GetDefaultLanguage()->gettext("srose.ui.main-menu.help.about-sr", "About");
     }
 
     static void SRSCALL AboutPopup(MainMenuBarContext* ctx)
@@ -65,7 +69,7 @@ namespace srose::ui::main_menu
 
             if(ImGui::BeginMenu(ctx->file.c_str()))
             {
-                if(ImGui::MenuItem("Quit"))
+                if(ImGui::MenuItem(ctx->quit.c_str()))
                 {
                     SDL_Event quit_event{};
                     quit_event.type = SDL_QUIT;
@@ -76,7 +80,7 @@ namespace srose::ui::main_menu
             }
             if(ImGui::BeginMenu(ctx->window.c_str()))
             {
-                if(ImGui::MenuItem("Toggle fullscreen"))
+                if(ImGui::MenuItem(ctx->toggle_screen.c_str()))
                 {
                     SDL_SetWindowFullscreen(
                         display->win,
@@ -88,18 +92,18 @@ namespace srose::ui::main_menu
             }
             if(ImGui::BeginMenu(ctx->dev.c_str()))
             {
-                if(ImGui::Checkbox("Show ImGui demo", &ctx->show_imgui_demo)){}
+                if(ImGui::Checkbox("Dear ImGui Demo", &ctx->show_imgui_demo)){}
 
                 ImGui::EndMenu();
             }
             if(ImGui::BeginMenu(ctx->help.c_str()))
             {
-                if(ImGui::MenuItem("Home page"))
+                if(ImGui::MenuItem(ctx->home_page.c_str()))
                 {
                     SR_UTIL_OpenInBrowser("https://github.com/HenryAWE/SubterraneanRose");
                 }
 
-                if(ImGui::MenuItem("About"))
+                if(ImGui::MenuItem(ctx->about_sr.c_str()))
                     ctx->show_about = true;
                 ImGui::EndMenu();
             }
