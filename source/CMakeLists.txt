@@ -36,8 +36,7 @@ add_subdirectory(./ui)
 
 
 # Executable
-aux_source_directory(. src_list)
-add_executable("srose-exec" ${src_list})
+add_executable("srose-exec" main.c subsystem.c)
 
 target_link_libraries("srose-exec" PRIVATE SDL2::SDL2 SDL2::SDL2main)
 target_link_libraries("srose-exec" PRIVATE "srose-core")
