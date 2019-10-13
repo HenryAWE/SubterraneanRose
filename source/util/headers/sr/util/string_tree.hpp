@@ -12,6 +12,7 @@
 #include <optional>
 #include <utility>
 #include <algorithm>
+#include <assert.h>
 #include "string_tree_fwd.hpp"
 
 
@@ -88,6 +89,8 @@ namespace srose::util
         void merge(self_type& other)
         {
             m_children.merge(other.m_children);
+            for(auto& i : other)
+                m_children[i.first].merge(i.second);
             if(!m_data.has_value())
                 m_data = std::move(other.m_data);
         }
@@ -99,6 +102,8 @@ namespace srose::util
         void merge(self_type&& other)
         {
             m_children.merge(other.m_children);
+            for(auto& i : other)
+                m_children[i.first].merge(std::move(i.second));
             if(!m_data.has_value())
                 m_data = std::move(other.m_data);
         }
