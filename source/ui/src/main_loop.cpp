@@ -21,7 +21,7 @@ int SRSCALL main_loop(SR_WM_display* display)
     using namespace srose;
     using namespace srose::ui;
 
-    srose::gpu::opengl3::renderer renderer;
+    srose::gpu::opengl3::Renderer renderer(display);
 
     main_menu::MainMenuBarContext main_menu_ctx{};
     main_menu::LoadStrings(&main_menu_ctx);
@@ -42,7 +42,7 @@ int SRSCALL main_loop(SR_WM_display* display)
         /*Rendering */
         renderer.ClearScreen(glm::vec4{0, 0, 0, 1});
         SR_WM_RenderFrame();
-        SDL_GL_SwapWindow(display->win);
+        renderer.Present();
     }
 
     return EXIT_SUCCESS;

@@ -8,3 +8,4 @@ target_include_directories("srose-gpu-opengl3" PUBLIC ./glm)
 
 target_link_libraries("srose-gpu-opengl3" PUBLIC "srose-core")
 target_link_libraries("srose-gpu-opengl3" PUBLIC "srose-util")
+target_link_libraries("srose-gpu-opengl3" PUBLIC "srose-wm")
