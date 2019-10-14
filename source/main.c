@@ -5,11 +5,12 @@
  */
 
 #include <sr/ui/entry.h>
+#include <SDL_main.h>
 #include <SDL_syswm.h>
 
 
 /*Program entry */
-int SDL_main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 #ifdef __WINDOWS__
     BOOL attached = AttachConsole(ATTACH_PARENT_PROCESS);
