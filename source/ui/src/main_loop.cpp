@@ -11,18 +11,21 @@
 #include <imgui.h>
 #include "main_menu/main_menu_bar.hpp"
 #include <sr/gpu/opengl3/texture.hpp>
+#include <sr/gpu/opengl3/renderer.hpp>
 #include <sr/locale/locale.hpp>
 #include "i18n/i18n.hpp"
 
 
 int SRSCALL main_loop(SR_WM_display* display)
 {
+    using namespace srose;
     using namespace srose::ui;
+
+    srose::gpu::opengl3::renderer renderer;
 
     main_menu::MainMenuBarContext main_menu_ctx{};
     main_menu::LoadStrings(&main_menu_ctx);
 
-    glClearColor(0, 0, 0, 1);
     int loop = SDL_TRUE;
     while(loop)
     {
@@ -37,7 +40,7 @@ int SRSCALL main_loop(SR_WM_display* display)
         SR_WM_EndFrame();
 
         /*Rendering */
-        glClear(GL_COLOR_BUFFER_BIT);
+        renderer.ClearScreen(glm::vec4{0, 0, 0, 1});
         SR_WM_RenderFrame();
         SDL_GL_SwapWindow(display->win);
     }
