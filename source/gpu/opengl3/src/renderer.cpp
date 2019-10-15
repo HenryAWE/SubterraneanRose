@@ -7,9 +7,7 @@
 #include <sr/gpu/opengl3/renderer.hpp>
 #include <glad/glad.h>
 #include <SDL.h>
-#include <cassert>
-
-#define ASSERT_CTX() assert(SDL_GL_GetCurrentContext())
+#include "gl_assert.h"
 
 
 namespace srose::gpu::opengl3
@@ -17,7 +15,7 @@ namespace srose::gpu::opengl3
     Renderer::Renderer(SR_WM_display* disp)
         : m_disp(disp)
     {
-        ASSERT_CTX();
+        SR_ASSERT_CTX();
         SDL_LogInfo(
             SDL_LOG_CATEGORY_APPLICATION,
             "[OpenGL3] Renderer Information:\n%s",
@@ -27,7 +25,7 @@ namespace srose::gpu::opengl3
 
     void Renderer::ClearScreen(glm::vec4 color) noexcept
     {
-        ASSERT_CTX();
+        SR_ASSERT_CTX();
         glClearColor(color[0], color[1], color[2], color[3]);
         glClear(GL_COLOR_BUFFER_BIT);
     }
@@ -39,7 +37,7 @@ namespace srose::gpu::opengl3
 
     std::string Renderer::Information()
     {
-        ASSERT_CTX();
+        SR_ASSERT_CTX();
 
         using namespace std::literals;
         std::string info;
