@@ -7,8 +7,11 @@
 #ifndef SROSE_GPU_OPENGL3_renderer_hpp_
 #define SROSE_GPU_OPENGL3_renderer_hpp_
 
+#include <glad/glad.h>
+#include <string>
 #include <glm/glm.hpp>
 #include <sr/wm/display.h>
+#include "texture.hpp"
 
 
 namespace srose::gpu::opengl3
@@ -23,6 +26,8 @@ namespace srose::gpu::opengl3
         void ClearScreen(glm::vec4 color) noexcept;
 
         void Present() noexcept;
+
+        std::string Information();
     };
 } // namespace srose::gpu::opengl3
 

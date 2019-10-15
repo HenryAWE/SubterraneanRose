@@ -18,6 +18,11 @@ namespace srose::gpu::opengl3
         : m_disp(disp)
     {
         ASSERT_CTX();
+        SDL_LogInfo(
+            SDL_LOG_CATEGORY_APPLICATION,
+            "[OpenGL3] Renderer Information:\n%s",
+            Information().c_str()
+        );
     }
 
     void Renderer::ClearScreen(glm::vec4 color) noexcept
@@ -30,5 +35,18 @@ namespace srose::gpu::opengl3
     void Renderer::Present() noexcept
     {
         SDL_GL_SwapWindow(m_disp->win);
+    }
+
+    std::string Renderer::Information()
+    {
+        ASSERT_CTX();
+
+        using namespace std::literals;
+        std::string info;
+        info += "Vendor: "s + (const char*)glGetString(GL_VENDOR) + '\n';
+        info += "Renderer: "s + (const char*)glGetString(GL_RENDERER) + '\n';
+        info += "Version: "s + (const char*)glGetString(GL_VERSION) + '\n';
+
+        return std::move(info);
     }
 } // namespace srose::gpu::opengl3
