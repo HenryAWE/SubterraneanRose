@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 #include <sr/wm/display.h>
 #include "texture.hpp"
+#include "buffer.hpp"
 
 
 namespace srose::gpu::opengl3
