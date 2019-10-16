@@ -9,6 +9,11 @@
 
 namespace srose::gpu::opengl3
 {
+    ShaderProgram::~ShaderProgram() noexcept
+    {
+        Destroy();
+    }
+
     void ShaderProgram::Generate()
     {
         Destroy();

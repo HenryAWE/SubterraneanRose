@@ -23,6 +23,8 @@ namespace srose::gpu::opengl3
         ShaderProgram(ShaderProgram&& move) noexcept
             : m_handle(std::exchange(move.m_handle, 0)) {}
 
+        ~ShaderProgram() noexcept;
+
         void Generate();
 
         void Destroy() noexcept;
