@@ -5,6 +5,7 @@
  */
 
 #include <sr/gpu/opengl3/shader.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <SDL_log.h>
 #include "gl_assert.h"
 
@@ -88,5 +89,19 @@ namespace srose::gpu::opengl3
         glDeleteShader(frag);
 
         return status != 0;
+    }
+
+    ShaderProgram::loc_type ShaderProgram::UniformLocation(const char* name)
+    {
+        return glGetUniformLocation(m_handle, name);
+    }
+
+    void Uniform(GLint loc, const float (&v)[4])
+    {
+        glUniform4fv(loc, 1, v);
+    }
+    void Uniform(GLint loc, const glm::vec4& v)
+    {
+        glUniform4fv(loc, 1, glm::value_ptr(v));
     }
 } // namespace srose::gpu::opengl3
