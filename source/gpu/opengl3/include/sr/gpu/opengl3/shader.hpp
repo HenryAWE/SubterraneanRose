@@ -29,6 +29,8 @@ namespace srose::gpu::opengl3
 
         void Destroy() noexcept;
 
+        bool Compile(const char* vssrc, const char* fssrc);
+
         [[nodiscard]]
         constexpr handle_type handle() const noexcept { return m_handle; }
         [[nodiscard]]

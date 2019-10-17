@@ -13,6 +13,7 @@
 #include <sr/wm/display.h>
 #include "texture.hpp"
 #include "buffer.hpp"
+#include "shader.hpp"
 
 
 namespace srose::gpu::opengl3
