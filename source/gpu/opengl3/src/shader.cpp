@@ -96,12 +96,24 @@ namespace srose::gpu::opengl3
         return glGetUniformLocation(m_handle, name);
     }
 
+    void Uniform(GLint loc, float v0)
+    {
+        glUniform1f(loc, v0);
+        SR_ASSERT_GL();
+    }
     void Uniform(GLint loc, const float (&v)[4])
     {
         glUniform4fv(loc, 1, v);
+        SR_ASSERT_GL();
     }
     void Uniform(GLint loc, const glm::vec4& v)
     {
         glUniform4fv(loc, 1, glm::value_ptr(v));
+        SR_ASSERT_GL();
+    }
+    void Uniform(GLint loc, const glm::mat4& m)
+    {
+        glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(m));
+        SR_ASSERT_GL();
     }
 } // namespace srose::gpu::opengl3

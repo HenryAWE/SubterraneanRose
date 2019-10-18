@@ -44,8 +44,10 @@ namespace srose::gpu::opengl3
         handle_type m_handle = 0;
     };
 
+    void Uniform(GLint loc, float v0);
     void Uniform(GLint loc, const float (&v)[4]);
     void Uniform(GLint loc, const glm::vec4& v);
+    void Uniform(GLint loc, const glm::mat4& m);
 } // namespace srose::gpu::opengl3
 
 
