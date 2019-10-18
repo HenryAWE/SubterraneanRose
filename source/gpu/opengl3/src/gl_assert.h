@@ -12,5 +12,6 @@
 #include <SDL_video.h>
 
 #define SR_ASSERT_CTX() assert(SDL_GL_GetCurrentContext())
+#define SR_ASSERT_GL() assert(glGetError() == GL_NO_ERROR)
 
 #endif

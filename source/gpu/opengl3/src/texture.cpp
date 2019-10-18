@@ -9,6 +9,7 @@
 #include <cassert>
 #include <SDL.h>
 #include <stb_image.h>
+#include "gl_assert.h"
 
 
 namespace srose::gpu::opengl3
@@ -20,10 +21,12 @@ namespace srose::gpu::opengl3
 
     void Texture::Generate() noexcept
     {
+        SR_ASSERT_CTX();
         glGenTextures(1, &m_handle);
     }
     void Texture::Destroy() noexcept
     {
+        SR_ASSERT_CTX();
         if(m_handle)
             glDeleteTextures(1, &m_handle);
         m_handle = 0;
@@ -31,6 +34,8 @@ namespace srose::gpu::opengl3
 
     bool Texture::LoadFromFile(const char* path)
     {
+        SR_ASSERT_CTX();
+
         int width, height;
         stbi_uc* data = stbi_load(path, &width, &height, nullptr, STBI_rgb_alpha);
 
@@ -47,11 +52,10 @@ namespace srose::gpu::opengl3
             GL_UNSIGNED_BYTE,
             data
         );
-        assert(glGetError() == GL_NO_ERROR);
+        SR_ASSERT_GL();
         glGenerateMipmap(GL_TEXTURE_2D);
-        assert(glGetError() == GL_NO_ERROR);
+        SR_ASSERT_GL();
         glBindTexture(GL_TEXTURE_2D, 0);
-        assert(glGetError() == GL_NO_ERROR);
 
         m_size = {width, height};
 
