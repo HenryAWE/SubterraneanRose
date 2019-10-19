@@ -40,7 +40,7 @@ int SRSCALL main_loop(SR_WM_display* display)
         SR_WM_EndFrame();
 
         /*Rendering */
-        renderer.ClearScreen(glm::vec4{0, 0, 0, 1});
+        renderer.ClearScreen();
         SR_WM_RenderFrame();
         renderer.Present();
     }

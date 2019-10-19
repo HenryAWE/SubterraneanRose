@@ -23,7 +23,7 @@ namespace srose::gpu::opengl3
         );
     }
 
-    void Renderer::ClearScreen(glm::vec4 color) noexcept
+    void Renderer::ClearScreen(const glm::vec4& color) noexcept
     {
         SR_ASSERT_CTX();
         glClearColor(color[0], color[1], color[2], color[3]);
@@ -46,5 +46,10 @@ namespace srose::gpu::opengl3
         info += "Version: "s + (const char*)glGetString(GL_VERSION) + '\n';
 
         return std::move(info);
+    }
+
+    void Renderer::ClearScreen()
+    {
+        ClearScreen(GetCurrentColor());
     }
 } // namespace srose::gpu::opengl3

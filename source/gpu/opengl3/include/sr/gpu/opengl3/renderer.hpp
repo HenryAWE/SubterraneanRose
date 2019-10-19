@@ -11,6 +11,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <sr/wm/display.h>
+#include <sr/gpu/renderer.hpp>
 #include "texture.hpp"
 #include "buffer.hpp"
 #include "shader.hpp"
@@ -18,18 +19,20 @@
 
 namespace srose::gpu::opengl3
 {
-    class Renderer
+    class Renderer : public gpu::Renderer
     {
         SR_WM_display* m_disp = nullptr;
 
     public:
         Renderer(SR_WM_display* disp);
 
-        void ClearScreen(glm::vec4 color) noexcept;
+        void ClearScreen(const glm::vec4& color) noexcept;
 
         void Present() noexcept;
 
         std::string Information();
+
+        void ClearScreen() override;
     };
 } // namespace srose::gpu::opengl3
 
