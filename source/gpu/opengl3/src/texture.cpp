@@ -1,6 +1,6 @@
 /**
  * @file texture.cpp
- * @author your name (you@domain.com)
+ * @author HenryAWE
  * @brief OpenGL texture wrapper
  */
 
