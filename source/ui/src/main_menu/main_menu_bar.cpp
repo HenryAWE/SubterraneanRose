@@ -14,20 +14,86 @@
 
 namespace srose::ui::main_menu
 {
-    void SRSCALL LoadStrings(MainMenuBarContext* ctx)
+    MainMenuBar::MainMenuBar(SR_WM_display* disp)
+        : display(disp)
     {
-        assert(ctx);
-        ctx->file = GetDefaultLanguage()->gettext("srose.ui.main-menu.file", "File") + "##SRMMB";
-        ctx->quit = GetDefaultLanguage()->gettext("srose.ui.main-menu.file.quit", "Quit");
-        ctx->window = GetDefaultLanguage()->gettext("srose.ui.main-menu.window", "Window") + "##SRMMB";
-        ctx->toggle_screen = GetDefaultLanguage()->gettext("srose.ui.main-menu.window.toggle-screen", "Toggle Fullscreen");
-        ctx->dev = GetDefaultLanguage()->gettext("srose.ui.main-menu.dev", "Developer") + "##SRMMB";
-        ctx->help = GetDefaultLanguage()->gettext("srose.ui.main-menu.help", "Help") + "##SRMMB";
-        ctx->home_page = GetDefaultLanguage()->gettext("srose.ui.main-menu.help.home-page", "Home page");
-        ctx->about_sr = GetDefaultLanguage()->gettext("srose.ui.main-menu.help.about-sr", "About");
+        LoadStrings();
     }
 
-    static void SRSCALL AboutPopup(MainMenuBarContext* ctx)
+    void MainMenuBar::LoadStrings()
+    {
+       file = GetDefaultLanguage()->gettext("srose.ui.main-menu.file", "File") + "###MMBFile";
+       quit = GetDefaultLanguage()->gettext("srose.ui.main-menu.file.quit", "Quit") + "###MMBQuit";
+       window = GetDefaultLanguage()->gettext("srose.ui.main-menu.window", "Window") + "###MMBWindow";
+       toggle_screen = GetDefaultLanguage()->gettext("srose.ui.main-menu.window.toggle-screen", "Toggle Fullscreen") + "###MMBToggleScreen";
+       dev = GetDefaultLanguage()->gettext("srose.ui.main-menu.dev", "Developer") + "###MMBDev";
+       help = GetDefaultLanguage()->gettext("srose.ui.main-menu.help", "Help") + "###MMBHelp";
+       home_page = GetDefaultLanguage()->gettext("srose.ui.main-menu.help.home-page", "Home Page") + "###MMBHomePage";
+       about_sr = GetDefaultLanguage()->gettext("srose.ui.main-menu.help.about-sr", "About") + "###MMBAbout";
+    }
+
+    void MainMenuBar::Update()
+    {
+        if(!ImGui::BeginMainMenuBar())
+            return;
+        /*Brief version info */
+        ImGui::TextColored(
+            {0.01f, 0.549f, 0.85f, 1}, // Deep blue
+            "SR - %d.%d.%d",
+            SR_VERSION_MAJOR, SR_VERSION_MINOR, SR_VERSION_PATCH
+        );
+        ImGui::Separator();
+        /*---------- */
+
+        if(ImGui::BeginMenu(file.c_str()))
+        {
+            if(ImGui::MenuItem(quit.c_str()))
+            {
+                SDL_Event quit_event{};
+                quit_event.type = SDL_QUIT;
+                SDL_PushEvent(&quit_event);
+            }
+
+            ImGui::EndMenu();
+        }
+        if(ImGui::BeginMenu(window.c_str()))
+        {
+            if(ImGui::MenuItem(toggle_screen.c_str()))
+            {
+                SDL_SetWindowFullscreen(
+                    display->win,
+                    !(SDL_GetWindowFlags(display->win)&SDL_WINDOW_FULLSCREEN)
+                );
+            }
+
+            ImGui::EndMenu();
+        }
+        if(ImGui::BeginMenu(dev.c_str()))
+        {
+            if(ImGui::Checkbox("Dear ImGui Demo", &show_imgui_demo)){}
+
+            ImGui::EndMenu();
+        }
+        if(ImGui::BeginMenu(help.c_str()))
+        {
+            if(ImGui::MenuItem(home_page.c_str()))
+            {
+                SR_UTIL_OpenInBrowser("https://github.com/HenryAWE/SubterraneanRose");
+            }
+
+            if(ImGui::MenuItem(about_sr.c_str()))
+                show_about = true;
+            ImGui::EndMenu();
+        }
+
+        if(show_about)
+            ImGui::OpenPopup("About Subterranean Rose");
+        AboutPopup();
+
+        ImGui::EndMainMenuBar();
+    }
+
+    void MainMenuBar::AboutPopup()
     {
         ImGui::SetNextWindowPosCenter(true);
         if(ImGui::BeginPopupModal("About Subterranean Rose", nullptr, ImGuiWindowFlags_NoResize))
@@ -47,72 +113,10 @@ namespace srose::ui::main_menu
 
             if(ImGui::Button("OK"))
             {
-                ctx->show_about = false;
+                show_about = false;
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
-        }
-    }
-
-    void SRSCALL MainMenuBar(MainMenuBarContext* ctx, SR_WM_display* display)
-    {
-        if(ImGui::BeginMainMenuBar())
-        {
-            /*Brief version info */
-            ImGui::TextColored(
-                {0.01f, 0.549f, 0.85f, 1}, // Deep blue
-                "SR - %d.%d.%d",
-                SR_VERSION_MAJOR, SR_VERSION_MINOR, SR_VERSION_PATCH
-            );
-            ImGui::Separator();
-            /*---------- */
-
-            if(ImGui::BeginMenu(ctx->file.c_str()))
-            {
-                if(ImGui::MenuItem(ctx->quit.c_str()))
-                {
-                    SDL_Event quit_event{};
-                    quit_event.type = SDL_QUIT;
-                    SDL_PushEvent(&quit_event);
-                }
-
-                ImGui::EndMenu();
-            }
-            if(ImGui::BeginMenu(ctx->window.c_str()))
-            {
-                if(ImGui::MenuItem(ctx->toggle_screen.c_str()))
-                {
-                    SDL_SetWindowFullscreen(
-                        display->win,
-                        !(SDL_GetWindowFlags(display->win)&SDL_WINDOW_FULLSCREEN)
-                    );
-                }
-
-                ImGui::EndMenu();
-            }
-            if(ImGui::BeginMenu(ctx->dev.c_str()))
-            {
-                if(ImGui::Checkbox("Dear ImGui Demo", &ctx->show_imgui_demo)){}
-
-                ImGui::EndMenu();
-            }
-            if(ImGui::BeginMenu(ctx->help.c_str()))
-            {
-                if(ImGui::MenuItem(ctx->home_page.c_str()))
-                {
-                    SR_UTIL_OpenInBrowser("https://github.com/HenryAWE/SubterraneanRose");
-                }
-
-                if(ImGui::MenuItem(ctx->about_sr.c_str()))
-                    ctx->show_about = true;
-                ImGui::EndMenu();
-            }
-
-            if(ctx->show_about)
-                ImGui::OpenPopup("About Subterranean Rose");
-            AboutPopup(ctx);
-
-            ImGui::EndMainMenuBar();
         }
     }
 } // namespace srose::ui::main_menu

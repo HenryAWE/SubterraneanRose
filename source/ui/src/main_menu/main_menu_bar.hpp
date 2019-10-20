@@ -14,25 +14,26 @@
 
 namespace srose::ui::main_menu
 {
-    struct MainMenuBarContext
+    struct MainMenuBar
     {
+        SR_WM_display* display = nullptr;
+
         bool show_about = false;
         bool show_imgui_demo = false;
         std::string file, quit;
         std::string window, toggle_screen;
         std::string dev;
         std::string help, home_page, about_sr;
+
+        MainMenuBar(SR_WM_display* disp);
+
+        void LoadStrings();
+
+        void Update();
+
+    private:
+        void AboutPopup();
     };
-
-    void SRSCALL LoadStrings(MainMenuBarContext* ctx);
-
-    /**
-     * @brief Main menu
-     * 
-     * @param ctx Calling context
-     * @param display Window
-     */
-    void SRSCALL MainMenuBar(MainMenuBarContext* ctx, SR_WM_display* display);
 } // namespace srose::ui::main_menu
 
 

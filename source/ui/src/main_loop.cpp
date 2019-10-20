@@ -22,9 +22,7 @@ int SRSCALL main_loop(SR_WM_display* display)
     using namespace srose::ui;
 
     srose::gpu::opengl3::Renderer renderer(display);
-
-    main_menu::MainMenuBarContext main_menu_ctx{};
-    main_menu::LoadStrings(&main_menu_ctx);
+    main_menu::MainMenuBar main_menu(display);
 
     int loop = SDL_TRUE;
     while(loop)
@@ -33,10 +31,10 @@ int SRSCALL main_loop(SR_WM_display* display)
         loop = SR_WM_ProcessEvent();
         SR_WM_NewFrame();
 
-        main_menu::MainMenuBar(&main_menu_ctx, display);
+        main_menu.Update();
 
-        if(main_menu_ctx.show_imgui_demo)
-            ImGui::ShowDemoWindow();
+        if(main_menu.show_imgui_demo)
+            ImGui::ShowDemoWindow(&main_menu.show_imgui_demo);
         SR_WM_EndFrame();
 
         /*Rendering */
