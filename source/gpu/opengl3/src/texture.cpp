@@ -35,11 +35,21 @@ namespace srose::gpu::opengl3
     bool Texture::LoadFromFile(const char* path)
     {
         SR_ASSERT_CTX();
+        if(!m_handle) Generate();
 
         int width, height;
         stbi_uc* data = stbi_load(path, &width, &height, nullptr, STBI_rgb_alpha);
+        if(!data)
+        { // Load failed
+            SDL_LogError(
+                SDL_LOG_CATEGORY_APPLICATION,
+                "[OpenGL3] Load texture \"%s\" failed: %s",
+                path, stbi_failure_reason()
+            );
 
-        if(!m_handle) Generate();
+            return false;
+        }
+
         glBindTexture(GL_TEXTURE_2D, m_handle);
         glTexImage2D(
             GL_TEXTURE_2D,
