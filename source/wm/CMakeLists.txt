@@ -1,5 +1,4 @@
 # SubterraneanRose Window Manager Module
-find_package(imgui CONFIG REQUIRED)
 
 aux_source_directory(./src wm_src_list)
 aux_source_directory(./imgui imgui_src_list)
