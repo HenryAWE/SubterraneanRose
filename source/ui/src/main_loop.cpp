@@ -23,6 +23,7 @@ int SRSCALL main_loop(SR_WM_display* display)
 
     srose::gpu::opengl3::Renderer renderer(display);
     main_menu::MainMenuBar main_menu(display);
+    DebugUI dbg_ui(&main_menu.show_debug_ui);
 
     int loop = SDL_TRUE;
     while(loop)
@@ -35,6 +36,7 @@ int SRSCALL main_loop(SR_WM_display* display)
 
         if(main_menu.show_imgui_demo)
             ImGui::ShowDemoWindow(&main_menu.show_imgui_demo);
+        dbg_ui.Update();
         SR_WM_EndFrame();
 
         /*Rendering */

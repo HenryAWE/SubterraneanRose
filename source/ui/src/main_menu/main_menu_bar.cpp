@@ -71,6 +71,7 @@ namespace srose::ui::main_menu
         if(ImGui::BeginMenu(dev.c_str()))
         {
             if(ImGui::Checkbox("Dear ImGui Demo", &show_imgui_demo)){}
+            if(ImGui::Checkbox("Debug UI", &show_debug_ui)){}
 
             ImGui::EndMenu();
         }
