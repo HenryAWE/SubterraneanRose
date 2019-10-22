@@ -29,6 +29,7 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc,char* argv[]);
  * @return int 1 means fullscrenn mode is required
  */
 int SRSCALL SR_UI_CONSOLE_FullscreenRequired();
+int SRSCALL SR_UI_CONSOLE_DrawDebugOverlay();
 
 #ifndef __cplusplus
 }

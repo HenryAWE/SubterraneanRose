@@ -41,11 +41,16 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
         video.add_options()
             ("get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), "Get all available display mode(s) of the specific display");
 
+        po::options_description debug("Debug");
+        debug.add_options()
+            ("draw-debug-overlay", "Draw overlay debug UI");
+
         po::options_description total("Allowed options");
         total
             .add(generic)
             .add(display)
-            .add(video);
+            .add(video)
+            .add(debug);
 
         po::store(po::parse_command_line(argc, argv, total), *vm);
         po::notify(*vm);
@@ -143,6 +148,11 @@ int SRSCALL SR_UI_CONSOLE_FullscreenRequired()
     assert(vm&&"Call SR_UI_CONSOLE_ParseArg() first!!!");
     return (bool)vm->count("fullscreen");
 }
+int SRSCALL SR_UI_CONSOLE_DrawDebugOverlay()
+{
+    assert(vm&&"Call SR_UI_CONSOLE_ParseArg() first!!!");
+    return (bool)vm->count("draw-debug-overlay");
+}
 
 #else
 /*Dummy implementation for disabled CUI module */
@@ -166,5 +176,6 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
 }
 
 int SRSCALL SR_UI_CONSOLE_FullscreenRequired() { return false; }
+int SRSCALL SR_UI_CONSOLE_DrawDebugOverlay() { return false; }
 
 #endif

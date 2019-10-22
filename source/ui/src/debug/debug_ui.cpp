@@ -6,13 +6,18 @@
 
 #include "debug_ui.hpp"
 #include <imgui.h>
+#include <sr/ui/console/progopt.h>
 #include <sr/core/version_info.h>
+#include "../i18n/i18n.hpp"
 
 
 namespace srose::ui
 {
     DebugUI::DebugUI(bool* p_open)
-        : m_p_open(p_open) {}
+        : m_p_open(p_open)
+    {
+        draw_overlay = (bool)SR_UI_CONSOLE_DrawDebugOverlay();
+    }
 
     void DebugUI::Update()
     {
@@ -39,8 +44,8 @@ namespace srose::ui
 
     void DebugUI::DrawOverlay()
     {
-        ImGui::SetNextWindowSize(ImVec2(125.0f, 0.0f));
-        ImGui::SetNextWindowPos(ImVec2(15.0f, 15.0f));
+        ImGui::SetNextWindowSize(ImVec2(175.0f, 0.0f));
+        ImGui::SetNextWindowPos(ImVec2(15.0f, 25.0f));
         ImGui::SetNextWindowBgAlpha(0.35f);
         if(!ImGui::Begin(
             "Debug##SRDBG-OVERLAY",
@@ -49,6 +54,22 @@ namespace srose::ui
             ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoDecoration|ImGuiWindowFlags_NoResize
         )) return;
         ImGui::TextUnformatted("Debug Info");
+
+        if(ImGui::BeginTabBar("##TabBar"))
+        {
+            if(ImGui::BeginTabItem("i18n"))
+            {
+                ImGui::BulletText("Translation");
+
+                static auto name = GetDefaultLanguage()->gettext("srose.language.name", "<invalid>");
+                static auto iso = GetDefaultLanguage()->gettext("srose.language.iso", "<invalid>");
+                ImGui::TextWrapped("Default locale: %s (%s)", name.c_str(), iso.c_str());
+
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+        }
 
         ImGui::End();
     }
