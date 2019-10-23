@@ -19,10 +19,12 @@ configure_file(
     NEWLINE_STYLE LF
 )
 
+add_library("srose-glad" STATIC ./glad/glad.c)
+target_include_directories("srose-glad" PUBLIC ./glad)
 
-add_library("srose-core" STATIC ${core_src_list} ${CMAKE_CURRENT_BINARY_DIR}/git_info.c ./glad/glad.c)
+add_library("srose-core" STATIC ${core_src_list} ${CMAKE_CURRENT_BINARY_DIR}/git_info.c)
 target_include_directories("srose-core" PUBLIC ./include)
-target_include_directories("srose-core" PUBLIC ./glad)
+target_link_libraries("srose-core" PUBLIC "srose-glad")
 
 target_link_libraries("srose-core" PUBLIC SDL2::SDL2)
 target_link_libraries("srose-core" PUBLIC SDL2::SDL2_mixer)
