@@ -9,9 +9,6 @@ target_include_directories("srose-locale" PUBLIC ./include)
 target_link_libraries("srose-locale" PRIVATE Boost::locale)
 target_link_libraries("srose-locale" PUBLIC "srose-util-headers")
 target_link_libraries("srose-locale" PUBLIC "srose-core")
-# The stupid GCC cannot link to c++17 filesystem library automatically
-if(CMAKE_COMPILER_IS_GNUCXX)
-    target_link_libraries("srose-locale" PUBLIC stdc++fs)
-endif()
+target_link_libraries("srose-locale" PUBLIC "srose-fs")
 
 add_subdirectory(./test)

@@ -28,6 +28,7 @@ add_compile_definitions(SR_HOMEPAGE_URL=${CMAKE_PROJECT_HOMEPAGE_URL})
 # Libraries
 add_subdirectory(./core)
 add_subdirectory(./util)
+add_subdirectory(./fs)
 add_subdirectory(./wm)
 add_subdirectory(./gpu)
 add_subdirectory(./locale)
