@@ -15,6 +15,9 @@
 
 namespace srose::ui
 {
+    std::shared_ptr<locale::language> GetDefaultLanguageInternal();
+    std::shared_ptr<locale::language> GetNearestLanguageInternal(std::locale lc);
+
     static std::map<std::string, std::shared_ptr<locale::language>> g_lang_map;
     static std::shared_ptr<locale::language> g_default_lang;
 
@@ -40,16 +43,16 @@ namespace srose::ui
             return;
         }
 
-        g_default_lang = GetNearestLanguage(locale::get_system_locale());
+        g_default_lang = GetNearestLanguageInternal(locale::get_system_locale());
     }
 
-    std::shared_ptr<locale::language> GetDefaultLanguage()
+    std::shared_ptr<locale::language> GetDefaultLanguageInternal()
     {
         assert(g_default_lang);
         return g_default_lang;
     }
 
-    std::shared_ptr<locale::language> GetNearestLanguage(std::locale lc)
+    std::shared_ptr<locale::language> GetNearestLanguageInternal(std::locale lc)
     {
         auto& lc_info = std::use_facet<boost::locale::info>(lc);
         std::vector<std::pair<std::string, int>> lcs;
@@ -76,5 +79,14 @@ namespace srose::ui
         if(lcs.size() == 0) return g_lang_map["C"];
 
         return g_lang_map[lcs[0].first];
+    }
+
+    locale::language* GetDefaultLanguage() noexcept
+    {
+        return g_default_lang.get();
+    }
+    std::shared_ptr<locale::language> GetNearestLanguage(std::locale lc)
+    {
+        return std::move(GetNearestLanguageInternal(lc));
     }
 } // namespace srose::ui
