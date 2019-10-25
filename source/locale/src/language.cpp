@@ -30,6 +30,8 @@ namespace srose::locale
                     m_tr.merge(parse_stream(ifs));
             }
         }
+
+        LoadSpecStrings();
     }
 
     std::string language::gettext(std::string_view path)
@@ -40,5 +42,11 @@ namespace srose::locale
     {
         auto opt = m_tr.get_value_optional(path);
         return opt.has_value() ? *opt : std::string(alternate);
+    }
+
+    void language::LoadSpecStrings()
+    {
+        m_name = gettext("srose.language.name", "Default");
+        m_iso = gettext("srose.language.iso", "C");
     }
 } // namespace srose::locale
