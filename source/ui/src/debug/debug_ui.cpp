@@ -61,9 +61,10 @@ namespace srose::ui
             {
                 ImGui::BulletText("Translation");
 
-                static auto name = GetDefaultLanguage()->gettext("srose.language.name", "<invalid>");
-                static auto iso = GetDefaultLanguage()->gettext("srose.language.iso", "<invalid>");
-                ImGui::TextWrapped("Default locale: %s (%s)", name.c_str(), iso.c_str());
+                ImGui::TextWrapped("Default locale: %s (%s)",
+                    GetDefaultLanguage()->name().c_str(),
+                    GetDefaultLanguage()->iso().c_str()
+                );
 
                 ImGui::EndTabItem();
             }
