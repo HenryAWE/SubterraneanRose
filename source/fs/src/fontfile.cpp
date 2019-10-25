@@ -17,6 +17,12 @@ namespace srose::filesystem
             ext==".ttf"||ext==".TTF"||
             ext==".ttc"||ext==".TTC";
     }
+    static bool MatchFontFileExt(std::wstring_view ext)
+    {
+        return
+            ext==L".ttf"||ext==L".TTF"||
+            ext==L".ttc"||ext==L".TTC";
+    }
 
     static std::optional<path> IterateDirectory(const std::string& name, const path& location)
     {
