@@ -19,14 +19,26 @@ namespace srose::locale
     public:
         language();
         language(language&& move) noexcept
-            : m_tr(std::move(move.m_tr)) {}
+            : m_tr(std::move(move.m_tr)),
+            m_name(std::move(move.m_name)),
+            m_iso(std::move(move.m_iso)) {}
         language(const std::filesystem::path& directory);
 
+        [[nodiscard]]
         std::string gettext(std::string_view path);
+        [[nodiscard]]
         std::string gettext(std::string_view path, std::string_view alternate);
+
+        [[nodiscard]]
+        const std::string& name() const noexcept { return m_name; }
+        [[nodiscard]]
+        const std::string& iso() const noexcept { return m_iso; }
 
     private:
         util::string_tree<std::string> m_tr;
+        std::string m_name, m_iso;
+
+        void LoadSpecStrings();
     };
 } // namespace srose::locale
 

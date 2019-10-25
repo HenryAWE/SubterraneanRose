@@ -10,6 +10,7 @@
 #include <string>
 #include <sr/core/macros.h>
 #include <sr/wm/display.h>
+#include "../debug/debug_ui.hpp"
 
 
 namespace srose::ui::main_menu
@@ -20,6 +21,7 @@ namespace srose::ui::main_menu
 
         bool show_about = false;
         bool show_imgui_demo = false;
+        bool show_debug_ui = false;
         std::string file, quit;
         std::string window, toggle_screen;
         std::string dev;

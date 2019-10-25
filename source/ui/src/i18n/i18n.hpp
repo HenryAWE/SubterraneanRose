@@ -15,7 +15,7 @@ namespace srose::ui
 {
     void LoadAllLanguage(const std::filesystem::path& lcres);
 
-    std::shared_ptr<locale::language> GetDefaultLanguage();
+    locale::language* GetDefaultLanguage() noexcept;
     std::shared_ptr<locale::language> GetNearestLanguage(std::locale lc);
 } // namespace srose::ui
 
