@@ -14,16 +14,17 @@
 #include <sr/wm/display.h>
 #include <sr/ui/entry.h>
 #include <sr/ui/console/progopt.h>
+#include <sr/filesystem/fontfile.hpp>
 #include "main_loop.hpp"
 #include "i18n/i18n.hpp"
+
 
 static void SRSCALL LoadFonts()
 {
     auto& io = ImGui::GetIO();
-#ifdef __WINDOWS__
-    if(std::filesystem::exists("C:\\Windows\\Fonts\\ARIALUNI.TTF"))
-        io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\ARIALUNI.TTF", 22.5f, nullptr, io.Fonts->GetGlyphRangesChineseFull());
-#endif
+    auto arialuni = srose::filesystem::GetFont("ARIALUNI");
+    if(arialuni)
+        io.Fonts->AddFontFromFileTTF(arialuni->string().c_str(), 22.5f, nullptr, io.Fonts->GetGlyphRangesChineseFull());
     io.Fonts->AddFontDefault();
     io.Fonts->Build();
 }
