@@ -24,7 +24,10 @@ namespace srose::ui
         if(m_p_open&&*m_p_open == false)
             goto proc_children;
         if(!ImGui::Begin("Debug##SRDBG", m_p_open))
+        {
+            ImGui::End();
             goto proc_children;
+        }
 
         ImGui::Text(
             "Program Version %d.%d.%d - %s",
