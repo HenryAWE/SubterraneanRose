@@ -49,17 +49,17 @@ int SRSCALL program_entry(int argc, char* argv[])
     {
         return EXIT_SUCCESS;
     }
-    int exit_code = EXIT_SUCCESS;
 
-    if(SR_CORE_InitSDL(SDL_TRUE) != 0)
-    {
-        return exit_code;
+    if(SR_CORE_Init(argc, argv, true) != 0)
+    { // Init failed
+        return EXIT_FAILURE;
     }
     else
     {
         at_quick_exit(&SR_CORE_QuitSDL); // We'll handle deinitialization on normal exit
     }
 
+    int exit_code = EXIT_SUCCESS;
     int window_flags = 0;
     window_flags |= SR_UI_CONSOLE_FullscreenRequired()?SDL_WINDOW_FULLSCREEN:0;
     SR_WM_display* display = SR_WM_CreateDisplay(

@@ -107,14 +107,14 @@ void SRSCALL SR_CORE_QuitSDL(void)
     SDL_Quit();
 }
 
+// Global variables make it easy to access the console argument
+// Declared in args.c
+extern int sr_argc;
+extern char** sr_argv;
+
 int SRSCALL SR_CORE_Init(int argc, char* argv[], int msgbox_on_error)
 {
-    printf(
-        "Subterranean Rose Project:\n"
-        "  Version %s - %s\n\n"
-        "  Please visit https://github.com/HenryAWE/SubterraneanRose for more up-to-date information",
-        SR_CORE_GetVersionString(), SR_CORE_GitCommitShortID()
-    );
+    sr_argc = argc; sr_argv = argv;
     if(SR_CORE_InitSDL(msgbox_on_error) != 0)
     {
         return -1;

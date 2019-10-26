@@ -8,6 +8,7 @@
 #include <imgui.h>
 #include <sr/ui/console/progopt.h>
 #include <sr/core/version_info.h>
+#include <sr/core/args.h>
 #include "../i18n/i18n.hpp"
 
 
@@ -37,7 +38,16 @@ namespace srose::ui
         ImGui::Separator();
 
         ImGui::Checkbox("Draw Overlay", &draw_overlay);
-        
+        ImGui::Separator();
+
+        ImGui::TextWrapped("Console argument(s)");
+        for(int i = 0; i < SR_CORE_GetArgc(); ++i)
+        {
+            ImGui::TextDisabled("argv[%d]", i);
+            ImGui::SameLine();
+            ImGui::TextWrapped("\"%s\"", SR_CORE_GetArgv()[i]);
+        }
+
         ImGui::End();
 
     proc_children:
