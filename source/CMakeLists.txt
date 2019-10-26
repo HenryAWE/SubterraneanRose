@@ -24,6 +24,9 @@ add_compile_definitions(SR_VERSION_PATCH=${CMAKE_PROJECT_VERSION_PATCH})
 
 add_compile_definitions(SR_HOMEPAGE_URL=${CMAKE_PROJECT_HOMEPAGE_URL})
 
+# Dependencies
+add_subdirectory(./ext)
+
 
 # Libraries
 add_subdirectory(./core)
