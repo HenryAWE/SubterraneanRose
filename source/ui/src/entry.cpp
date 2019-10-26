@@ -33,7 +33,16 @@ static void SRSCALL LoadFonts()
 int SRSCALL program_entry(int argc, char* argv[])
 {
     using namespace srose::ui;
-    std::filesystem::current_path(std::filesystem::u8path(argv[0]).parent_path());
+    std::error_code ec = {};
+    std::filesystem::current_path(std::filesystem::u8path(argv[0]).parent_path(), ec);
+    if (ec)
+    {
+        SDL_LogError(
+            SDL_LOG_CATEGORY_APPLICATION,
+            "[UI] Set program executing path failed, use \"%s\" instead",
+            std::filesystem::current_path().u8string().c_str()
+        );
+    }
     auto lang_ready = std::async(std::launch::async, LoadAllLanguage, "locale");
 
     if(SR_UI_CONSOLE_ParseArg(argc, argv) == 1)
