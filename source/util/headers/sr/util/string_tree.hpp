@@ -57,13 +57,13 @@ namespace srose::util
     
     private:
         internal_data_type m_children; // Child nodes
-        mapped_type m_data; // Data stored by current nod
+        mapped_type m_data; // Data stored by current node
 
     public:
         basic_string_tree() = default;
         basic_string_tree(const basic_string_tree& rhs)
             : m_children(rhs.m_children), m_data(rhs.m_data) {}
-        basic_string_tree(basic_string_tree&& move)
+        basic_string_tree(basic_string_tree&& move) noexcept
             : m_children(std::move(move.m_children)), m_data(std::move(move.m_data)) {}
         basic_string_tree(value_type&& move)
             : m_children(), m_data(std::move(move)) {}
