@@ -157,7 +157,7 @@ int SRSCALL SR_UI_CONSOLE_DrawDebugOverlay()
 #else
 /*Dummy implementation for disabled CUI module */
 #pragma message("Use dummy implementation for CUI")
-#include <sr/core/macros.h>
+#include <sr/ui/console/progopt.h>
 #include <cstdio>
 
 
