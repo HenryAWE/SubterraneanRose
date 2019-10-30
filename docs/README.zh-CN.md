@@ -5,12 +5,7 @@
 ## 关于
 - 你可以访问单独的页面以了解特定内容  
 1. [国际化（i18n）](./i18n.zh-CN.md)：包含内容翻译以及其它相关内容
-
-## 依赖
-- [SDL](https://www.libsdl.org/)
-- [SDL_mixer](https://www.libsdl.org/projects/SDL_mixer/)
-- [GLAD](https://glad.dav1d.de/)
-- [Dear ImGui](https://github.com/Tyyppi77/imgui_sdl)
+2. [构建与安装](./build.zh-CN.md)：构建与安装项目
 
 ## 我们的目标
 - 开源
