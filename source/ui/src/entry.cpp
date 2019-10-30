@@ -1,7 +1,7 @@
 /**
- * @file entry_windows.cpp
+ * @file entry.cpp
  * @author HenryAWE
- * @brief Program entry on windows desktop
+ * @brief Program entry on PC like Windows, OSX, Linux
  */
 
 #include <assert.h>

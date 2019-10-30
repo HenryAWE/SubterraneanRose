@@ -1,7 +1,7 @@
 /**
  * @file main_loop.cpp
  * @author HenryAWE
- * @brief 
+ * @brief Main loop
  */
 
 #include <glad/glad.h>
