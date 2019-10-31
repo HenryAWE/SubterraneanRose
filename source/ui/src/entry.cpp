@@ -14,7 +14,7 @@
 #include <sr/wm/display.h>
 #include <sr/ui/entry.h>
 #include <sr/ui/console/progopt.h>
-#include <sr/filesystem/fontfile.hpp>
+#include <sr/filesystem/filesystem.hpp>
 #include "main_loop.hpp"
 #include "i18n/i18n.hpp"
 
@@ -32,7 +32,9 @@ static void SRSCALL LoadFonts()
 
 int SRSCALL program_entry(int argc, char* argv[])
 {
+    using namespace srose;
     using namespace srose::ui;
+
     std::error_code ec = {};
     std::filesystem::current_path(std::filesystem::u8path(argv[0]).parent_path(), ec);
     if (ec)
@@ -43,7 +45,7 @@ int SRSCALL program_entry(int argc, char* argv[])
             std::filesystem::current_path().u8string().c_str()
         );
     }
-    auto lang_ready = std::async(std::launch::async, LoadAllLanguage, "locale");
+    auto lang_ready = std::async(std::launch::async, LoadAllLanguage, filesystem::GetLocaleFolder());
 
     if(SR_UI_CONSOLE_ParseArg(argc, argv) == 1)
     {

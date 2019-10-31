@@ -9,6 +9,7 @@
 
 #include <filesystem>
 #include "fontfile.hpp"
+#include "common.hpp"
 
 
 namespace srose::filesystem
