@@ -23,16 +23,16 @@ namespace srose::ui
     /**
      * @brief Get the default language
      * 
-     * @return locale::language* The pointer to the default language (never null)
+     * @return locale::Language* The pointer to the default language (never null)
      */
-    locale::language* GetDefaultLanguage() noexcept;
+    locale::Language* GetDefaultLanguage() noexcept;
     /**
      * @brief Get the nearest language based on the specific locale
      * 
      * @param lc The specific locale
-     * @return std::shared_ptr<locale::language> The nearest language, or "C" on error
+     * @return std::shared_ptr<locale::Language> The nearest language, or "C" on error
      */
-    std::shared_ptr<locale::language> GetNearestLanguage(std::locale lc);
+    std::shared_ptr<locale::Language> GetNearestLanguage(std::locale lc);
 } // namespace srose::ui
 
 

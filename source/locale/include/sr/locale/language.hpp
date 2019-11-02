@@ -14,15 +14,15 @@
 
 namespace srose::locale
 {
-    class language
+    class Language
     {
     public:
-        language();
-        language(language&& move) noexcept
+        Language();
+        Language(Language&& move) noexcept
             : m_tr(std::move(move.m_tr)),
             m_name(std::move(move.m_name)),
             m_iso(std::move(move.m_iso)) {}
-        language(const std::filesystem::path& directory);
+        explicit Language(const std::filesystem::path& directory);
 
         [[nodiscard]]
         std::string gettext(std::string_view path);

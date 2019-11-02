@@ -11,11 +11,11 @@ int main()
     using namespace srose;
     using namespace srose::util;
 
-    locale::language default_lc;
+    locale::Language default_lc{};
     assert(default_lc.gettext("srose.language.name") == "Default");
     assert(default_lc.gettext("srose.language.iso") == "C");
 
-    locale::language en("./locale/en/");
+    locale::Language en("./locale/en/");
     assert(en.gettext("srose.language.name") == "English");
     assert(en.name() == "English");
     assert(en.iso() == "en");
@@ -25,7 +25,7 @@ int main()
 
     boost::locale::generator gen;
     std::locale::global(gen("zh-CN.UTF-8"));
-    locale::language zh_CN("./locale/zh-CN/");
+    locale::Language zh_CN("./locale/zh-CN/");
     assert(boost::locale::conv::utf_to_utf<wchar_t>(zh_CN.gettext("srose.language.name")) == L"简体中文");
     assert(zh_CN.gettext("srose.language.name") == "简体中文");
     assert(zh_CN.name() == "简体中文");

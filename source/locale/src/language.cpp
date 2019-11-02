@@ -11,13 +11,13 @@
 
 namespace srose::locale
 {
-    language::language()
+    Language::Language()
     {
         m_tr.emplace_at("srose.language.name", "Default");
         m_tr.emplace_at("srose.language.iso", "C");
     }
 
-    language::language(const std::filesystem::path& directory)
+    Language::Language(const std::filesystem::path& directory)
     {
         namespace fs = std::filesystem;
         fs::recursive_directory_iterator search(directory, fs::directory_options::skip_permission_denied);
@@ -34,17 +34,17 @@ namespace srose::locale
         LoadSpecStrings();
     }
 
-    std::string language::gettext(std::string_view path)
+    std::string Language::gettext(std::string_view path)
     {
         return m_tr.get_value(path);
     }
-    std::string language::gettext(std::string_view path, std::string_view alternate)
+    std::string Language::gettext(std::string_view path, std::string_view alternate)
     {
         auto opt = m_tr.get_value_optional(path);
         return opt.has_value() ? *opt : std::string(alternate);
     }
 
-    void language::LoadSpecStrings()
+    void Language::LoadSpecStrings()
     {
         m_name = gettext("srose.language.name", "Default");
         m_iso = gettext("srose.language.iso", "C");
