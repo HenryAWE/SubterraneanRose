@@ -6,6 +6,8 @@
 #include <boost/locale.hpp>
 
 
+void test_stream_operator(std::shared_ptr<srose::locale::Language> lang);
+
 int main()
 {
     using namespace srose;
@@ -49,5 +51,22 @@ int main()
         assert(false&&"Should not reach this line");
     }
 
+    test_stream_operator(std::make_shared<locale::Language>(std::move(zh_CN)));
+
     return EXIT_SUCCESS;
+}
+
+void test_stream_operator(std::shared_ptr<srose::locale::Language> lang)
+{
+    using namespace srose;
+    using namespace srose::locale;
+    std::locale lang_lc(std::locale(), new TranslationFacet(lang));
+    auto& tr = std::use_facet<TranslationFacet>(lang_lc).get();
+    assert(tr.name() == "简体中文");
+
+    std::stringstream ss;
+    ss.imbue(lang_lc);
+    assert(std::has_facet<TranslationFacet>(ss.getloc()));
+    ss << SRTR("srose.language.name");
+    assert(ss.str() == "简体中文");
 }

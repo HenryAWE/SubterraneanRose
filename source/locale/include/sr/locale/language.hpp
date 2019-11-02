@@ -10,6 +10,7 @@
 #include <utility>
 #include <filesystem>
 #include <sr/util/string_tree.hpp>
+#include <iosfwd>
 
 
 namespace srose::locale
@@ -43,7 +44,41 @@ namespace srose::locale
 
         void LoadSpecStrings();
     };
+
+    class TranslationFacet : public std::locale::facet
+    {
+        std::shared_ptr<Language> m_lang;
+    public:
+        static std::locale::id id;
+
+        TranslationFacet(const TranslationFacet&) = delete;
+        TranslationFacet(std::shared_ptr<Language> lang) noexcept
+            : m_lang(std::move(lang)) {}
+
+        [[nodiscard]]
+        Language& get() const noexcept { return *m_lang.get(); }
+    };
+
+    class TranslationHelper
+    {
+    public:
+        std::string_view path;
+
+        TranslationHelper(std::string_view path_) noexcept
+            : path(path_) {}
+
+        friend std::ostream& operator<<(std::ostream& os, TranslationHelper& helper)
+        {
+            auto& lc = os.getloc();
+            auto& tr = std::use_facet<TranslationFacet>(lc);
+            os << tr.get().gettext(helper.path);
+
+            return os;
+        }
+    };
 } // namespace srose::locale
+
+#define SRTR(path) (::srose::locale::TranslationHelper)(path)
 
 
 #endif

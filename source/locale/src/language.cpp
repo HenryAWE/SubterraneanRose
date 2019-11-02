@@ -59,4 +59,7 @@ namespace srose::locale
         m_iso = gettext("srose.language.iso", "C");
         m_default = m_tr.get_value_optional("srose.language.default");
     }
+
+    // Initiate static member
+    std::locale::id TranslationFacet::id;
 } // namespace srose::locale
