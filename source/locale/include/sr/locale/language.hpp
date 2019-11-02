@@ -33,10 +33,13 @@ namespace srose::locale
         const std::string& name() const noexcept { return m_name; }
         [[nodiscard]]
         const std::string& iso() const noexcept { return m_iso; }
+        [[nodiscard]]
+        const std::optional<std::string>& default_str() const noexcept { return m_default; }
 
     private:
         util::string_tree<std::string> m_tr;
         std::string m_name, m_iso;
+        std::optional<std::string> m_default;
 
         void LoadSpecStrings();
     };

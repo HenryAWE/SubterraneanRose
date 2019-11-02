@@ -36,7 +36,16 @@ namespace srose::locale
 
     std::string Language::gettext(std::string_view path)
     {
-        return m_tr.get_value(path);
+        if(m_default.has_value())
+        {
+            auto opt = m_tr.get_value_optional(path);
+            assert(m_default.has_value());
+            return opt.has_value()? *opt : *m_default;
+        }
+        else
+        {
+            return m_tr.get_value(path);
+        }
     }
     std::string Language::gettext(std::string_view path, std::string_view alternate)
     {
@@ -48,5 +57,6 @@ namespace srose::locale
     {
         m_name = gettext("srose.language.name", "Default");
         m_iso = gettext("srose.language.iso", "C");
+        m_default = m_tr.get_value_optional("srose.language.default");
     }
 } // namespace srose::locale
