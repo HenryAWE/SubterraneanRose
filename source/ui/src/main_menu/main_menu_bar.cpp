@@ -22,14 +22,14 @@ namespace srose::ui::main_menu
 
     void MainMenuBar::LoadStrings()
     {
-       file = GetDefaultLanguage()->gettext("srose.ui.main-menu.file", "File") + "###MMBFile";
-       quit = GetDefaultLanguage()->gettext("srose.ui.main-menu.file.quit", "Quit") + "###MMBQuit";
-       window = GetDefaultLanguage()->gettext("srose.ui.main-menu.window", "Window") + "###MMBWindow";
-       toggle_screen = GetDefaultLanguage()->gettext("srose.ui.main-menu.window.toggle-screen", "Toggle Fullscreen") + "###MMBToggleScreen";
-       dev = GetDefaultLanguage()->gettext("srose.ui.main-menu.dev", "Developer") + "###MMBDev";
-       help = GetDefaultLanguage()->gettext("srose.ui.main-menu.help", "Help") + "###MMBHelp";
-       home_page = GetDefaultLanguage()->gettext("srose.ui.main-menu.help.home-page", "Home Page") + "###MMBHomePage";
-       about_sr = GetDefaultLanguage()->gettext("srose.ui.main-menu.help.about-sr", "About") + "###MMBAbout";
+       file = GetDefaultLanguage()->gettext("srose.ui.main-menu.file") + "###MMBFile";
+       quit = GetDefaultLanguage()->gettext("srose.ui.main-menu.file.quit") + "###MMBQuit";
+       window = GetDefaultLanguage()->gettext("srose.ui.main-menu.window") + "###MMBWindow";
+       toggle_screen = GetDefaultLanguage()->gettext("srose.ui.main-menu.window.toggle-screen") + "###MMBToggleScreen";
+       dev = GetDefaultLanguage()->gettext("srose.ui.main-menu.dev") + "###MMBDev";
+       help = GetDefaultLanguage()->gettext("srose.ui.main-menu.help") + "###MMBHelp";
+       home_page = GetDefaultLanguage()->gettext("srose.ui.main-menu.help.home-page") + "###MMBHomePage";
+       about_sr = GetDefaultLanguage()->gettext("srose.ui.main-menu.help.about-sr") + "###MMBAbout";
     }
 
     void MainMenuBar::Update()

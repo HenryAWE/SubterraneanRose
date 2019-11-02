@@ -1,0 +1,10 @@
+# User Interface
+
+@srose.ui.main-menu.file = "File"
+@srose.ui.main-menu.file.quit = "Quit"
+@srose.ui.main-menu.window = "Window"
+@srose.ui.main-menu.window.toggle-screen = "Toggle Fullscreen"
+@srose.ui.main-menu.dev = "Developer"
+@srose.ui.main-menu.help = "Help"
+@srose.ui.main-menu.help.home-page = "Home Page"
+@srose.ui.main-menu.help.about-sr = "About"
