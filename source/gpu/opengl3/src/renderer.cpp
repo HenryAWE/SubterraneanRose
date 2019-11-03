@@ -30,8 +30,9 @@ namespace srose::gpu::opengl3
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void Renderer::Present() noexcept
+    void Renderer::Present()
     {
+        SR_ASSERT_CTX();
         SDL_GL_SwapWindow(m_disp->win);
     }
 

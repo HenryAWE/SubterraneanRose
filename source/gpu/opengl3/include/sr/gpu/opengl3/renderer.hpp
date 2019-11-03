@@ -28,7 +28,7 @@ namespace srose::gpu::opengl3
 
         void ClearScreen(const glm::vec4& color) noexcept;
 
-        void Present() noexcept;
+        void Present() override;
 
         std::string Information();
 

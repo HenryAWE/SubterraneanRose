@@ -30,6 +30,7 @@ namespace srose::gpu
         const glm::vec4& GetCurrentColor() const noexcept;
 
         virtual void ClearScreen() = 0;
+        virtual void Present() {}
     };
 } // namespace srose::gpu
 
