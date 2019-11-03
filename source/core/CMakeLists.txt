@@ -1,6 +1,5 @@
 # SubterraneanRose Core Module
 find_package(SDL2 CONFIG REQUIRED)
-find_package(sdl2-mixer CONFIG REQUIRED)
 
 aux_source_directory(./src core_src_list)
 # Generate GIT information in C source
@@ -24,5 +23,3 @@ target_include_directories("srose-core" PUBLIC ./include)
 target_link_libraries("srose-core" PUBLIC "srose-ext-glad")
 
 target_link_libraries("srose-core" PUBLIC SDL2::SDL2)
-target_link_libraries("srose-core" PUBLIC SDL2::SDL2_mixer)
-

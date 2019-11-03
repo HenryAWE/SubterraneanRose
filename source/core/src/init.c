@@ -48,42 +48,58 @@ int SRSCALL SR_CORE_InitSDL(int msgbox_on_err)
         VERSION_NUMBER_2_ARG(sdl_version_linked)
     );
 
-    if (Mix_Init(MIX_INIT_FLAC | MIX_INIT_MP3 | MIX_INIT_OGG) == 0)
+    if(SR_CORE_OpenAudio(NULL, NULL) == -1)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+static SDL_AudioSpec obtained;
+static SDL_AudioDeviceID dev;
+
+int SRSCALL SR_CORE_OpenAudio(SDL_AudioCallback callback, void* user)
+{
+    SDL_AudioSpec want;
+    memset(&want, 0, sizeof(want));
+
+    want.freq = SR_AUDIO_SAMPLE_RATE;
+    want.format = AUDIO_S16SYS;
+    want.channels = 2;
+    want.samples = 4096;
+    want.callback = callback;
+    want.userdata = user;
+
+    dev = SDL_OpenAudioDevice(NULL, 0, &want, &obtained, 0);
+    if(dev == 0)
     {
         SDL_LogError(
             SDL_LOG_CATEGORY_APPLICATION,
-            "[CORE] Mix_Init() failed: %s",
+            "[CORE] SDL_OpenAudioDevice() failed: %s",
             SDL_GetError()
         );
-        if(0)
-        {
-            SDL_ShowSimpleMessageBox(
-                SDL_MESSAGEBOX_ERROR,
-                "Mix_Init() failed",
-                SDL_GetError(),
-                NULL
-            );
-        }
-        // SDL_Quit();
 
-        // return 1;
+        return -1;
     }
 
-    SDL_version mixer_version;
-    const SDL_version* mixer_version_linked;
-    MIX_VERSION(&mixer_version);
-    mixer_version_linked = Mix_Linked_Version();
     SDL_LogInfo(
         SDL_LOG_CATEGORY_APPLICATION,
-        "[CORE] Mix_Init() success\n"
-        "Mixer Info:\n"
-        "  Version %d.%d.%d\n"
-        "  Runtime Version: %d.%d.%d",
-        VERSION_NUMBER_2_ARG(mixer_version),
-        VERSION_NUMBER_2_ARG(*mixer_version_linked)
+        "[CORE] SDL_OpenAudioDevice() succeeded\n"
+        "  Device ID: %u - \"%s\"\n"
+        "  Driver: %s",
+        dev-2,
+        SDL_GetAudioDeviceName(dev-2, 0),
+        SDL_GetCurrentAudioDriver()
     );
 
     return 0;
+}
+void SRSCALL SR_CORE_CloseAudio(void)
+{
+    if(dev > 1);
+    SDL_CloseAudioDevice(dev);
+    memset(&obtained, 0, sizeof(obtained));
 }
 
 int SRSCALL SR_CORE_InitGL(void)
@@ -103,7 +119,7 @@ int SRSCALL SR_CORE_InitGL(void)
 
 void SRSCALL SR_CORE_QuitSDL(void)
 {
-    Mix_Quit();
+    SR_CORE_CloseAudio();
     SDL_Quit();
 }
 
