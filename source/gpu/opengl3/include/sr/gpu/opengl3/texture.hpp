@@ -10,6 +10,7 @@
 #include <glad/glad.h>
 #include <filesystem>
 #include <utility>
+#include <sr/gpu/image.hpp>
 
 
 namespace srose::gpu::opengl3
@@ -17,7 +18,7 @@ namespace srose::gpu::opengl3
     /**
      * @brief OpenGL texture wrapper
      */
-    class Texture
+    class Texture : public gpu::Texture
     {
     public:
         typedef GLuint handle_type;
@@ -38,6 +39,9 @@ namespace srose::gpu::opengl3
         handle_type handle() const noexcept { return m_handle; }
 
         std::pair<int, int> size() const noexcept { return m_size; }
+
+        [[nodiscard]]
+        native_handle_type GetNativeHandle() const noexcept override { return (void*)(std::intptr_t)m_handle; }
 
     private:
         handle_type m_handle = 0;
