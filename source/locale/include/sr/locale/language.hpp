@@ -22,7 +22,8 @@ namespace srose::locale
         Language(Language&& move) noexcept
             : m_tr(std::move(move.m_tr)),
             m_name(std::move(move.m_name)),
-            m_iso(std::move(move.m_iso)) {}
+            m_iso(std::move(move.m_iso)),
+            m_default(std::move(move.m_default)) {}
         explicit Language(const std::filesystem::path& directory);
 
         [[nodiscard]]
@@ -75,10 +76,14 @@ namespace srose::locale
 
             return os;
         }
+
+        std::string str() const;
+
+        operator std::string() const { return str(); }
     };
 } // namespace srose::locale
 
-#define SRTR(path) (::srose::locale::TranslationHelper)(path)
+#define SRTR(path) ((::srose::locale::TranslationHelper)(path))
 
 
 #endif
