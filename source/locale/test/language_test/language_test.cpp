@@ -58,6 +58,9 @@ int main()
 
 void test_stream_operator(std::shared_ptr<srose::locale::Language> lang)
 {
+    assert(lang->default_str().has_value());
+    assert(*lang->default_str() == "（加载失败）");
+
     using namespace srose;
     using namespace srose::locale;
     std::locale lang_lc(std::locale(), new TranslationFacet(lang));
@@ -69,4 +72,9 @@ void test_stream_operator(std::shared_ptr<srose::locale::Language> lang)
     assert(std::has_facet<TranslationFacet>(ss.getloc()));
     ss << SRTR("srose.language.name");
     assert(ss.str() == "简体中文");
+
+    std::locale::global(lang_lc);
+    assert(SRTR("srose.language.name").str() == "简体中文");
+    std::string not_found = SRTR("@not.found");
+    assert(not_found == *lang->default_str());
 }

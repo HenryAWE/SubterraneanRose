@@ -7,6 +7,7 @@
 #include <sr/locale/language.hpp>
 #include <sr/locale/parser.hpp>
 #include <fstream>
+#include <sstream>
 
 
 namespace srose::locale
@@ -62,4 +63,9 @@ namespace srose::locale
 
     // Initiate static member
     std::locale::id TranslationFacet::id;
+
+    std::string TranslationHelper::str() const
+    {
+        return std::use_facet<TranslationFacet>(std::locale()).get().gettext(path);
+    }
 } // namespace srose::locale
