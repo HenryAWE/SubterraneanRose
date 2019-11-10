@@ -9,6 +9,7 @@
 
 #include <utility>
 #include <imgui.h>
+#include <sr/filesystem/filesystem.hpp>
 
 
 namespace srose::gpu
@@ -46,6 +47,15 @@ namespace srose::gpu
          * @return ImVec2 Size in pixels
          */
         ImVec2 GetSizeImVec2() const noexcept;
+
+        /**
+         * @brief Load a texture from file
+         * 
+         * @param file The texture file
+         * @return true Succeeded
+         * @return false Failed
+         */
+        virtual bool LoadFromFile(const filesystem::path& file) = 0;
     };
 } // namespace srose::gpu
 

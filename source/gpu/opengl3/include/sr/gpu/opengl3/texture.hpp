@@ -43,6 +43,8 @@ namespace srose::gpu::opengl3
         [[nodiscard]]
         native_handle_type GetNativeHandle() const noexcept override { return (void*)(std::intptr_t)m_handle; }
 
+        bool LoadFromFile(const filesystem::path& file) override;
+
     private:
         handle_type m_handle = 0;
         std::pair<int, int> m_size = {0, 0};

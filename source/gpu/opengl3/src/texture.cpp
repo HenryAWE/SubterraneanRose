@@ -73,4 +73,9 @@ namespace srose::gpu::opengl3
 
         return true;
     }
+
+    bool Texture::LoadFromFile(const filesystem::path& file)
+    {
+        return LoadFromFile(file.u8string().c_str());
+    }
 } // namespace srose::gpu::opengl3
