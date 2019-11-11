@@ -10,7 +10,7 @@
 #include <utility>
 #include <filesystem>
 #include <sr/util/string_tree.hpp>
-#include <iosfwd>
+#include <iostream>
 
 
 namespace srose::locale
@@ -68,9 +68,9 @@ namespace srose::locale
         TranslationHelper(std::string_view path_) noexcept
             : path(path_) {}
 
-        friend std::ostream& operator<<(std::ostream& os, TranslationHelper& helper)
+        friend std::ostream& operator<<(std::ostream& os, const TranslationHelper& helper)
         {
-            auto& lc = os.getloc();
+            auto lc = os.getloc();
             auto& tr = std::use_facet<TranslationFacet>(lc);
             os << tr.get().gettext(helper.path);
 
