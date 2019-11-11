@@ -28,3 +28,5 @@ if(${SROSE_ENABLE_CUI})
     target_link_libraries("srose-ui" PUBLIC Boost::program_options)
     target_compile_definitions("srose-ui" PUBLIC SR_ENABLE_CUI=1)
 endif()
+
+add_subdirectory(./test)
