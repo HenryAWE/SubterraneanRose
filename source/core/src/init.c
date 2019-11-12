@@ -7,7 +7,6 @@
 #include <glad/glad.h>
 #include <sr/core/init.h>
 #include <SDL.h>
-#include <SDL_mixer.h>
 #include <SDL_video.h>
 #include <sr/core/version_info.h>
 
