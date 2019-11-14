@@ -4,6 +4,7 @@ add_executable(
     language_test
     language_test.cpp
 )
+target_link_libraries(language_test PRIVATE "srose-test")
 target_link_libraries(language_test PRIVATE "srose-locale")
 target_link_libraries(language_test PRIVATE Boost::locale)
 

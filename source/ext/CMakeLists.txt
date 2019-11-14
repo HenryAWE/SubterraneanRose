@@ -60,3 +60,7 @@ target_link_libraries("srose-ext-ffmpeg" INTERFACE
     ${AVDEVICE_LIBRARY}
     ${SWSCALE_LIBRARY}
 )
+
+find_package(Boost REQUIRED QUIET COMPONENTS unit_test_framework)
+add_library("srose-test" INTERFACE)
+target_link_libraries("srose-test" INTERFACE Boost::unit_test_framework)

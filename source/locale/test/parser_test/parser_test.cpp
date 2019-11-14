@@ -1,7 +1,8 @@
 /* Test parser of the Subterranean Rose i18n module */
 
+#define BOOST_TEST_MODULE parser_test
+#include <boost/test/included/unit_test.hpp>
 #include <sr/locale/parser.hpp>
-#include <cassert>
 #include <string>
 #include <sstream>
 #include <boost/locale/encoding_utf.hpp>
@@ -23,29 +24,26 @@ LR"(
 )";
 
 
-int main()
+BOOST_AUTO_TEST_CASE(test1)
 {
-    using namespace std;
-    using namespace srose;
-    using namespace srose::locale;
+    using srose::locale::parse_string, srose::locale::parse_stream, srose::locale::parse_wstream;
 
-    util::string_tree<std::string> result;
+    srose::util::string_tree<std::string> result;
     parse_string(result, L"@name.text = \"Hello\"\" World\"");
-    assert(result.get_value("name.text") == "Hello World");
+    BOOST_TEST_REQUIRE(result.get_value("name.text") == "Hello World");
 
     std::stringstream ss;
     ss.str(translations);
     auto result2 = parse_stream(ss);
-    assert(result2.get_value("srose.first") == "First Message");
-    assert(boost::locale::conv::utf_to_utf<wchar_t>(result2.get_value("srose.second")) == L"第二条信息");
-    assert(result2.get_value("srose.second") == "第二条信息");
+    BOOST_TEST_REQUIRE(result2.get_value("srose.first") == "First Message");
+    auto converted = boost::locale::conv::utf_to_utf<wchar_t>(result2.get_value("srose.second"));
+    BOOST_TEST_REQUIRE(bool(converted == L"第二条信息"));
+    BOOST_TEST_REQUIRE(result2.get_value("srose.second") == "第二条信息");
 
     std::wstringstream wss;
     wss.str(wtranslations);
     auto result3 = parse_wstream(wss);
-    assert(result3.get_value("text.zh") == "中文");
-    assert(result3.get_value("text.ru") == "Россия");
-    assert(result3.get_value("text.ja") == "にほんご");
-
-    return 0;
+    BOOST_TEST_REQUIRE(result3.get_value("text.zh") == "中文");
+    BOOST_TEST_REQUIRE(result3.get_value("text.ru") == "Россия");
+    BOOST_TEST_REQUIRE(result3.get_value("text.ja") == "にほんご");
 }

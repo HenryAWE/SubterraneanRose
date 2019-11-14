@@ -1,6 +1,8 @@
 /* Test UI property */
+
+#define BOOST_TEST_MODULE ui_property_test
+#include <boost/test/included/unit_test.hpp>
 #include <sr/ui/property.hpp>
-#include <cassert>
 #include <climits>
 #include <cfloat>
 #include <cmath>
@@ -12,28 +14,28 @@ template <typename T>
 void test_normal()
 {
     Property<T> pt("T test");
-    assert(pt.name() == "T test");
-    assert(pt.value() == T());
-    assert(pt.min() == std::numeric_limits<T>::min());
-    assert(pt.max() == std::numeric_limits<T>::max());
+    BOOST_REQUIRE(pt.name() == "T test");
+    BOOST_REQUIRE(pt.value() == T());
+    BOOST_REQUIRE(pt.min() == std::numeric_limits<T>::min());
+    BOOST_REQUIRE(pt.max() == std::numeric_limits<T>::max());
 }
 
-int main()
+BOOST_AUTO_TEST_CASE(test1)
 {
     Property<int> pi("test", 0, -15);
-    assert(pi.value() == 0);
-    assert(pi.min() == -15);
-    assert(pi.max() == INT_MAX);
+    BOOST_REQUIRE(pi.value() == 0);
+    BOOST_REQUIRE(pi.min() == -15);
+    BOOST_REQUIRE(pi.max() == INT_MAX);
     pi.value(-16); // Will be clamped
-    assert(pi.value() == -15);
-    assert(pi.min() == -15);
+    BOOST_REQUIRE(pi.value() == -15);
+    BOOST_REQUIRE(pi.min() == -15);
     pi.min(INT_MIN);
-    assert(pi.min() == INT_MIN);
+    BOOST_REQUIRE(pi.min() == INT_MIN);
     pi.value(-100);
-    assert(pi.value() == -100);
+    BOOST_REQUIRE(pi.value() == -100);
 
     Property<float> pf("float", 15.0f);
-    assert(std::abs(pf.value() - 15.0f) < FLT_EPSILON);
+    BOOST_REQUIRE(std::abs(pf.value() - 15.0f) < FLT_EPSILON);
 
     test_normal<char>();
     test_normal<char16_t>();
@@ -42,10 +44,8 @@ int main()
     test_normal<unsigned long>();
 
     Property<std::string> ts("string", "init");
-    assert(ts.name() == "string");
-    assert(ts.value() == "init");
+    BOOST_REQUIRE(ts.name() == "string");
+    BOOST_REQUIRE(ts.value() == "init");
     ts.value("modified");
-    assert(ts.value() == "modified");
-
-    return 0;
+    BOOST_REQUIRE(ts.value() == "modified");
 }
