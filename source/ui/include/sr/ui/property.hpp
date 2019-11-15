@@ -8,6 +8,8 @@
 #define SROSE_UI_property_hpp_
 
 #include <string>
+#undef min
+#undef max
 #include <limits>
 #include <algorithm>
 #include <type_traits>
