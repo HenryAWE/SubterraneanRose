@@ -10,8 +10,7 @@
 #include <sr/wm/event.h>
 #include <imgui.h>
 #include "main_menu/main_menu_bar.hpp"
-#include <sr/gpu/opengl3/texture.hpp>
-#include <sr/gpu/opengl3/renderer.hpp>
+#include <sr/wm/winmgr.hpp>
 #include <sr/locale/locale.hpp>
 #include "i18n/i18n.hpp"
 
@@ -21,7 +20,8 @@ int SRSCALL main_loop(SR_WM_display* display)
     using namespace srose;
     using namespace srose::ui;
 
-    srose::gpu::opengl3::Renderer renderer(display);
+    auto& renderer =  *wm::GetRenderer();
+
     main_menu::MainMenuBar main_menu(display);
     DebugUI dbg_ui(&main_menu.show_debug_ui);
 

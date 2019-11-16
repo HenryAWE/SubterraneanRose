@@ -11,10 +11,10 @@
 #include <future>
 #include <imgui.h>
 #include <sr/core/init.h>
-#include <sr/wm/display.h>
 #include <sr/ui/entry.h>
 #include <sr/ui/console/progopt.h>
 #include <sr/filesystem/filesystem.hpp>
+#include <sr/wm/winmgr.hpp>
 #include "main_loop.hpp"
 #include "i18n/i18n.hpp"
 
@@ -83,6 +83,7 @@ int SRSCALL program_entry(int argc, char* argv[])
 
     try
     {
+        wm::CreateRenderer(display);
         auto font_ready = std::async(std::launch::async, LoadFonts);
         lang_ready.get();
         SDL_SetWindowTitle(display->win, GetDefaultLanguage()->gettext("srose", "Subterranean Rose").c_str());
@@ -102,13 +103,14 @@ int SRSCALL program_entry(int argc, char* argv[])
             SDL_MESSAGEBOX_ERROR,
             typeid(ex).name(),
             ex.what(),
-            NULL
+            nullptr
         );
 
         goto quit_program;
     }
     catch(...)
     {
+        exit_code = EXIT_FAILURE;
         SDL_LogError(
             SDL_LOG_CATEGORY_APPLICATION,
             "[UI] Caught unknown exception"
@@ -118,11 +120,12 @@ int SRSCALL program_entry(int argc, char* argv[])
             SDL_MESSAGEBOX_ERROR,
             "UNCAUGHT EXCEPTION",
             "Unknown exception",
-            NULL
+            nullptr
         );
     }
 
 quit_program:
+    wm::DestroyRenderer();
     SR_WM_DestroyDisplay(display);
     SR_CORE_QuitSDL();
     return exit_code;

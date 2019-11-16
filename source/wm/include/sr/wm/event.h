@@ -17,6 +17,8 @@ extern "C" {
 
 int SRSCALL SR_WM_InitEventSystem(SR_WM_display* display);
 
+SR_WM_display* SRSCALL SR_WM_GetDisplay();
+
 void SRSCALL SR_WM_QuitEventSystem();
 
 int SRSCALL SR_WM_ProcessEvent();

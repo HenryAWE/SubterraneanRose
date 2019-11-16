@@ -1,8 +1,7 @@
 /**
  * @file event_handler.cpp
- * @author ocornut
  * @author HenryAWE
- * @brief ImGUI SDL event handler
+ * @brief Event handler
  */
 
 #include <imgui.h>
@@ -17,21 +16,19 @@
 
 
 static ImGuiContext* g_imctx = nullptr;
-SDL_Window* g_window = nullptr;
+static SR_WM_display* g_display = nullptr;
 
 int SRSCALL SR_WM_InitEventSystem(SR_WM_display* display)
 {
     assert(!g_imctx);
     assert(display->win);
-    g_window = display->win;
+    g_display = display;
     g_imctx = ImGui::CreateContext();
     if(!g_imctx)
     {
         return -1;
     }
 
-    int w = 640, h = 480;
-    SDL_GetWindowSize(display->win, &w, &h);
     if(!ImGui_ImplSDL2_InitForOpenGL(display->win, display->glctx))
     {
         return -1;
@@ -44,6 +41,11 @@ int SRSCALL SR_WM_InitEventSystem(SR_WM_display* display)
     return 0;
 }
 
+SR_WM_display* SRSCALL SR_WM_GetDisplay()
+{
+    return g_display;
+}
+
 void SRSCALL SR_WM_QuitEventSystem()
 {
     assert(g_imctx);
@@ -52,6 +54,7 @@ void SRSCALL SR_WM_QuitEventSystem()
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext(g_imctx);
     g_imctx = nullptr;
+    g_display = nullptr;
 }
 
 int SRSCALL SR_WM_ProcessEvent()
@@ -60,14 +63,12 @@ int SRSCALL SR_WM_ProcessEvent()
     SDL_Event event{};
     while(SDL_PollEvent(&event))
     {
+        ImGui_ImplSDL2_ProcessEvent(&event);
+
         switch(event.type)
         {
         case SDL_QUIT:
             retval = SDL_FALSE;
-            break;
-
-        default:
-            ImGui_ImplSDL2_ProcessEvent(&event);
             break;
         }
     }
@@ -78,7 +79,7 @@ int SRSCALL SR_WM_ProcessEvent()
 void SRSCALL SR_WM_NewFrame()
 {
     ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame(g_window);
+    ImGui_ImplSDL2_NewFrame(g_display->win);
     ImGui::NewFrame();
 }
 
