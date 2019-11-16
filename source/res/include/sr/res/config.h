@@ -7,5 +7,6 @@
 #ifndef SROSE_RES_config_h_
 #define SROSE_RES_config_h_
 
+#include <sr/core/macros.h>
 
 #endif

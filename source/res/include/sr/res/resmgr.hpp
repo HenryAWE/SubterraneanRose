@@ -32,6 +32,11 @@ namespace srose::res
          */
         const filesystem::path& GetPath() const noexcept { return m_res_path; }
     };
+
+    ResourceManager* SRSCALL CreateResourceManager();
+    void SRSCALL DestroyResourceManager();
+    [[nodiscard]]
+    ResourceManager* SRSCALL GetResourceManager() noexcept;
 } // namespace srose::res
 
 

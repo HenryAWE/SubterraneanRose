@@ -15,6 +15,7 @@
 #include <sr/ui/console/progopt.h>
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/wm/winmgr.hpp>
+#include <sr/res/resmgr.hpp>
 #include "main_loop.hpp"
 #include "i18n/i18n.hpp"
 
@@ -85,6 +86,7 @@ int SRSCALL program_entry(int argc, char* argv[])
     {
         wm::CreateRenderer(display);
         auto font_ready = std::async(std::launch::async, LoadFonts);
+        res::CreateResourceManager();
         lang_ready.get();
         SDL_SetWindowTitle(display->win, GetDefaultLanguage()->gettext("srose", "Subterranean Rose").c_str());
         font_ready.get();
@@ -125,6 +127,7 @@ int SRSCALL program_entry(int argc, char* argv[])
     }
 
 quit_program:
+    res::DestroyResourceManager();
     wm::DestroyRenderer();
     SR_WM_DestroyDisplay(display);
     SR_CORE_QuitSDL();
