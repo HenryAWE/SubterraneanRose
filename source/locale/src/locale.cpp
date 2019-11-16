@@ -10,14 +10,25 @@
 
 namespace srose::locale
 {
-    std::locale SRSCALL get_system_locale(bool utf8)
+    namespace blc = boost::locale;
+
+    std::string SRSCALL GetSystemLocaleName(bool utf8)
     {
-        using namespace boost::locale;
-        generator gen;
+        return blc::util::get_system_locale(utf8);
+    }
 
-        std::string name = util::get_system_locale(utf8);
+    std::locale SRSCALL GetSystemLocale(bool utf8)
+    {
+        std::string name = GetSystemLocaleName(utf8);
 
-        std::locale lc = gen.generate(name);
-        return util::create_info(lc, name);
+        return GenerateLocale(name);
+    }
+
+    std::locale SRSCALL GenerateLocale(const std::string& id)
+    {
+        blc::generator gen;
+
+        std::locale lc = gen(id);
+        return blc::util::create_info(lc, id);;
     }
 } // namespace srose::locale

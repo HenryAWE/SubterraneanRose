@@ -9,11 +9,18 @@
 
 #include <locale>
 #include <sr/core/macros.h>
+#include "language.hpp"
 
 
 namespace srose::locale
 {
-    std::locale SRSCALL get_system_locale(bool utf8 = true);
+    [[nodiscard]]
+    std::string SRSCALL GetSystemLocaleName(bool utf8 = true);
+    [[nodiscard]]
+    std::locale SRSCALL GetSystemLocale(bool utf8 = true);
+
+    [[nodiscard]]
+    std::locale SRSCALL GenerateLocale(const std::string& id);
 } // namespace srose::locale
 
 

@@ -8,9 +8,10 @@
 #define SROSE_LOCALE_language_hpp_
 
 #include <utility>
-#include <filesystem>
-#include <sr/util/string_tree.hpp>
 #include <iostream>
+#include <sr/core/macros.h>
+#include <sr/filesystem/filesystem.hpp>
+#include <sr/util/string_tree.hpp>
 
 
 namespace srose::locale
@@ -45,6 +46,8 @@ namespace srose::locale
 
         void LoadSpecStrings();
     };
+
+    std::locale SRSCALL CreateTranslation(const std::locale& in, std::shared_ptr<Language> lang);
 
     class TranslationFacet : public std::locale::facet
     {

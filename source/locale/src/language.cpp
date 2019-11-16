@@ -8,6 +8,7 @@
 #include <sr/locale/parser.hpp>
 #include <fstream>
 #include <sstream>
+#include <boost/locale.hpp>
 
 
 namespace srose::locale
@@ -59,6 +60,11 @@ namespace srose::locale
         m_name = gettext("srose.language.name", "Default");
         m_iso = gettext("srose.language.iso", "C");
         m_default = m_tr.get_value_optional("srose.language.default");
+    }
+
+    std::locale SRSCALL CreateTranslation(const std::locale& in, std::shared_ptr<Language> lang)
+    {
+        return std::locale(in, new TranslationFacet(std::move(lang)));
     }
 
     // Initiate static member

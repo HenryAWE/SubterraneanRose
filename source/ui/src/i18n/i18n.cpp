@@ -43,7 +43,9 @@ namespace srose::ui
             return;
         }
 
-        g_default_lang = GetNearestLanguageInternal(locale::get_system_locale());
+        auto sys_lc = locale::GetSystemLocale();
+        g_default_lang = GetNearestLanguageInternal(sys_lc);
+        std::locale::global(locale::CreateTranslation(sys_lc, g_default_lang));
     }
 
     std::shared_ptr<locale::Language> GetDefaultLanguageInternal()

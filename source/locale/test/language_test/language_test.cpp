@@ -74,8 +74,14 @@ void test_stream_operator(std::shared_ptr<srose::locale::Language> lang)
     ss << SRTR("srose.language.name");
     BOOST_TEST_REQUIRE(ss.str() == "简体中文");
 
-    std::locale::global(lang_lc);
+    auto origin = std::locale::global(lang_lc);
+    BOOST_TEST_REQUIRE(!std::has_facet<TranslationFacet>(origin));
     BOOST_TEST_REQUIRE(SRTR("srose.language.name").str() == "简体中文");
     std::string not_found = SRTR("@not.found");
     BOOST_TEST_REQUIRE(not_found == *lang->default_str());
+
+    std::locale::global(CreateTranslation(origin, lang));
+    BOOST_TEST_REQUIRE(SRTR("srose.language.name").str() == "简体中文");
+    std::string not_found_2 = SRTR("@not.found");
+    BOOST_TEST_REQUIRE(not_found_2 == *lang->default_str());
 }
