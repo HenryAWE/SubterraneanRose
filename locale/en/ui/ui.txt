@@ -1,5 +1,12 @@
 # User Interface
 
+# Common
+@srose.ui.window = "Window"
+@srose.ui.file = "File"
+@srose.ui.open = "Open"
+@srose.ui.close = "Close"
+@srose.ui.help = "Help"
+
 @srose.ui.main-menu.file = "File"
 @srose.ui.main-menu.file.quit = "Quit"
 @srose.ui.main-menu.window = "Window"
@@ -8,3 +15,6 @@
 @srose.ui.main-menu.help = "Help"
 @srose.ui.main-menu.help.home-page = "Home Page"
 @srose.ui.main-menu.help.about-sr = "About"
+
+# Editor
+@srose.ui.editor = "Editor"
