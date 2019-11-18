@@ -12,7 +12,7 @@
 namespace srose::ui
 {
     EditorWindow::EditorWindow()
-        : window_title(SRTR("srose.ui.editor"))
+        : window_title(SRTR("srose.ui.editor").str() + "###srose.ui.EditorWindow")
     {
         m_menu_bar.file = SRTR("srose.ui.file");
         m_menu_bar.open = SRTR("srose.ui.open");
@@ -25,7 +25,6 @@ namespace srose::ui
             return;
 
         constexpr ImGuiWindowFlags editor_flags =
-            ImGuiWindowFlags_NoSavedSettings |
             ImGuiWindowFlags_MenuBar;
 
         ImGui::PushID("srose.ui.EditorWindow");
