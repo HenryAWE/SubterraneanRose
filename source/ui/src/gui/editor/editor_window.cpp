@@ -12,11 +12,11 @@
 namespace srose::ui
 {
     EditorWindow::EditorWindow()
-        : window_title(SRTR("srose.ui.editor").str() + "###srose.ui.EditorWindow")
+        : window_title(gettext("srose.ui.editor") + "###srose.ui.EditorWindow")
     {
-        m_menu_bar.file = SRTR("srose.ui.file");
-        m_menu_bar.open = SRTR("srose.ui.open");
-        m_menu_bar.close = SRTR("srose.ui.close");
+        m_menu_bar.file = gettext("srose.ui.file");
+        m_menu_bar.open = gettext("srose.ui.open");
+        m_menu_bar.close = gettext("srose.ui.close");
     }
 
     void EditorWindow::Update()

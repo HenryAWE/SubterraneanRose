@@ -7,13 +7,13 @@
 #ifndef SROSE_UI_GUI_editor_window_hpp_
 #define SROSE_UI_GUI_editor_window_hpp_
 
-#include <boost/noncopyable.hpp>
 #include <sr/ui/property.hpp>
+#include "../widget.hpp"
 
 
 namespace srose::ui
 {
-    class EditorWindow : boost::noncopyable
+    class EditorWindow : public Widget
     {
         bool m_visible = true;
         std::string window_title;
