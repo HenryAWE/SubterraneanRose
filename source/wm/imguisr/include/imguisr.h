@@ -35,7 +35,8 @@ namespace ImGuiSR
     enum ImGuiSRPushType : int
     {
         ImGuiSR_ID,
-        ImGuiSR_Window
+        ImGuiSR_Window,
+        ImGuiSR_MenuBar
     };
 
     template <ImGuiSRPushType type>
@@ -62,6 +63,20 @@ namespace ImGuiSR
 
         ~PushGuard() noexcept { ImGui::End(); }
     };
+
+    #define IMGUISR_PUSHGUARD_TEMPLATE(objname, open_func, close_func) \
+    template <>\
+    class PushGuard<objname> : public PushGuardBase\
+    {\
+    public:\
+        template <typename... Args>\
+        PushGuard(Args&&... args) noexcept\
+            : PushGuardBase(open_func(std::forward<Args>(args)...)) {}\
+        \
+        ~PushGuard() noexcept { if(value)close_func(); }\
+    };
+
+    IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_MenuBar, ImGui::BeginMenuBar, ImGui::EndMenuBar);
 } // namespace ImGuiSR
 
 
