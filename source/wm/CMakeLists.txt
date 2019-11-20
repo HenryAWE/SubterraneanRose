@@ -7,3 +7,5 @@ target_include_directories("srose-wm" PUBLIC ./include)
 target_link_libraries("srose-wm" PUBLIC "srose-core")
 target_link_libraries("srose-wm" PUBLIC "srose-gpu")
 target_link_libraries("srose-wm" PUBLIC "srose-ext-imgui")
+
+add_subdirectory(./imguisr)
