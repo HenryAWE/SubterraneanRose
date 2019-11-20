@@ -13,6 +13,12 @@
 
 namespace ImGuiSR
 {
+    /* RAII helper classes for ImGui
+     * 
+     * Usage:
+     *  auto object = ImGuiSR::PushGuard<ImGuiSR_ObjectType>(args...);
+     */
+
     class PushGuardBase
     {
     public:
@@ -28,11 +34,23 @@ namespace ImGuiSR
 
     enum ImGuiSRPushType : int
     {
+        ImGuiSR_ID,
         ImGuiSR_Window
     };
 
     template <ImGuiSRPushType type>
     class PushGuard;
+
+    template <>
+    class PushGuard<ImGuiSR_ID> : public PushGuardBase
+    {
+    public:
+        template <typename... Args>
+        PushGuard(Args&&... args) noexcept
+            : PushGuardBase((ImGui::PushID(std::forward<Args>(args)...), true)) {}
+
+        ~PushGuard() noexcept { ImGui::PopID(); }
+    };
 
     template <>
     class PushGuard<ImGuiSR_Window> : public PushGuardBase
