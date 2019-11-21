@@ -6,6 +6,7 @@
 
 #include "editor_window.hpp"
 #include <imgui.h>
+#include <imguisr.h>
 #include <sr/locale/locale.hpp>
 
 
@@ -27,26 +28,24 @@ namespace srose::ui
         constexpr ImGuiWindowFlags editor_flags =
             ImGuiWindowFlags_MenuBar;
 
-        ImGui::PushID("srose.ui.EditorWindow");
-        if (ImGui::Begin(window_title.c_str(), &m_visible, editor_flags))
+        auto id = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_ID>("srose.ui.EditorWindow");
+        
+        auto window = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(window_title.c_str(), &m_visible, editor_flags);
+        if (window)
         {
             UpdateMenuBar();
         }
-        ImGui::End();
-        ImGui::PopID();
     }
 
     void EditorWindow::UpdateMenuBar()
     {
-        if (!ImGui::BeginMenuBar())
+        auto bar = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_MenuBar>();
+        if (!bar)
             return;
 
-        if (ImGui::BeginMenu(m_menu_bar.file.c_str()))
+        if (auto menu = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Menu>(m_menu_bar.file.c_str()))
         {
             if (ImGui::MenuItem(m_menu_bar.close.c_str(), "Ctrl+Q")) { m_visible = false; }
-            ImGui::EndMenu();
         }
-
-        ImGui::EndMenuBar();
     }
 } // namespace srose::ui
