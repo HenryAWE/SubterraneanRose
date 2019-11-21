@@ -36,7 +36,8 @@ namespace ImGuiSR
     {
         ImGuiSR_ID,
         ImGuiSR_Window,
-        ImGuiSR_MenuBar
+        ImGuiSR_MenuBar,
+        ImGuiSR_Menu
     };
 
     template <ImGuiSRPushType type>
@@ -77,6 +78,7 @@ namespace ImGuiSR
     };
 
     IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_MenuBar, ImGui::BeginMenuBar, ImGui::EndMenuBar);
+    IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_Menu, ImGui::BeginMenu, ImGui::EndMenu);
 } // namespace ImGuiSR
 
 
