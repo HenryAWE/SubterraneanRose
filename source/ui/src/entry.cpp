@@ -16,6 +16,7 @@
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/wm/winmgr.hpp>
 #include <sr/res/resmgr.hpp>
+#include "gui/uimgr.hpp"
 #include "main_loop.hpp"
 #include "i18n/i18n.hpp"
 
@@ -90,6 +91,7 @@ int SRSCALL program_entry(int argc, char* argv[])
         lang_ready.get();
         SDL_SetWindowTitle(display->win, GetDefaultLanguage()->gettext("srose", "Subterranean Rose").c_str());
         font_ready.get();
+        ui::CreateUIManager();
         main_loop(display);
     }
     catch(std::exception& ex)
@@ -127,6 +129,7 @@ int SRSCALL program_entry(int argc, char* argv[])
     }
 
 quit_program:
+    ui::DestroyUIManager();
     res::DestroyResourceManager();
     wm::DestroyRenderer();
     SR_WM_DestroyDisplay(display);
