@@ -7,8 +7,11 @@
 #ifndef SROSE_WM_IMGUISR_imguisr_h_
 #define SROSE_WM_IMGUISR_imguisr_h_
 
+#include <functional>
 #include <utility>
+#include <optional>
 #include <imgui.h>
+#include <sr/filesystem/filesystem.hpp>
 
 
 namespace ImGuiSR
@@ -83,6 +86,29 @@ namespace ImGuiSR
     IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_Menu, ImGui::BeginMenu, ImGui::EndMenu);
     IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_TabBar, ImGui::BeginTabBar, ImGui::EndTabBar);
     IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_TabItem, ImGui::BeginTabItem, ImGui::EndTabItem);
+
+    class FileBrowser
+    {
+        std::string m_title;
+        std::function<bool(const srose::filesystem::path& in)> m_filter;
+        srose::filesystem::path m_path;
+        std::optional<srose::filesystem::path> m_directory = std::nullopt;
+    public:
+        FileBrowser(
+            std::string title,
+            std::function<bool(const srose::filesystem::path& in)> filter,
+            srose::filesystem::path begin = srose::filesystem::current_path()
+        ) : m_title(std::move(title) + "###srose.file-browser"),
+            m_filter(std::move(filter)), m_directory(std::move(begin)) {}
+
+        void Open();
+
+        [[nodiscard]]
+        const srose::filesystem::path& get() const noexcept { return m_path; }
+
+    private:
+        void UpdateMainContent();
+    };
 } // namespace ImGuiSR
 
 

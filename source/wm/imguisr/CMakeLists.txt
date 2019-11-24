@@ -5,3 +5,4 @@ add_library("srose-imguisr" STATIC ${imguisr_src_list})
 
 target_include_directories("srose-imguisr" PUBLIC ./include)
 target_link_libraries("srose-imguisr" PUBLIC "srose-ext-imgui")
+target_link_libraries("srose-imguisr" PUBLIC "srose-fs")
