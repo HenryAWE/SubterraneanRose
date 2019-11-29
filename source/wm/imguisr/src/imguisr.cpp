@@ -15,12 +15,13 @@ namespace ImGuiSR
 {
     void FileBrowser::Open()
     {
-        auto& io = ImGui::GetIO();
         if (!ImGui::IsPopupOpen(m_title.c_str()))
-        {
             ImGui::OpenPopup(m_title.c_str());
-        }
+    }
 
+    void FileBrowser::Update()
+    {
+        auto& io = ImGui::GetIO();
         constexpr ImGuiWindowFlags flags =
             ImGuiWindowFlags_NoResize |
             ImGuiWindowFlags_NoSavedSettings |

@@ -103,6 +103,8 @@ namespace ImGuiSR
 
         void Open();
 
+        void Update();
+
         [[nodiscard]]
         const srose::filesystem::path& get() const noexcept { return m_path; }
 
