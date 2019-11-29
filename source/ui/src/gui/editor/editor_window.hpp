@@ -8,6 +8,7 @@
 #define SROSE_UI_GUI_editor_window_hpp_
 
 #include <sr/ui/property.hpp>
+#include <imguisr.h>
 #include "../widget.hpp"
 
 
@@ -17,6 +18,7 @@ namespace srose::ui
     {
         bool m_visible = true;
         std::string window_title;
+        ImGuiSR::FileBrowser m_browser;
 
         struct MenuBarData
         {
@@ -27,7 +29,7 @@ namespace srose::ui
 
         void Update();
 
-        void Show() noexcept;
+        void Show() noexcept { m_visible = true; }
 
     private:
         void UpdateMenuBar();

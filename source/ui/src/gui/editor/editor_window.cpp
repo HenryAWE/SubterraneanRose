@@ -13,7 +13,8 @@
 namespace srose::ui
 {
     EditorWindow::EditorWindow()
-        : window_title(gettext("srose.ui.editor") + "###srose.ui.EditorWindow")
+        : window_title(gettext("srose.ui.editor") + "###srose.ui.EditorWindow"),
+        m_browser("Project", {})
     {
         m_menu_bar.file = gettext("srose.ui.file");
         m_menu_bar.open = gettext("srose.ui.open");
@@ -45,7 +46,9 @@ namespace srose::ui
 
         if (auto menu = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Menu>(m_menu_bar.file.c_str()))
         {
+            if (ImGui::MenuItem("FIle", "Ctrl+O")) { m_browser.Open(); }
             if (ImGui::MenuItem(m_menu_bar.close.c_str(), "Ctrl+Q")) { m_visible = false; }
         }
+        m_browser.Update();
     }
 } // namespace srose::ui
