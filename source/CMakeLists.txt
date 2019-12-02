@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 # Build options
-option(SROSE_ENABLE_CUI "Enable console inferface" ON)
+option(SROSE_DISABLE_CUI "Disable console inferface" OFF)
 set(SROSE_RENDER_BACKEND "OpenGL3" CACHE STRING "Choose a render backend from: OpenGL3")
 
 

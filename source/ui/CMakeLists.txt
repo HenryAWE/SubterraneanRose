@@ -14,7 +14,7 @@ list(APPEND ui_src_list ${ui_gui_editor_src_list})
 
 
 # Console UI
-if(${SROSE_ENABLE_CUI})
+if(NOT ${SROSE_DISABLE_CUI})
     find_package(Boost REQUIRED COMPONENTS program_options)
 endif()
 aux_source_directory(./src/console ui_console_src_list)
@@ -29,9 +29,10 @@ target_link_libraries("srose-ui" PUBLIC "srose-wm")
 target_link_libraries("srose-ui" PUBLIC "srose-gpu")
 target_link_libraries("srose-ui" PUBLIC "srose-locale")
 target_link_libraries("srose-ui" PUBLIC "srose-res")
-if(${SROSE_ENABLE_CUI})
+if(NOT ${SROSE_DISABLE_CUI})
     target_link_libraries("srose-ui" PUBLIC Boost::program_options)
-    target_compile_definitions("srose-ui" PUBLIC SR_ENABLE_CUI=1)
+else()
+    target_compile_definitions("srose-ui" PUBLIC SROSE_DISABLE_CUI=1)
 endif()
 
 add_subdirectory(./test)

@@ -4,7 +4,7 @@
  * @brief Program options
  */
 
-#if defined SR_ENABLE_CUI // Controlled by the build flag SROSE_ENABLE_CUI
+#if !defined SROSE_DISABLE_CUI // Controlled by the build flag SROSE_DISABLE_CUI
 
 #include <sr/ui/console/progopt.h>
 #include <boost/program_options.hpp>
@@ -166,9 +166,9 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
     if(argc > 1)
     {
         std::printf(
-            "The program was built with SROSE_ENABLE_CUI set to OFF\n"
+            "The program was built with SROSE_DISABLE_CUI set to ON\n"
             "If you want the functionality of the command line UI, "
-            "please re-build the program with SROSE_ENABLE_CUI set to ON\n"
+            "please re-build the program with SROSE_DISABLE_CUI set to OFF\n"
         );
     }
 
