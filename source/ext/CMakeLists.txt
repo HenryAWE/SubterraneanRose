@@ -32,18 +32,23 @@ target_link_libraries("srose-ext-imgui" PRIVATE "srose-ext-glad")
 # FFmpeg doesn't support find_package() of CMake
 find_path(AVCODEC_INCLUDE_DIR libavcodec/avcodec.h)
 find_library(AVCODEC_LIBRARY avcodec)
+mark_as_advanced(AVCODEC_INCLUDE_DIR AVCODEC_LIBRARY)
 
 find_path(AVFORMAT_INCLUDE_DIR libavformat/avformat.h)
 find_library(AVFORMAT_LIBRARY avformat)
+mark_as_advanced(AVFORMAT_INCLUDE_DIR AVFORMAT_LIBRARY)
 
 find_path(AVUTIL_INCLUDE_DIR libavutil/avutil.h)
 find_library(AVUTIL_LIBRARY avutil)
+mark_as_advanced(AVUTIL_INCLUDE_DIR AVUTIL_LIBRARY)
 
 find_path(AVDEVICE_INCLUDE_DIR libavdevice/avdevice.h)
 find_library(AVDEVICE_LIBRARY avdevice)
+mark_as_advanced(AVDEVICE_INCLUDE_DIR AVDEVICE_LIBRARY)
 
 find_path(SWSCALE_INCLUDE_DIR libswscale/swscale.h)
 find_library(SWSCALE_LIBRARY swscale)
+mark_as_advanced(SWSCALE_INCLUDE_DIR SWSCALE_LIBRARY)
 
 add_library("srose-ext-ffmpeg" INTERFACE)
 target_include_directories("srose-ext-ffmpeg" INTERFACE
