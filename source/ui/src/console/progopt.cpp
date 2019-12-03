@@ -19,6 +19,13 @@
 /*Global variables map */
 static std::unique_ptr<boost::program_options::variables_map> vm;
 
+extern "C"
+const boost::program_options::variables_map& GetVariablesMapInternal() noexcept
+{
+    assert(vm&&"Call SR_UI_CONSOLE_ParseArg() first!!!");
+    return *vm.get();
+}
+
 int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
 {
     try
@@ -35,6 +42,7 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
 
         po::options_description display("Display");
         display.add_options()
+            ("language", po::value<std::string>()->value_name("name")->default_value("auto"), "Display language")
             ("fullscreen,F", "Fullscreen");
         
         po::options_description video("Video");

@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <sr/locale/locale.hpp>
 #include <boost/locale.hpp>
+#include <sr/ui/console/cmdline.hpp>
 
 
 namespace srose::ui
@@ -56,6 +57,7 @@ namespace srose::ui
 
     std::shared_ptr<locale::Language> GetNearestLanguageInternal(std::locale lc)
     {
+        std::string preferred = console::GetPreferredLanguage();
         auto& lc_info = std::use_facet<boost::locale::info>(lc);
         std::vector<std::pair<std::string, int>> lcs;
         lcs.reserve(g_lang_map.size() + 1);
@@ -65,6 +67,7 @@ namespace srose::ui
         {
             std::string_view sv = j.first;
             if(sv=="C" || sv.size()==0) continue;
+            if(!preferred.empty() && preferred==sv) { j.second = 10; continue; }
             std::size_t sep_pos = sv.find_first_of("_-");
             if(sv.substr(0, sep_pos) == lc_info.language())
                 ++j.second;

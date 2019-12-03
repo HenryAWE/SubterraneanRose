@@ -7,12 +7,13 @@
 #ifndef SROSE_UI_CONSOLE_cmdline_hpp_
 #define SROSE_UI_CONSOLE_cmdline_hpp_
 
+#include <string>
 #include "progopt.h"
 
 
 namespace srose::ui::console
 {
-    
+    std::string GetPreferredLanguage();
 } // namespace srose::ui::console
 
 
