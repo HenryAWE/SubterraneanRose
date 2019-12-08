@@ -36,6 +36,76 @@ namespace srose::util
     };
 
     template <
+        typename CharT,
+        CharT Separator
+    >
+    class basic_string_path : public string_tree_base
+    {
+        std::basic_string_view<CharT> m_sv;
+    public:
+        typedef CharT char_type;
+        typedef std::basic_string_view<CharT> string_view_type;
+        typedef typename string_view_type::size_type size_type;
+
+        basic_string_path() = default;
+        basic_string_path(const basic_string_path& rhs) = default;
+        basic_string_path(string_view_type sv)
+            : m_sv(sv) {}
+
+        class iterator
+        {
+            friend basic_string_path;
+            string_view_type sv;
+            std::size_t pos = 0, next_sep = string_view_type::npos;
+
+            iterator(size_type pos_) noexcept : pos(pos_), next_sep(pos_) {};
+            iterator(string_view_type sv_, std::size_t pos_ = 0) noexcept
+                : sv(sv_), pos(pos_), next_sep(sv.find(Separator)) {}
+
+            static constexpr CharT empty_string[1] = { CharT(0) };
+        public:
+            iterator() noexcept = default;
+            iterator(const iterator& rhs) noexcept = default;
+
+            bool operator==(const iterator& rhs) const noexcept
+            {
+                return pos==rhs.pos && next_sep==rhs.next_sep;
+            }
+            bool operator!=(const iterator& rhs) const noexcept
+            {
+                return !(*this == rhs);
+            }
+            iterator& operator++() noexcept
+            {
+                assert(pos != sv.npos);
+                if (next_sep == sv.npos)
+                {
+                    pos = sv.npos;
+                    return *this;
+                }
+                pos = next_sep + 1;
+                next_sep = sv.find(Separator, next_sep + 1);
+                return *this;
+            }
+            string_view_type operator*() const
+            {
+                if (pos == next_sep)
+                    return empty_string;
+                return sv.substr(pos, next_sep - pos);
+            }
+        };
+
+        iterator begin() const
+        {
+            return iterator(m_sv);
+        }
+        iterator end() const
+        {
+            return iterator(m_sv.npos);
+        }
+    };
+
+    template <
         typename T,
         typename CharT,
         CharT Separator

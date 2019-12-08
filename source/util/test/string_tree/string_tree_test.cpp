@@ -8,6 +8,30 @@
 using namespace std;
 using namespace srose::util;
 
+BOOST_AUTO_TEST_CASE(test_string_path)
+{
+    basic_string_path<char, '.'> sp("test.for.path");
+    auto it = sp.begin();
+    BOOST_TEST_REQUIRE(bool(it == sp.begin()));
+    auto test = *it;
+    BOOST_TEST_REQUIRE(bool(test == "test"));
+    auto for_ = *++it;
+    BOOST_TEST_REQUIRE(bool(for_ == "for"));
+    auto end_ = *++it;
+    BOOST_TEST_REQUIRE(bool(end_ == "path"));
+    BOOST_TEST_REQUIRE(!bool(it == sp.end()));
+    BOOST_TEST_REQUIRE(bool(it != sp.end()));
+    ++it;
+    BOOST_TEST_REQUIRE(bool(it == sp.end()));
+
+    const char* parsed[3] = {"test", "for", "path"};
+    std::size_t idx = 0;
+    for (std::string_view sv : sp)
+    {
+        BOOST_TEST_REQUIRE(bool(sv == parsed[idx++]));
+    }
+}
+
 void test_ctor()
 {
     string_tree<int, '/'> base;
