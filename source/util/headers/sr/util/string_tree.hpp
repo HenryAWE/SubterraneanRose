@@ -118,6 +118,7 @@ namespace srose::util
         typedef basic_string_tree self_type;
         typedef std::basic_string<CharT> string_type;
         typedef std::basic_string_view<CharT> string_view_type;
+        typedef basic_string_path<CharT, Separator> path_type;
         typedef std::map<string_type, self_type> internal_data_type;
         typedef std::size_t size_type;
         typedef typename internal_data_type::iterator iterator;
@@ -262,21 +263,14 @@ namespace srose::util
          */
         self_type* force_path(string_view_type sv)
         {
-            if(sv.empty())
-                return this;
-
-            CharT separator_str[2] = { Separator, CharT(0) };
-            auto first_char = sv.find_first_not_of(separator_str); // Find first
-            if(first_char == sv.npos)
-                return this;
-            auto next_sep = sv.find(Separator, first_char);
-            string_view_type target = sv.substr(first_char, next_sep);
-            if(next_sep == sv.npos)
-                sv = string_view_type();
-            else
-                sv = sv.substr(next_sep);
-
-            return m_children[std::string(target)].force_path(sv); // recursion
+            path_type pt(sv);
+            self_type* current = this;
+            for (auto it = pt.begin(); it != pt.end(); ++it)
+            {
+                auto target = *it;
+                current = &current->m_children[std::string(target)];
+            }
+            return current;
         }
 
         /**
@@ -287,28 +281,21 @@ namespace srose::util
          */
         self_type const* walk_path(string_view_type sv) const noexcept
         {
-            if(sv.empty())
-                return this;
+            path_type pt(sv);
+            self_type const* current = this;
 
-            CharT separator_str[2] = { Separator, CharT(0) };
-            auto first_char = sv.find_first_not_of(separator_str); // Find first
-            if(first_char == sv.npos)
-                return this;
-            auto next_sep = sv.find(Separator, first_char);
-            string_view_type target = sv.substr(first_char, next_sep);
-            if(next_sep == sv.npos)
-                sv = string_view_type();
-            else
-                sv = sv.substr(next_sep);
-
-            auto iter = std::find_if(
-                    m_children.begin(), m_children.end(),
-                    [&target](auto& in) { return string_view_type(in.first) == target; }
-                );
-            if(iter == m_children.end())
-                return nullptr;    //Not found, return nullptr
-            else
-                return iter->second.walk_path(sv); // recursion
+            for (auto it = pt.begin(); it != pt.end(); ++it)
+            {
+                auto target = *it;
+                auto iter = std::find_if(
+                        current->m_children.begin(), current->m_children.end(),
+                        [&target](auto& in) { return string_view_type(in.first) == target; }
+                    );
+                if(iter == current->m_children.end())
+                    return nullptr;    //Not found, return nullptr
+                current = &iter->second;
+            }
+            return current;
         }
     };
 } // namespace srose::util
