@@ -96,8 +96,8 @@ int SRSCALL SR_CORE_OpenAudio(SDL_AudioCallback callback, void* user)
 }
 void SRSCALL SR_CORE_CloseAudio(void)
 {
-    if(dev > 1);
-    SDL_CloseAudioDevice(dev);
+    if(dev > 1)
+        SDL_CloseAudioDevice(dev);
     memset(&obtained, 0, sizeof(obtained));
 }
 
