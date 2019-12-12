@@ -27,7 +27,8 @@ class compiler:
 
     def load(self, filename):
         f = open(filename, encoding="utf-8")
-        line_number = 1
+        line_number = 0
 
         for string in f.read().splitlines():
+            line_number += 1
             self.parse_string(string, os.path.basename(filename), line_number)
