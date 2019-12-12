@@ -22,7 +22,18 @@ class compiler:
         if(string[0] != '@'):
             # Syntax error
             self.emit_warning("Syntax error - %s"%string, file=file, line=line)
-        
+            return
+        eqidx = string.find('=')
+        if(eqidx == -1):
+            self.emit_warning("Missing '='", file=file, line=line)
+            return
+        strid = string[1:eqidx].strip()
+        tr = string[eqidx+1:].strip()
+        if(tr[0] != '"' or tr[-1] != '"'):
+            self.emit_warning('''Missing '"' at the begin/end of the translation string ''', file=file, line=line)
+            return
+        # Remove the '"' characters around the string
+        tr = tr[1:-1]
 
 
     def load(self, filename):
