@@ -5,12 +5,16 @@
 # This file is licensed under GPLv3
 
 
-import os
+import os, sys
 
 class compiler:
     @staticmethod
-    def emit_warning(info, file = "<string>", line = 0):
+    def emit_warning(info, file = "<string>", line = 0, fatal = False):
         print("[%s - %d]: "%(file, line), info)
+        if fatal:
+            sys.exit(1)
+
+    stop_on_err = False
 
     def parse_string(self, string, file, line):
         string.strip()
@@ -21,16 +25,16 @@ class compiler:
             return
         if(string[0] != '@'):
             # Syntax error
-            self.emit_warning("Syntax error - %s"%string, file=file, line=line)
+            self.emit_warning("Syntax error - %s"%string, file=file, line=line, fatal=self.stop_on_err)
             return
         eqidx = string.find('=')
         if(eqidx == -1):
-            self.emit_warning("Missing '='", file=file, line=line)
+            self.emit_warning("Missing '='", file=file, line=line, fatal=self.stop_on_err)
             return
         strid = string[1:eqidx].strip()
         tr = string[eqidx+1:].strip()
         if(tr[0] != '"' or tr[-1] != '"'):
-            self.emit_warning('''Missing '"' at the begin/end of the translation string ''', file=file, line=line)
+            self.emit_warning('''Missing '"' at the begin/end of the translation string ''', file=file, line=line, fatal=self.stop_on_err)
             return
         # Remove the '"' characters around the string
         tr = tr[1:-1]
