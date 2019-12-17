@@ -10,7 +10,7 @@ import os
 class compiler:
     @staticmethod
     def emit_warning(info, file = "<string>", line = 0):
-        print("[%s - %d]: "%(file, line), info);
+        print("[%s - %d]: "%(file, line), info)
 
     def parse_string(self, string, file, line):
         string.strip()
