@@ -19,5 +19,6 @@ project(
 )
 
 enable_testing()
+add_subdirectory(./tools)
 add_subdirectory(./source)
 add_subdirectory(./locale)
