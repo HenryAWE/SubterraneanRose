@@ -119,7 +119,28 @@ namespace srose::util
         typedef std::basic_string<CharT> string_type;
         typedef std::basic_string_view<CharT> string_view_type;
         typedef basic_string_path<CharT, Separator> path_type;
-        typedef std::map<string_type, self_type> internal_data_type;
+        struct comp
+        {
+            typedef void is_transparent;
+
+            bool operator()(const string_view_type& lhs, const string_view_type& rhs) const noexcept
+            {
+                return lhs < rhs;
+            }
+            bool operator()(const string_type& lhs, const string_view_type& rhs) const noexcept
+            {
+                return string_view_type(lhs) < rhs;
+            }
+            bool operator()(const string_view_type& lhs, const string_type& rhs) const noexcept
+            {
+                return lhs < string_view_type(rhs);
+            }
+            bool operator()(const string_type& lhs, const string_type& rhs) const noexcept
+            {
+                return lhs < rhs;
+            }
+        };
+        typedef std::map<string_type, self_type, comp> internal_data_type;
         typedef std::size_t size_type;
         typedef typename internal_data_type::iterator iterator;
         typedef typename internal_data_type::const_iterator const_iterator;
@@ -287,10 +308,7 @@ namespace srose::util
             for (auto it = pt.begin(); it != pt.end(); ++it)
             {
                 auto target = *it;
-                auto iter = std::find_if(
-                        current->m_children.begin(), current->m_children.end(),
-                        [&target](auto& in) { return string_view_type(in.first) == target; }
-                    );
+                auto iter = current->m_children.find(string_view_type(target));
                 if(iter == current->m_children.end())
                     return nullptr;    //Not found, return nullptr
                 current = &iter->second;
