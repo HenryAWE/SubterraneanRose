@@ -31,4 +31,12 @@ BOOST_AUTO_TEST_CASE(test_funcqueue)
     fq.then(setter(s, "new"));
     fq.invoke();
     BOOST_TEST_REQUIRE(bool(s == "new"));
+    int var = 0;
+    fq.repeat(5, [&var](){ ++var; });
+    BOOST_TEST_REQUIRE(var == 0);
+    for(int i = 0; i<5; ++i)
+    {
+        fq.invoke();
+        BOOST_TEST_REQUIRE(var = i+1);
+    }
 }
