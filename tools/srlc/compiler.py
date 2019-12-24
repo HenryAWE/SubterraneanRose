@@ -10,11 +10,12 @@ import os, sys
 class compiler:
     @staticmethod
     def emit_warning(info, file = "<string>", line = 0, fatal = False):
-        print("[%s - %d]: "%(file, line), info)
+        print("[compiler] [%s - %d]: "%(file, line), info)
         if fatal:
             sys.exit(1)
 
     stop_on_err = False
+    verbose = 0
 
     def parse_string(self, string, file, line):
         string.strip()
@@ -38,10 +39,14 @@ class compiler:
             return
         # Remove the '"' characters around the string
         tr = tr[1:-1]
+        if self.verbose>=3:
+            print("[compiler]", strid.split('.'), "= \"%s\""%tr)
 
 
     def load(self, filename):
         f = open(filename, encoding="utf-8")
+        if self.verbose>=1:
+            print("[compiler] Loading file \"%s\""%os.path.basename(filename))
         line_number = 0
 
         for string in f.read().splitlines():

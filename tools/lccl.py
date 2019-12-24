@@ -10,6 +10,7 @@ import sys, argparse, os
 import srlc.compiler
 
 parser = argparse.ArgumentParser(description="Compiler Options")
+parser.add_argument("--verbose", "-v", action="count", default=0)
 parser.add_argument("--input", "-i", help="Input file(s)", nargs='+', required=True)
 parser.add_argument("--stop-on-error", help="Stop on error", action="store_true")
 if len(sys.argv)<=1:
@@ -19,5 +20,6 @@ args = parser.parse_args()
 
 cl = srlc.compiler.compiler()
 cl.stop_on_err = args.stop_on_error
+cl.verbose = args.verbose
 for file in args.input:
     cl.load(file)
