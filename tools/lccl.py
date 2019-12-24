@@ -12,6 +12,9 @@ import srlc.compiler
 parser = argparse.ArgumentParser(description="Compiler Options")
 parser.add_argument("--input", "-i", help="Input file(s)", nargs='+', required=True)
 parser.add_argument("--stop-on-error", help="Stop on error", action="store_true")
+if len(sys.argv)<=1:
+    parser.print_help()
+    sys.exit(0)
 args = parser.parse_args()
 
 cl = srlc.compiler.compiler()
