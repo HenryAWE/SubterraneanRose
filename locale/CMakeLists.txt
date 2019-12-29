@@ -10,6 +10,16 @@ macro(install_lang lang)
     )
 endmacro(install_lang lang)
 
+macro(test_lang lang)
+    file(GLOB_RECURSE files "${lang}/*.txt")
+    add_test(
+	    NAME "TestLocale_${lang}"
+	    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_SOURCE_DIR}/tools/lccl.py" "--action=error-checking" "-i" ${files}
+    )
+endmacro()
+
 
 install_lang(en)
 install_lang(zh-CN)
+test_lang(en)
+test_lang(zh-CN)
