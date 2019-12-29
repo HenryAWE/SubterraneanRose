@@ -25,6 +25,7 @@ cl.verbose = args.verbose
 if args.action == "error-checking":
     if cl.verbose >= 1:
         print("[lccl] Error-checking")
+    cl.stop_on_err = True
     cl.mode = srlc.compiler.option.ERROR_CHECKING
     for file in args.input:
         cl.load(file)
