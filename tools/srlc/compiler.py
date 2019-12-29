@@ -6,6 +6,11 @@
 
 
 import os, sys
+from enum import IntEnum
+
+class option(IntEnum):
+    ERROR_CHECKING = 1
+    DISPLAY = 2
 
 class compiler:
     @staticmethod
@@ -15,6 +20,7 @@ class compiler:
             sys.exit(1)
 
     stop_on_err = False
+    mode = option.ERROR_CHECKING
     verbose = 0
 
     def parse_string(self, string, file, line):
@@ -39,7 +45,7 @@ class compiler:
             return
         # Remove the '"' characters around the string
         tr = tr[1:-1]
-        if self.verbose>=3:
+        if self.verbose>=3 or self.mode==option.DISPLAY:
             print("[compiler]", strid.split('.'), "= \"%s\""%tr)
 
 
