@@ -13,7 +13,9 @@
 - Boost 1.70.0
 
 ## Starting Build
-- Clone the repository 
+- Once you have all of the dependencies installed, you can start building the project
+- Clone the repository  
+  **Warning: Never download the repository as an archive file, since the compilation depends on some source file generated during the configuration time based on the git information**
   ```
   git clone https://github.com/HenryAWE/SubterraneanRose.git
   ```

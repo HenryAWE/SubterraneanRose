@@ -13,6 +13,8 @@
 - Boost 1.70.0
 
 ## 开始构建
+- 安装完所有依赖项之后即可开始构建项目  
+  **警告：不要以压缩包形式下载代码，因为编译需要依赖一些在配置期间基于 git 生成的源文件**
 - 克隆代码  
   ```
   git clone https://github.com/HenryAWE/SubterraneanRose.git
