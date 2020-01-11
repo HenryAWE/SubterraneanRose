@@ -13,4 +13,4 @@
 - Easy-to-use
 
 ## License
-- Code: [GNU General Public License v3.0 (GPLv3)](./license.txt)
+- [GNU General Public License v3.0 (GPLv3)](../LICENSE)

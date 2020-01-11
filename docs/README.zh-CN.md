@@ -13,4 +13,4 @@
 - 易于使用
 
 ## 许可
-- 代码：[GNU 通用公共许可证 3.0 版（GNU General Public License v3.0, GPLv3）](./license.txt)
+- [GNU 通用公共许可证 3.0 版（GNU General Public License v3.0, GPLv3）](../LICENSE)
