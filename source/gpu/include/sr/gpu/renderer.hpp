@@ -9,6 +9,9 @@
 
 #include <glm/glm.hpp>
 #include <stack>
+#include <sr/filesystem/filesystem.hpp>
+#include <sr/util/string_tree.hpp>
+#include "image.hpp"
 
 
 namespace srose::gpu
@@ -31,6 +34,12 @@ namespace srose::gpu
 
         virtual void ClearScreen() = 0;
         virtual void Present() {}
+
+        util::string_tree<std::shared_ptr<Texture>, '/'> textures;
+
+        virtual std::unique_ptr<gpu::Texture> CreateTexture() = 0;
+
+        bool LoadTextureFromFile(std::string_view as, const filesystem::path& file);
     };
 } // namespace srose::gpu
 

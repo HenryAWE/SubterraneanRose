@@ -30,4 +30,16 @@ namespace srose::gpu
         else
             return m_color_stack.top();
     }
+
+    bool Renderer::LoadTextureFromFile(std::string_view as, const filesystem::path& file)
+    {
+        std::shared_ptr<Texture> tex(CreateTexture());
+        bool result = tex->LoadFromFile(file);
+        if(result)
+        {
+            textures.emplace_at(as, std::move(tex));
+        }
+
+        return result;
+    }
 } // namespace srose::gpu
