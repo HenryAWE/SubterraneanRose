@@ -21,7 +21,7 @@ namespace srose::ui
     public:
         Widget();
 
-        ~Widget() = default;
+        virtual ~Widget() = default;
 
         [[nodiscard]]
         constexpr const std::locale& getloc() const noexcept { return m_loc; }
