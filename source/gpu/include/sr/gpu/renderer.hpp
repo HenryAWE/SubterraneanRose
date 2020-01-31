@@ -37,9 +37,12 @@ namespace srose::gpu
 
         util::string_tree<std::shared_ptr<Texture>, '/'> textures;
 
-        virtual std::unique_ptr<gpu::Texture> CreateTexture() = 0;
+        std::unique_ptr<Texture> CreateTexture() { return std::unique_ptr<Texture>(NewTexture()); }
 
         bool LoadTextureFromFile(std::string_view as, const filesystem::path& file);
+
+    protected:
+        virtual Texture* NewTexture() = 0;
     };
 } // namespace srose::gpu
 

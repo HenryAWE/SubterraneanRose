@@ -54,8 +54,8 @@ namespace srose::gpu::opengl3
         ClearScreen(GetCurrentColor());
     }
 
-    std::unique_ptr<gpu::Texture> Renderer::CreateTexture()
+    Texture* Renderer::NewTexture()
     {
-        return std::make_unique<opengl3::Texture>();
+        return new Texture;
     }
 } // namespace srose::gpu::opengl3
