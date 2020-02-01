@@ -10,16 +10,19 @@
 #include "mainmenu.hpp"
 #include <cassert>
 #include <imgui_internal.h>
+#include <SDL_events.h>
 
 
 namespace srose::ui
 {
     MainMenu::MainMenu()
     {
+        using std::make_pair;
+
         constexpr int BUTTON_COUNT = 2;
         m_buttons.reserve(BUTTON_COUNT);
-        m_buttons.push_back(gettext("srose.ui.mainmenu.config") + "###config");
-        m_buttons.push_back(gettext("srose.ui.mainmenu.exit") + "###exit");
+        m_buttons.push_back(make_pair(gettext("srose.ui.mainmenu.config") + "###config", nullptr));
+        m_buttons.push_back(make_pair(gettext("srose.ui.mainmenu.exit") + "###exit", &MainMenu::Button_Exit));
     }
 
     void MainMenu::Update()
@@ -43,10 +46,22 @@ namespace srose::ui
         );
         assert(background);
 
+        using std::get;
         const float button_height = (io.DisplaySize.y) / static_cast<float>(2 * m_buttons.size());
         for(const auto& i : m_buttons)
         {
-            ImGui::Button(i.c_str(), ImVec2(-1.0f, button_height));
+            if(ImGui::Button(get<0>(i).c_str(), ImVec2(-1.0f, button_height)))
+            {
+                auto cb = get<1>(i);
+                if(cb) (this->*cb)();
+            }
         }
+    }
+
+    void MainMenu::Button_Exit()
+    {
+        SDL_Event quit_event{};
+        quit_event.type = SDL_QUIT;
+        SDL_PushEvent(&quit_event);
     }
 } // namespace srose::ui

@@ -8,6 +8,7 @@
 #define SROSE_UI_GUI_mainmenu_hpp_
 
 #include <vector>
+#include <utility>
 #include <imgui.h>
 #include <imguisr.h>
 #include "widget.hpp"
@@ -22,7 +23,10 @@ namespace srose::ui
 
         void Update();
     private:
-        std::vector<std::string> m_buttons;
+        using callback_type = void(MainMenu::*)();
+        std::vector<std::pair<std::string, callback_type>> m_buttons;
+
+        void Button_Exit();
     };
 } // namespace srose::ui
 
