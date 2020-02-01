@@ -25,6 +25,8 @@ namespace srose::ui
         using callback_type = void(ConfigPanel::*)();
         std::vector<std::pair<std::string, callback_type>> m_buttons;
 
+        void Button_Video();
+        void Button_Language();
         void Button_Return();
     };
 } // namespace srose::ui

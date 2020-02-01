@@ -10,6 +10,8 @@
 @srose.ui.mainmenu.config = "Configuration"
 @srose.ui.mainmenu.exit = "Exit"
 
+@srose.ui.configpanel.video = "Video Options"
+@srose.ui.configpanel.lang = "Display Language"
 @srose.ui.configpanel.return = "Return"
 
 @srose.ui.main-menu.file = "File"
