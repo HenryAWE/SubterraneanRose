@@ -21,7 +21,7 @@ namespace srose::ui
 
         constexpr int BUTTON_COUNT = 2;
         m_buttons.reserve(BUTTON_COUNT);
-        m_buttons.push_back(make_pair(gettext("srose.ui.mainmenu.config") + "###config", nullptr));
+        m_buttons.push_back(make_pair(gettext("srose.ui.mainmenu.config") + "###config", &MainMenu::Button_Config));
         m_buttons.push_back(make_pair(gettext("srose.ui.mainmenu.exit") + "###exit", &MainMenu::Button_Exit));
     }
 
@@ -60,6 +60,11 @@ namespace srose::ui
         }
     }
 
+    void MainMenu::Button_Config()
+    {
+        auto& uimgr = *GetUIManager();
+        uimgr.widget_stack.push(uimgr.widget_tree.get_value("configpanel"));
+    }
     void MainMenu::Button_Exit()
     {
         GetUIManager()->Quit();

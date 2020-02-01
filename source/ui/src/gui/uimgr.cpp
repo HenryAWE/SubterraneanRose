@@ -8,6 +8,7 @@
 #include <SDL_events.h>
 #include <memory>
 #include "mainmenu.hpp"
+#include "configmenu.hpp"
 
 
 namespace srose::ui
@@ -31,6 +32,7 @@ namespace srose::ui
     {
         widget_stack.push(std::make_shared<MainMenu>());
         widget_tree.emplace_at("mainmenu", widget_stack.top());
+        widget_tree.emplace_at("configpanel", std::make_shared<ConfigPanel>());
     }
 
     static std::unique_ptr<UIManager> g_uimgr;
