@@ -15,7 +15,9 @@ namespace srose::ui
 
     std::locale Widget::imbue(const std::locale& loc)
     {
-        return std::exchange(m_loc, loc);
+        auto lc = std::exchange(m_loc, loc);
+        OnImbue();
+        return std::move(lc);
     }
 
     std::string Widget::gettext(std::string_view id) const

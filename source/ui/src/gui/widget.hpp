@@ -31,6 +31,9 @@ namespace srose::ui
 
         [[nodiscard]]
         std::string gettext(std::string_view id) const;
+
+    protected:
+        virtual void OnImbue() {}
     };
 } // namespace srose::ui
 
