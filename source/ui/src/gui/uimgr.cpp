@@ -7,6 +7,7 @@
 #include "uimgr.hpp"
 #include <SDL_events.h>
 #include <memory>
+#include "mainmenu.hpp"
 
 
 namespace srose::ui
@@ -24,6 +25,12 @@ namespace srose::ui
         SDL_Event quit_event{};
         quit_event.type = SDL_QUIT;
         SDL_PushEvent(&quit_event);
+    }
+
+    void UIManager::InitializeWidgets()
+    {
+        widget_stack.push(std::make_shared<MainMenu>());
+        widget_tree.emplace_at("mainmenu", widget_stack.top());
     }
 
     static std::unique_ptr<UIManager> g_uimgr;
