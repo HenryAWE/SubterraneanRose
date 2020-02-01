@@ -19,6 +19,7 @@
 #include "gui/uimgr.hpp"
 #include "main_loop.hpp"
 #include "i18n/i18n.hpp"
+#include "gui/mainmenu.hpp"
 
 
 static void SRSCALL LoadFonts()
@@ -91,7 +92,8 @@ int SRSCALL program_entry(int argc, char* argv[])
         lang_ready.get();
         SDL_SetWindowTitle(display->win, GetDefaultLanguage()->gettext("srose", "Subterranean Rose").c_str());
         font_ready.get();
-        ui::CreateUIManager();
+        auto& uimgr = *ui::CreateUIManager();
+        uimgr.widget_stack.push(std::make_shared<MainMenu>());
         main_loop(display);
     }
     catch(std::exception& ex)
