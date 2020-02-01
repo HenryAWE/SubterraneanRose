@@ -23,6 +23,8 @@ namespace srose::ui
 
         virtual ~Widget() = default;
 
+        virtual void Update() {}
+
         [[nodiscard]]
         constexpr const std::locale& getloc() const noexcept { return m_loc; }
         std::locale imbue(const std::locale& loc);

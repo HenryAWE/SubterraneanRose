@@ -13,7 +13,10 @@ namespace srose::ui
 {
     void UIManager::Update()
     {
-
+        if(!widget_stack.empty())
+        {
+            widget_stack.top()->Update();
+        }
     }
 
     void UIManager::Quit() noexcept

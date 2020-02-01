@@ -21,7 +21,8 @@ namespace srose::ui
     public:
         MainMenu();
 
-        void Update();
+        void Update() override;
+
     private:
         using callback_type = void(MainMenu::*)();
         std::vector<std::pair<std::string, callback_type>> m_buttons;

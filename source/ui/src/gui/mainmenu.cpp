@@ -27,6 +27,8 @@ namespace srose::ui
 
     void MainMenu::Update()
     {
+        Widget::Update();
+
         auto& io = ImGui::GetIO();
 
         int background_flags =

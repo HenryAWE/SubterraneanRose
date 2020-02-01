@@ -7,12 +7,14 @@
 #ifndef SROSE_UI_GUI_uimgr_hpp_
 #define SROSE_UI_GUI_uimgr_hpp_
 
+#include <stack>
 #include <functional>
 #include <optional>
 #include <imgui.h>
 #include <imguisr.h>
 #include <sr/core/macros.h>
 #include <sr/filesystem/common.hpp>
+#include "widget.hpp"
 
 
 namespace srose::ui
@@ -26,6 +28,8 @@ namespace srose::ui
          * @brief Send quit event to SDL
          */
         void Quit() noexcept;
+
+        std::stack<std::shared_ptr<Widget>> widget_stack;
     };
 
     UIManager* SRSCALL CreateUIManager();
