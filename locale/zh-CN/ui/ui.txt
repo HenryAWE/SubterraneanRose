@@ -7,6 +7,9 @@
 @srose.ui.close = "关闭"
 @srose.ui.help = "帮助"
 
+@srose.ui.mainmenu.config = "设置"
+@srose.ui.mainmenu.exit = "退出"
+
 @srose.ui.main-menu.file = "文件"
 @srose.ui.main-menu.file.quit = "退出"
 @srose.ui.main-menu.window = "窗口"

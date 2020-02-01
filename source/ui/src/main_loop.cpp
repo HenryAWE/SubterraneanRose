@@ -15,6 +15,7 @@
 #include "gui/uimgr.hpp"
 #include "i18n/i18n.hpp"
 #include "gui/editor/editor_window.hpp"
+#include "gui/mainmenu.hpp"
 
 
 int SRSCALL main_loop(SR_WM_display* display)
@@ -28,6 +29,7 @@ int SRSCALL main_loop(SR_WM_display* display)
     main_menu::MainMenuBar main_menu(display);
     DebugUI dbg_ui(&main_menu.show_debug_ui);
     EditorWindow ed;
+    MainMenu mm;
 
     int loop = SDL_TRUE;
     while(loop)
@@ -38,6 +40,7 @@ int SRSCALL main_loop(SR_WM_display* display)
         try
         {
             main_menu.Update();
+            mm.Update();
 
             if (main_menu.show_imgui_demo)
                 ImGui::ShowDemoWindow(&main_menu.show_imgui_demo);

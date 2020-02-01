@@ -7,6 +7,9 @@
 @srose.ui.close = "Close"
 @srose.ui.help = "Help"
 
+@srose.ui.mainmenu.config = "Configuration"
+@srose.ui.mainmenu.exit = "Exit"
+
 @srose.ui.main-menu.file = "File"
 @srose.ui.main-menu.file.quit = "Quit"
 @srose.ui.main-menu.window = "Window"

@@ -14,6 +14,14 @@
 
 namespace srose::ui
 {
+    MainMenu::MainMenu()
+    {
+        constexpr int BUTTON_COUNT = 2;
+        m_buttons.reserve(BUTTON_COUNT);
+        m_buttons.push_back(gettext("srose.ui.mainmenu.config") + "###config");
+        m_buttons.push_back(gettext("srose.ui.mainmenu.exit") + "###exit");
+    }
+
     void MainMenu::Update()
     {
         auto& io = ImGui::GetIO();
@@ -24,6 +32,7 @@ namespace srose::ui
             ImGuiWindowFlags_NoBringToFrontOnFocus |
             ImGuiWindowFlags_NoResize |
             ImGuiWindowFlags_NoBackground |
+            ImGuiWindowFlags_NoScrollbar |
             ImGuiWindowFlags_NoSavedSettings;
         ImGui::SetNextWindowPosCenter();
         ImGui::SetNextWindowSize(io.DisplaySize/2.0f);
@@ -33,5 +42,11 @@ namespace srose::ui
             background_flags
         );
         assert(background);
+
+        const float button_height = (io.DisplaySize.y) / static_cast<float>(2 * m_buttons.size());
+        for(const auto& i : m_buttons)
+        {
+            ImGui::Button(i.c_str(), ImVec2(-1.0f, button_height));
+        }
     }
 } // namespace srose::ui
