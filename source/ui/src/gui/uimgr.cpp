@@ -5,6 +5,7 @@
  */
 
 #include "uimgr.hpp"
+#include <SDL_events.h>
 #include <memory>
 
 
@@ -13,6 +14,13 @@ namespace srose::ui
     void UIManager::Update()
     {
 
+    }
+
+    void UIManager::Quit() noexcept
+    {
+        SDL_Event quit_event{};
+        quit_event.type = SDL_QUIT;
+        SDL_PushEvent(&quit_event);
     }
 
     static std::unique_ptr<UIManager> g_uimgr;

@@ -21,6 +21,11 @@ namespace srose::ui
     {
     public:
         void Update();
+
+        /**
+         * @brief Send quit event to SDL
+         */
+        void Quit() noexcept;
     };
 
     UIManager* SRSCALL CreateUIManager();

@@ -10,7 +10,7 @@
 #include "mainmenu.hpp"
 #include <cassert>
 #include <imgui_internal.h>
-#include <SDL_events.h>
+#include "uimgr.hpp"
 
 
 namespace srose::ui
@@ -60,8 +60,6 @@ namespace srose::ui
 
     void MainMenu::Button_Exit()
     {
-        SDL_Event quit_event{};
-        quit_event.type = SDL_QUIT;
-        SDL_PushEvent(&quit_event);
+        GetUIManager()->Quit();
     }
 } // namespace srose::ui
