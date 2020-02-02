@@ -84,31 +84,6 @@ static void SRSCALL SR_WM_GetSRoseWindowSize(int* out_w, int* out_h, int flags, 
     #undef SR_WM_COMP_DISPLAY_SIZE
 }
 
-/**
- * @brief [Internal] Get the index of the OpenGL driver
- * 
- * @return int The index of the OpenGL driver, or -1 if error occurred
- */
-static int SRSCALL SR_WM_GetOpenGLRendererDriver()
-{
-    int total = SDL_GetNumRenderDrivers();
-    SDL_RendererInfo info;
-    for(int i = 0; i < total; ++i)
-    {
-        SDL_zero(info);
-        SDL_GetRenderDriverInfo(i, &info);
-        //TODO: Use OpenGL ES on mobile platform
-        if (strspn(info.name, "opengl") != 0)
-            return i;
-    }
-
-    SDL_LogError(
-        SDL_LOG_CATEGORY_APPLICATION,
-        "[WM] Cannot find a OpenGL render driver"
-    );
-    return -1;
-}
-
 SR_WM_display* SRSCALL SR_WM_CreateDisplay(
     const char* title,
     int additional_flags
