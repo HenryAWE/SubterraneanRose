@@ -21,8 +21,6 @@ namespace srose::gpu::opengl3
 {
     class Renderer : public gpu::Renderer
     {
-        SR_WM_display* m_disp = nullptr;
-
     public:
         Renderer(SR_WM_display* disp);
 

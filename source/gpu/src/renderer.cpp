@@ -5,11 +5,16 @@
  */
 
 #include "sr/gpu/renderer.hpp"
+#include <cassert>
 
 
 namespace srose::gpu
 {
-    Renderer::Renderer() = default;
+    Renderer::Renderer(SR_WM_display* disp)
+        : m_disp(disp)
+    {
+        assert(m_disp);
+    }
 
     Renderer::~Renderer() noexcept = default;
 

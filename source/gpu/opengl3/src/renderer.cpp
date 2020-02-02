@@ -13,7 +13,7 @@
 namespace srose::gpu::opengl3
 {
     Renderer::Renderer(SR_WM_display* disp)
-        : m_disp(disp)
+        : gpu::Renderer(disp)
     {
         SR_ASSERT_CTX();
         SDL_LogInfo(
@@ -33,7 +33,7 @@ namespace srose::gpu::opengl3
     void Renderer::Present()
     {
         SR_ASSERT_CTX();
-        SDL_GL_SwapWindow(m_disp->win);
+        SDL_GL_SwapWindow(GetDisplay()->win);
     }
 
     std::string Renderer::Information()
