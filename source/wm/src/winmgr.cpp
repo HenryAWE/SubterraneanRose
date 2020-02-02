@@ -21,12 +21,12 @@ namespace srose::wm
         return g_renderer.get();
     }
 
-    void SRSCALL DestroyRenderer()
+    void SRSCALL DestroyRenderer() noexcept
     {
         g_renderer.reset();
     }
 
-    gpu::Renderer* SRSCALL GetRenderer()
+    gpu::Renderer* SRSCALL GetRenderer() noexcept
     {
         return g_renderer.get();
     }

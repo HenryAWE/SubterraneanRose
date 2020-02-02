@@ -87,18 +87,18 @@ static void SRSCALL SR_WM_GetSRoseWindowSize(int* out_w, int* out_h, int flags, 
 SR_WM_display* SRSCALL SR_WM_CreateDisplay(
     const char* title,
     int additional_flags
-) { // TODO: Stable behavior
+) {
     SR_WM_display* display = (SR_WM_display*)malloc(sizeof(SR_WM_display));
     SDL_zerop(display);
 
-    /*Set the OpenGL attributes for window&context creation*/
+    /* Set the OpenGL attributes for window&context creation*/
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
 
-    /*Create window */
+    /* Create window */
     additional_flags |= SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI; // Add necessary flags
 
     const int display_index = 0;
@@ -120,7 +120,7 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
         additional_flags
     );
     if (!display->win)
-    { // Create window failed
+    { // Failed to create a requested window
         SDL_LogError(
             SDL_LOG_CATEGORY_APPLICATION,
             "[WM] SDL_CreateWindow() failed: %s",
@@ -132,7 +132,7 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
     }
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "[WM] SDL_CreateWindow() succeeded");
     
-    /*Setup OpenGL */
+    /* Setup OpenGL context */
     display->glctx = SDL_GL_CreateContext(display->win);
     if(!display->glctx)
     {
@@ -155,7 +155,7 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
         return NULL;
     }
 
-    /*ImGui */
+    /* Initialize ImGui */
     if(SR_WM_InitEventSystem(display) != 0)
     {
         SDL_GL_MakeCurrent(display->win, NULL);
@@ -166,7 +166,7 @@ SR_WM_display* SRSCALL SR_WM_CreateDisplay(
         return NULL;
     }
 
-    /*Return the result */
+    /* Return the result */
     return display;
 }
 

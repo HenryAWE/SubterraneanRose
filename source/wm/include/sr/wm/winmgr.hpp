@@ -16,11 +16,17 @@ namespace srose::wm
 {
     using ::SR_WM_display;
 
-   gpu::Renderer* SRSCALL CreateRenderer(SR_WM_display* display);
-   void SRSCALL DestroyRenderer();
+    /**
+     * @brief Create renderer
+     * 
+     * @param display The instance of the display
+     * @return gpu::Renderer* CreateRenderer The created renderer
+     */
+    gpu::Renderer* SRSCALL CreateRenderer(SR_WM_display* display);
+    void SRSCALL DestroyRenderer() noexcept;
 
-   [[nodiscard]]
-   gpu::Renderer* SRSCALL GetRenderer();
+    [[nodiscard]]
+    gpu::Renderer* SRSCALL GetRenderer() noexcept;
 } // namespace srose::wm
 
 

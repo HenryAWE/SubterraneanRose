@@ -5,8 +5,6 @@
  */
 
 #include <imgui.h>
-
-// SDL
 #include <SDL.h>
 #include <cassert>
 #include <imgui_impl_sdl.h>
