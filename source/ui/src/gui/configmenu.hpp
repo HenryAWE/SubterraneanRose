@@ -22,12 +22,18 @@ namespace srose::ui
         void Update() override;
 
     private:
+        void LoadButtons();
+
         using callback_type = void(ConfigPanel::*)();
         std::vector<std::pair<std::string, callback_type>> m_buttons;
 
         void Button_Video();
         void Button_Language();
         void Button_Return();
+
+        callback_type m_content_func = nullptr;
+
+        void Content_Video();
     };
 } // namespace srose::ui
 

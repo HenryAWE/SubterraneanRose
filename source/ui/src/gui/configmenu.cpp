@@ -18,13 +18,7 @@ namespace srose::ui
 {
     ConfigPanel::ConfigPanel()
     {
-        using std::make_pair;
-
-        constexpr int BUTTON_COUNT = 2;
-        m_buttons.reserve(BUTTON_COUNT);
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.video") + "###lang", &ConfigPanel::Button_Video));
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.lang") + "###lang", &ConfigPanel::Button_Language));
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
+        LoadButtons();
     }
 
     void ConfigPanel::Update()
@@ -64,12 +58,27 @@ namespace srose::ui
         /* Item content */
         ImVec2 content_region(ImGui::GetContentRegionAvail().x * 0.85f, io.DisplaySize.y * 0.7f);
         ImGui::BeginChild("##content", content_region, true);
+        if(m_content_func)
+        {
+            (this->*m_content_func)();
+        }
         ImGui::EndChild();
+    }
+
+    void ConfigPanel::LoadButtons()
+    {
+        using std::make_pair;
+
+        constexpr int BUTTON_COUNT = 2;
+        m_buttons.reserve(BUTTON_COUNT);
+        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.video") + "###lang", &ConfigPanel::Button_Video));
+        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.lang") + "###lang", &ConfigPanel::Button_Language));
+        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
     }
 
     void ConfigPanel::Button_Video()
     {
-
+        m_content_func = &ConfigPanel::Content_Video;
     }
     void ConfigPanel::Button_Language()
     {
@@ -80,5 +89,10 @@ namespace srose::ui
         auto& uimgr = *GetUIManager();
         if(&*uimgr.widget_stack.top() == this)
             uimgr.widget_stack.pop();
+    }
+
+    void ConfigPanel::Content_Video()
+    {
+
     }
 } // namespace srose::ui
