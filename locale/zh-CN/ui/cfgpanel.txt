@@ -1,0 +1,5 @@
+# 设置面板
+
+@srose.ui.configpanel.video = "视频选项"
+@srose.ui.configpanel.lang = "显示语言"
+@srose.ui.configpanel.return = "返回"

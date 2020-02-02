@@ -1,0 +1,5 @@
+# Configuration Panel
+
+@srose.ui.configpanel.video = "Video Options"
+@srose.ui.configpanel.lang = "Display Language"
+@srose.ui.configpanel.return = "Return"

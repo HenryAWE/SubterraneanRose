@@ -10,10 +10,6 @@
 @srose.ui.mainmenu.config = "设置"
 @srose.ui.mainmenu.exit = "退出"
 
-@srose.ui.configpanel.video = "视频选项"
-@srose.ui.configpanel.lang = "显示语言"
-@srose.ui.configpanel.return = "返回"
-
 @srose.ui.main-menu.file = "文件"
 @srose.ui.main-menu.file.quit = "退出"
 @srose.ui.main-menu.window = "窗口"
