@@ -23,6 +23,7 @@ namespace srose::ui
 
     private:
         void LoadButtons();
+        void ResetStates();
 
         using callback_type = void(ConfigPanel::*)();
         std::vector<std::pair<std::string, callback_type>> m_buttons;
@@ -33,6 +34,7 @@ namespace srose::ui
 
         callback_type m_content_func = nullptr;
 
+        std::string m_str_windowed;
         void Content_Video();
     };
 } // namespace srose::ui

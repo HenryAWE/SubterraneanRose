@@ -11,6 +11,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imguisr.h>
+#include <sr/wm/winmgr.hpp>
 #include "uimgr.hpp"
 
 
@@ -74,6 +75,12 @@ namespace srose::ui
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.video") + "###lang", &ConfigPanel::Button_Video));
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.lang") + "###lang", &ConfigPanel::Button_Language));
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
+
+        m_str_windowed = gettext("srose.ui.configpanel.video.windowed");
+    }
+    void ConfigPanel::ResetStates()
+    {
+        m_content_func = nullptr;
     }
 
     void ConfigPanel::Button_Video()
@@ -86,6 +93,7 @@ namespace srose::ui
     }
     void ConfigPanel::Button_Return()
     {
+        ResetStates();
         auto& uimgr = *GetUIManager();
         if(&*uimgr.widget_stack.top() == this)
             uimgr.widget_stack.pop();
@@ -93,6 +101,11 @@ namespace srose::ui
 
     void ConfigPanel::Content_Video()
     {
+        if(m_content_func != &ConfigPanel::Content_Video)
+            ResetStates();
 
+        SDL_Window* win = wm::GetRenderer()->GetDisplay()->win;
+        bool windowed = !(SDL_GetWindowFlags(win)&SDL_WINDOW_FULLSCREEN);
+        ImGui::Checkbox(m_str_windowed.c_str(), &windowed);
     }
 } // namespace srose::ui
