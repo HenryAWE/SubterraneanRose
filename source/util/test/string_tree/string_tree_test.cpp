@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(test_string_path)
     }
 }
 
-void test_ctor()
+BOOST_AUTO_TEST_CASE(test_string_tree_ctor)
 {
     string_tree<int, '/'> base;
     base.emplace_at("srose/value/1", 233);
@@ -44,10 +44,8 @@ void test_ctor()
     BOOST_TEST_REQUIRE(moved.get_value("srose/value/1") == 233);
 }
 
-BOOST_AUTO_TEST_CASE(test1)
+BOOST_AUTO_TEST_CASE(test_string_tree)
 {
-    test_ctor();
-
     // Test emplacement
     string_tree<int, '/'> st(5);
     static_assert(st.separator() == '/' ,"Unexpected separator");
