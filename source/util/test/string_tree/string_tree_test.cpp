@@ -56,6 +56,14 @@ BOOST_AUTO_TEST_CASE(test_string_tree)
     st.emplace(666);
     BOOST_TEST_REQUIRE(st.get_value() == 666);
 
+    // Test operators
+    st.emplace_at("first/second", 12);
+    st.emplace_at("first", 1);
+    BOOST_TEST_REQUIRE(st["first"] == 1);
+    BOOST_TEST_REQUIRE(st["first/second"] == 12);
+    st["first"] = 21;
+    BOOST_TEST_REQUIRE(st.get_value("first") == 21);
+
     // Test assignment
     std::string tm = "move";
     string_tree<std::string> sts = std::move(tm);
