@@ -18,6 +18,7 @@
 
 namespace srose::util
 {
+    /* Helper class */
     class string_tree_base
     {
     public:
@@ -35,6 +36,7 @@ namespace srose::util
         }
     };
 
+    /* Helper class */
     template <
         typename CharT,
         CharT Separator
@@ -121,6 +123,7 @@ namespace srose::util
         typedef basic_string_path<CharT, Separator> path_type;
         struct comp
         {
+            // Enable comparing across different type without constructing new instance
             typedef void is_transparent;
 
             bool operator()(const string_view_type& lhs, const string_view_type& rhs) const noexcept
@@ -268,6 +271,7 @@ namespace srose::util
                 const_cast<self_type*>(iter)->modify(std::move(func));
         }
 
+        /* Iterators */
         iterator begin() noexcept { return m_children.begin();}
         iterator end() noexcept { return m_children.end(); }
         const_iterator begin() const noexcept { return m_children.begin();}
@@ -275,12 +279,23 @@ namespace srose::util
         const_iterator cbegin() const noexcept { return m_children.cbegin(); }
         const_iterator cend() const noexcept { return m_children.cend(); }
 
+        /* Operators */
+        value_type& operator[](string_view_type pt)
+        {
+            self_type* iter = force_path(pt);
+            if(!iter->has_value())
+                iter->m_data.emplace();
+            return iter->m_data.value();
+        }
+        value_type& operator*() { return *m_data; }
+        const value_type& operator*() const { return *m_data; }
+
     private:
         /**
-         * @brief Internal function, a new child will be created when the path cannot be found
+         * @brief [Internal] Walk througth the path, a new child will be created when the path cannot be found
          * 
          * @param sv Path
-         * @return self_type* Search result
+         * @return self_type* Search result, never null
          */
         self_type* force_path(string_view_type sv)
         {
@@ -295,7 +310,7 @@ namespace srose::util
         }
 
         /**
-         * @brief Internal function
+         * @brief [Internal] Walk througth the path
          * 
          * @param sv Path
          * @return self_type const* Search result, or nullptr when the path cannot be found

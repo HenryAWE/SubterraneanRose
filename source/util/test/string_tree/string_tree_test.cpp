@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(test_string_path)
     }
 }
 
-void test_ctor()
+BOOST_AUTO_TEST_CASE(test_string_tree_ctor)
 {
     string_tree<int, '/'> base;
     base.emplace_at("srose/value/1", 233);
@@ -44,10 +44,8 @@ void test_ctor()
     BOOST_TEST_REQUIRE(moved.get_value("srose/value/1") == 233);
 }
 
-BOOST_AUTO_TEST_CASE(test1)
+BOOST_AUTO_TEST_CASE(test_string_tree)
 {
-    test_ctor();
-
     // Test emplacement
     string_tree<int, '/'> st(5);
     static_assert(st.separator() == '/' ,"Unexpected separator");
@@ -57,6 +55,18 @@ BOOST_AUTO_TEST_CASE(test1)
     BOOST_TEST_REQUIRE(st.get_value() == 233);
     st.emplace(666);
     BOOST_TEST_REQUIRE(st.get_value() == 666);
+
+    // Test operators
+    st.emplace_at("first/second", 12);
+    st.emplace_at("first", 1);
+    BOOST_TEST_REQUIRE(st["first"] == 1);
+    BOOST_TEST_REQUIRE(st["first/second"] == 12);
+    st["first"] = 21;
+    BOOST_TEST_REQUIRE(st.get_value("first") == 21);
+    *st = 4;
+    BOOST_TEST_REQUIRE(*st == 4);
+    st.modify([](int& v){ v=6; });
+    BOOST_TEST_REQUIRE((*const_cast<const string_tree<int, '/'>&>(st) == 6));
 
     // Test assignment
     std::string tm = "move";
