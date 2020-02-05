@@ -9,6 +9,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <stdexcept>
 #include <sr/locale/locale.hpp>
 #include <boost/locale.hpp>
 #include <sr/ui/console/cmdline.hpp>
@@ -16,6 +17,12 @@
 
 namespace srose::ui
 {
+    class LocaleNotFound : public std::runtime_error
+    {
+    public:
+        LocaleNotFound() : runtime_error("Locale not found") {}
+    };
+
     std::shared_ptr<locale::Language> GetDefaultLanguageInternal();
     std::shared_ptr<locale::Language> GetNearestLanguageInternal(std::locale lc);
 
@@ -26,8 +33,9 @@ namespace srose::ui
     {
         namespace fs = std::filesystem;
         if(!fs::exists(lcres))
-            goto end;
+            throw LocaleNotFound();
 
+        // Iterate through the locale directory
         for(auto dt : fs::directory_iterator(lcres))
         {
             if(!fs::is_directory(dt.path())) continue;
@@ -36,16 +44,16 @@ namespace srose::ui
             g_lang_map[lang->gettext("srose.language.iso")] = std::move(lang);
         }
 
-    end:
-        if(g_lang_map.size() == 0)
-        {
-            g_default_lang = g_lang_map["C"] = std::make_shared<locale::Language>();
+        if(g_lang_map.size() == 0) // Nothing was loaded
+            throw LocaleNotFound();
 
-            return;
-        }
-
+        // Set a specific locale as default locale
         auto sys_lc = locale::GetSystemLocale();
+        if(g_lang_map.count("en"))
+            g_default_lang = g_lang_map["en"];
         g_default_lang = GetNearestLanguageInternal(sys_lc);
+        if(!g_default_lang)
+            throw LocaleNotFound();
         std::locale::global(locale::CreateTranslation(sys_lc, g_default_lang));
     }
 
@@ -78,10 +86,10 @@ namespace srose::ui
         }
 
         lcs.erase(std::unique(lcs.begin(), lcs.end()), lcs.end());
-        if(lcs.size() == 0) return g_lang_map["C"];
+        if(lcs.size() == 0) return g_default_lang;
         std::sort(lcs.begin(), lcs.end(), [](auto& r, auto& l)->bool { return r.second>l.second; });
         if(lcs[0].second != 0) lcs.erase(std::remove_if(lcs.begin(), lcs.end(), [](auto& i)->bool { return i.second==0; }), lcs.end());
-        if(lcs.size() == 0) return g_lang_map["C"];
+        if(lcs.size() == 0) return g_default_lang;
 
         return g_lang_map[lcs[0].first];
     }
