@@ -23,15 +23,17 @@ namespace srose::ui
         LocaleNotFound() : runtime_error("Locale not found") {}
     };
 
-    std::shared_ptr<locale::Language> GetDefaultLanguageInternal();
-    std::shared_ptr<locale::Language> GetNearestLanguageInternal(std::locale lc);
-
     static std::map<std::string, std::shared_ptr<locale::Language>> g_lang_map;
     static std::shared_ptr<locale::Language> g_default_lang;
 
+    locale::Language* GetDefaultLanguage() noexcept
+    {
+        return g_default_lang.get();
+    }
+
     void LoadAllLanguage(const std::filesystem::path& lcres)
     {
-        namespace fs = std::filesystem;
+        namespace fs = filesystem;
         if(!fs::exists(lcres))
             throw LocaleNotFound();
 
@@ -51,28 +53,22 @@ namespace srose::ui
         auto sys_lc = locale::GetSystemLocale();
         if(g_lang_map.count("en"))
             g_default_lang = g_lang_map["en"];
-        g_default_lang = GetNearestLanguageInternal(sys_lc);
+        g_default_lang = GetNearestLanguage(sys_lc);
         if(!g_default_lang)
             throw LocaleNotFound();
         std::locale::global(locale::CreateTranslation(sys_lc, g_default_lang));
     }
 
-    std::shared_ptr<locale::Language> GetDefaultLanguageInternal()
-    {
-        assert(g_default_lang);
-        return g_default_lang;
-    }
-
-    std::shared_ptr<locale::Language> GetNearestLanguageInternal(std::locale lc)
+    std::shared_ptr<locale::Language> GetNearestLanguage(std::locale lc)
     {
         std::string preferred = console::GetPreferredLanguage();
         auto& lc_info = std::use_facet<boost::locale::info>(lc);
-        std::vector<std::pair<std::string, int>> lcs;
+        std::vector<std::pair<std::string /*name*/, int /*weight*/>> lcs;
         lcs.reserve(g_lang_map.size() + 1);
         for(auto& i : g_lang_map)
             lcs.emplace_back(std::make_pair(i.first, 0));
         for(auto& j : lcs)
-        {
+        { // Calculate locale's weight
             std::string_view sv = j.first;
             if(sv=="C" || sv.size()==0) continue;
             if(!preferred.empty() && preferred==sv) { j.second = 10; continue; }
@@ -85,6 +81,7 @@ namespace srose::ui
                 ++j.second;
         }
 
+        // Chose the most suitable locale based on the weight
         lcs.erase(std::unique(lcs.begin(), lcs.end()), lcs.end());
         if(lcs.size() == 0) return g_default_lang;
         std::sort(lcs.begin(), lcs.end(), [](auto& r, auto& l)->bool { return r.second>l.second; });
@@ -92,14 +89,5 @@ namespace srose::ui
         if(lcs.size() == 0) return g_default_lang;
 
         return g_lang_map[lcs[0].first];
-    }
-
-    locale::Language* GetDefaultLanguage() noexcept
-    {
-        return g_default_lang.get();
-    }
-    std::shared_ptr<locale::Language> GetNearestLanguage(std::locale lc)
-    {
-        return std::move(GetNearestLanguageInternal(lc));
     }
 } // namespace srose::ui
