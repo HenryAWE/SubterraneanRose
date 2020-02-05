@@ -63,6 +63,10 @@ BOOST_AUTO_TEST_CASE(test_string_tree)
     BOOST_TEST_REQUIRE(st["first/second"] == 12);
     st["first"] = 21;
     BOOST_TEST_REQUIRE(st.get_value("first") == 21);
+    *st = 4;
+    BOOST_TEST_REQUIRE(*st == 4);
+    st.modify([](int& v){ v=6; });
+    BOOST_TEST_REQUIRE((*const_cast<const string_tree<int, '/'>&>(st) == 6));
 
     // Test assignment
     std::string tm = "move";

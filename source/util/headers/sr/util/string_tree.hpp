@@ -279,6 +279,7 @@ namespace srose::util
         const_iterator cbegin() const noexcept { return m_children.cbegin(); }
         const_iterator cend() const noexcept { return m_children.cend(); }
 
+        /* Operators */
         value_type& operator[](string_view_type pt)
         {
             self_type* iter = force_path(pt);
@@ -286,6 +287,8 @@ namespace srose::util
                 iter->m_data.emplace();
             return iter->m_data.value();
         }
+        value_type& operator*() { return *m_data; }
+        const value_type& operator*() const { return *m_data; }
 
     private:
         /**
