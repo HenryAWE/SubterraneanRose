@@ -43,6 +43,7 @@ namespace srose::gpu::opengl3
         [[nodiscard]]
         native_handle_type GetNativeHandle() const noexcept override { return (void*)(std::intptr_t)m_handle; }
 
+        bool LoadDefaultTexture() override;
         bool LoadFromFile(const filesystem::path& file) override;
 
     private:

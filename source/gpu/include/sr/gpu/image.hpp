@@ -49,6 +49,12 @@ namespace srose::gpu
         ImVec2 GetSizeImVec2() const noexcept;
 
         /**
+         * @brief Load a default red and black texture
+         * 
+         * @return bool Always true
+         */
+        virtual bool LoadDefaultTexture() = 0;
+        /**
          * @brief Load a texture from file
          * 
          * @param file The texture file

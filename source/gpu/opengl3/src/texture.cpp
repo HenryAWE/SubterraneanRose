@@ -32,6 +32,45 @@ namespace srose::gpu::opengl3
         m_handle = 0;
     }
 
+    bool Texture::LoadDefaultTexture()
+    {
+        SR_ASSERT_CTX();
+        if(!m_handle) Generate();
+        constexpr int width = 4, height = 4;
+        #define SR_BLACK {0, 0, 0, 255}
+        #define SR_RED {255, 0, 0, 255}
+        constexpr unsigned char data[width][height][4 /*RGBA*/]
+        {
+            { SR_RED, SR_BLACK, SR_RED, SR_BLACK },
+            { SR_BLACK, SR_RED, SR_BLACK, SR_RED },
+            { SR_RED, SR_BLACK, SR_RED, SR_BLACK },
+            { SR_BLACK, SR_RED, SR_BLACK, SR_RED }
+        };
+
+        glBindTexture(GL_TEXTURE_2D, m_handle);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RGBA,
+            width,
+            height,
+            0,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            data
+        );
+        SR_ASSERT_GL();
+        glGenerateMipmap(GL_TEXTURE_2D);
+        SR_ASSERT_GL();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        m_size = {width, height};
+
+        return true;
+    }
     bool Texture::LoadFromFile(const char* path)
     {
         SR_ASSERT_CTX();
@@ -47,7 +86,7 @@ namespace srose::gpu::opengl3
                 path, stbi_failure_reason()
             );
 
-            return false;
+            return LoadDefaultTexture();
         }
 
         glBindTexture(GL_TEXTURE_2D, m_handle);
