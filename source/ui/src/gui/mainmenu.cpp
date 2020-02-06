@@ -11,6 +11,7 @@
 #include <cassert>
 #include <imgui_internal.h>
 #include "uimgr.hpp"
+#include "editor/editor_window.hpp"
 
 
 namespace srose::ui
@@ -19,8 +20,9 @@ namespace srose::ui
     {
         using std::make_pair;
 
-        constexpr int BUTTON_COUNT = 2;
+        constexpr int BUTTON_COUNT = 3;
         m_buttons.reserve(BUTTON_COUNT);
+        m_buttons.push_back(make_pair(gettext("srose.ui.editor") + "###editor", &MainMenu::Button_Editor));
         m_buttons.push_back(make_pair(gettext("srose.ui.mainmenu.config") + "###config", &MainMenu::Button_Config));
         m_buttons.push_back(make_pair(gettext("srose.ui.mainmenu.exit") + "###exit", &MainMenu::Button_Exit));
     }
@@ -60,10 +62,15 @@ namespace srose::ui
         }
     }
 
+    void MainMenu::Button_Editor()
+    {
+        auto& uimgr = *GetUIManager();
+        uimgr.widget_stack.push(uimgr.widget_tree["editor.window"]);
+    }
     void MainMenu::Button_Config()
     {
         auto& uimgr = *GetUIManager();
-        uimgr.widget_stack.push(uimgr.widget_tree.get_value("configpanel"));
+        uimgr.widget_stack.push(uimgr.widget_tree["configpanel"]);
     }
     void MainMenu::Button_Exit()
     {

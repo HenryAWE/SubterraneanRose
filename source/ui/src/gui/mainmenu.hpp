@@ -27,6 +27,7 @@ namespace srose::ui
         using callback_type = void(MainMenu::*)();
         std::vector<std::pair<std::string, callback_type>> m_buttons;
 
+        void Button_Editor();
         void Button_Config();
         void Button_Exit();
     };

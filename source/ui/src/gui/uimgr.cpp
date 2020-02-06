@@ -8,6 +8,7 @@
 #include <SDL_events.h>
 #include <memory>
 #include "mainmenu.hpp"
+#include "editor/editor_window.hpp"
 #include "configmenu.hpp"
 
 
@@ -32,6 +33,7 @@ namespace srose::ui
     {
         widget_stack.push(std::make_shared<MainMenu>());
         widget_tree.emplace_at("mainmenu", widget_stack.top());
+        widget_tree.emplace_at("editor.window", std::make_shared<editor::EditorWindow>());
         widget_tree.emplace_at("configpanel", std::make_shared<ConfigPanel>());
     }
 

@@ -12,26 +12,19 @@
 #include "../widget.hpp"
 
 
-namespace srose::ui
+namespace srose::ui::editor
 {
     class EditorWindow : public Widget
     {
-        bool m_visible = true;
-        std::string window_title;
-        ImGuiSR::FileBrowser m_browser;
-
-        struct MenuBarData
-        {
-            std::string file, open, close;
-        }m_menu_bar;
     public:
         EditorWindow();
 
-        void Update();
-
-        void Show() noexcept { m_visible = true; }
+        void Update() override;
 
     private:
+        std::string m_title;
+        void LoadAll();
+
         void UpdateMenuBar();
     };
 } // namespace srose::ui
