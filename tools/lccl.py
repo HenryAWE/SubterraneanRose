@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser(description="Compiler Options")
 parser.add_argument("--verbose", "-v", action="count", default=0)
 parser.add_argument("--input", "-i", help="Input file(s)", nargs='+', required=True)
 parser.add_argument("--stop-on-error", help="Stop on error", action="store_true")
-parser.add_argument("--action", choices=["error-checking", "display"], default="error-checking")
+parser.add_argument("--action", choices=["error-checking", "display","compile"], default="error-checking")
 if len(sys.argv)<=1:
     parser.print_help()
     sys.exit(0)
@@ -33,5 +33,11 @@ elif args.action == "display":
     if cl.verbose >= 1:
         print("[lccl] Display")
     cl.mode = srlc.compiler.option.DISPLAY
+    for file in args.input:
+        cl.load(file)
+elif args.action == "compile":
+    if cl.verbose >=1:
+        print("[lccl] Compile")
+    cl.mode = srlc.compiler.option.COMPILE
     for file in args.input:
         cl.load(file)

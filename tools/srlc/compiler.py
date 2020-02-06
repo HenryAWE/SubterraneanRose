@@ -11,6 +11,7 @@ from enum import IntEnum
 class option(IntEnum):
     ERROR_CHECKING = 1
     DISPLAY = 2
+    COMPILE = 3
 
 class compiler:
     @staticmethod
@@ -22,6 +23,19 @@ class compiler:
     stop_on_err = False
     mode = option.ERROR_CHECKING
     verbose = 0
+    data = {}
+
+    def push_var(self, strid, tr):
+        items = self.data
+        sepid = strid.split('.')
+        for id in sepid:
+            if id not in items:
+                if id == sepid[-1]:
+                    items[id] = [{}, tr]
+                    break
+                else:
+                    items[id] = [{}, None]
+            items = items[id][0]
 
     def parse_string(self, string, file, line):
         string.strip()
@@ -47,6 +61,10 @@ class compiler:
         tr = tr[1:-1]
         if self.verbose>=3 or self.mode==option.DISPLAY:
             print("[compiler]", strid.split('.'), "= \"%s\""%tr)
+
+        if self.mode!=option.COMPILE:
+            return
+        self.push_var(strid, tr)
 
 
     def load(self, filename):
