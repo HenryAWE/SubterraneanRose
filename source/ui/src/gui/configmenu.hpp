@@ -36,6 +36,7 @@ namespace srose::ui
 
         std::string m_str_windowed;
         void Content_Video();
+        void Content_Language();
     };
 } // namespace srose::ui
 

@@ -70,9 +70,9 @@ namespace srose::ui
     {
         using std::make_pair;
 
-        constexpr int BUTTON_COUNT = 2;
+        constexpr int BUTTON_COUNT = 3;
         m_buttons.reserve(BUTTON_COUNT);
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.video") + "###lang", &ConfigPanel::Button_Video));
+        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.video") + "###video", &ConfigPanel::Button_Video));
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.lang") + "###lang", &ConfigPanel::Button_Language));
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
 
@@ -85,11 +85,19 @@ namespace srose::ui
 
     void ConfigPanel::Button_Video()
     {
-        m_content_func = &ConfigPanel::Content_Video;
+        if(m_content_func != &ConfigPanel::Content_Video)
+        {
+            ResetStates();
+            m_content_func = &ConfigPanel::Content_Video;
+        }
     }
     void ConfigPanel::Button_Language()
     {
-
+        if(m_content_func != &ConfigPanel::Content_Language)
+        {
+            ResetStates();
+            m_content_func = &ConfigPanel::Content_Language;
+        }
     }
     void ConfigPanel::Button_Return()
     {
@@ -101,11 +109,12 @@ namespace srose::ui
 
     void ConfigPanel::Content_Video()
     {
-        if(m_content_func != &ConfigPanel::Content_Video)
-            ResetStates();
-
         SDL_Window* win = wm::GetRenderer()->GetDisplay()->win;
         bool windowed = !(SDL_GetWindowFlags(win)&SDL_WINDOW_FULLSCREEN);
         ImGui::Checkbox(m_str_windowed.c_str(), &windowed);
+    }
+    void ConfigPanel::Content_Language()
+    {
+
     }
 } // namespace srose::ui
