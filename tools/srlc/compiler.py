@@ -7,6 +7,7 @@
 
 import os, sys
 from enum import IntEnum
+import struct
 
 class option(IntEnum):
     ERROR_CHECKING = 1
@@ -76,3 +77,35 @@ class compiler:
         for string in f.read().splitlines():
             line_number += 1
             self.parse_string(string, os.path.basename(filename), line_number)
+
+    @staticmethod
+    def compile_I32(value):
+        return struct.Struct("<I").pack(value)
+    @staticmethod
+    def compile_cxxstr(value):
+        if not value:
+            return compiler.compile_I32(0)
+        bstr = value.encode()
+        return compiler.compile_I32(len(bstr))+bstr
+    @staticmethod
+    def compile_srstrtree(subid, value):
+        bstr = compiler.compile_cxxstr(subid)
+        bstr += compiler.compile_cxxstr(value[1])
+        count = len(value[0])
+        bstr += compiler.compile_I32(count)
+        for it in value[0].items():
+            bstr += compiler.compile_srstrtree(it[0], it[1])
+        return bstr
+
+    def compile(self, file):
+        output = open(file, "w+b")
+        if self.verbose>=2:
+            print("[compiler] Write to file \"%s\""%file)
+        # Header
+        output.write(b"SRLC")
+        # Version number
+        output.write(struct.Struct("<III").pack(0, 1, 0))
+        # Translation texts
+        output.write(b"@txt")
+        for it in self.data.items():
+            output.write(compiler.compile_srstrtree(it[0], it[1]))
