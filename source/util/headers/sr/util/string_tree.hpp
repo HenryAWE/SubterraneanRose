@@ -222,6 +222,18 @@ namespace srose::util
         }
 
         [[nodiscard]]
+        /**
+         * @brief Get a child node, will create new node if path doesn't exist
+         * 
+         * @param pt Path
+         * @return self_type& The child node
+         */
+        self_type& child(string_view_type pt)
+        {
+            return *force_path(pt);
+        }
+
+        [[nodiscard]]
         value_type get_value() const { return *m_data; }
         [[nodiscard]]
         value_type get_value(string_view_type pt) const
