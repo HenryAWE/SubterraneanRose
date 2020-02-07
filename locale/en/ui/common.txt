@@ -1,0 +1,3 @@
+# Common strings
+
+@srose.ui.common.return = "Return"

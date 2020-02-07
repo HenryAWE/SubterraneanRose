@@ -1,0 +1,3 @@
+# 常见字符串
+
+@srose.ui.common.return = "返回"
