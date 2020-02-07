@@ -53,7 +53,7 @@ int SRSCALL program_entry(int argc, char* argv[])
     using namespace srose::ui;
 
     SetWorkingDirectory(argv[0]);
-    auto lang_ready = std::async(std::launch::async, LoadAllLanguage, filesystem::GetLocaleFolder());
+    LoadAllLanguage(filesystem::GetLocaleFolder());
 
     if(SR_UI_CONSOLE_ParseArg(argc, argv) == 1)
     {
@@ -93,8 +93,8 @@ int SRSCALL program_entry(int argc, char* argv[])
     {
         wm::CreateRenderer(display);
         auto font_ready = std::async(std::launch::async, LoadFonts);
+        SelectLanguage();
         res::CreateResourceManager();
-        lang_ready.get();
         SDL_SetWindowTitle(display->win, GetDefaultLanguage()->gettext("srose", "Subterranean Rose").c_str());
         font_ready.get();
         ui::CreateUIManager()->InitializeWidgets();

@@ -19,6 +19,10 @@ namespace srose::ui
      * @param lcres The path to the folder, typically "./locale/"
      */
     void LoadAllLanguage(const std::filesystem::path& lcres);
+    /**
+     * @brief Select a language as default one based on system setting and command line argument
+     */
+    void SelectLanguage();
 
     /**
      * @brief Get the default language

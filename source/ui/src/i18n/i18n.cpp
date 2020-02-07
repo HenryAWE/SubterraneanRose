@@ -40,7 +40,7 @@ namespace srose::ui
         // Iterate through the locale directory
         for(auto dt : fs::directory_iterator(lcres))
         {
-            if(!fs::is_directory(dt.path())) continue;
+            if(fs::is_directory(dt.path()) || dt.path().extension()!=".srlc") continue;
             auto lang = std::make_shared<locale::Language>(dt.path());
 
             g_lang_map[lang->gettext("srose.language.iso")] = std::move(lang);
@@ -48,7 +48,9 @@ namespace srose::ui
 
         if(g_lang_map.size() == 0) // Nothing was loaded
             throw LocaleNotFound();
-
+    }
+    void SelectLanguage()
+    {
         // Set a specific locale as default locale
         auto sys_lc = locale::GetSystemLocale();
         if(g_lang_map.count("en"))
