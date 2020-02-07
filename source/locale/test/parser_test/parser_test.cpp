@@ -5,45 +5,38 @@
 #include <sr/locale/parser.hpp>
 #include <string>
 #include <sstream>
-#include <boost/locale/encoding_utf.hpp>
 
 
-const char translations[] =
-R"(
-# This is a comment
-@srose.first = "First Message"
-@srose.second = "第二条信息"
-)";
-
-const wchar_t wtranslations[] =
-LR"(
-# 这是一条注释
-@text.zh = "中文"
-@text.ru = "Россия"
-@text.ja = "にほんご"
-)";
-
-
-BOOST_AUTO_TEST_CASE(test1)
+BOOST_AUTO_TEST_CASE(test_parser)
 {
-    using srose::locale::parse_string, srose::locale::parse_stream, srose::locale::parse_wstream;
-
-    srose::util::string_tree<std::string> result;
-    parse_string(result, L"@name.text = \"Hello\"\" World\"");
-    BOOST_TEST_REQUIRE(result.get_value("name.text") == "Hello World");
-
+    using namespace srose;
+    using namespace srose::locale;
     std::stringstream ss;
-    ss.str(translations);
-    auto result2 = parse_stream(ss);
-    BOOST_TEST_REQUIRE(result2.get_value("srose.first") == "First Message");
-    auto converted = boost::locale::conv::utf_to_utf<wchar_t>(result2.get_value("srose.second"));
-    BOOST_TEST_REQUIRE(bool(converted == L"第二条信息"));
-    BOOST_TEST_REQUIRE(result2.get_value("srose.second") == "第二条信息");
+    ss.write("\x08\x00\x00\x00", 4);
+    BOOST_REQUIRE(detail::Decode_U32LE(ss) == 0x8u);
+    ss.write("\x04\x00\x00\x00""abcd", 8);
+    BOOST_REQUIRE(detail::Decode_CxxStr(ss) == "abcd");
+    // Test empty string
+    ss.write("\x00\x00\x00\x00", 4);
+    BOOST_REQUIRE(detail::Decode_CxxStr(ss) == std::string());
+    // Test UTF-8
+    ss.write("\x06\x00\x00\x00""\xE4\xB8\xAD\xE6\x96\x87", 10);
+    BOOST_REQUIRE(detail::Decode_CxxStr(ss) == "中文");
 
-    std::wstringstream wss;
-    wss.str(wtranslations);
-    auto result3 = parse_wstream(wss);
-    BOOST_TEST_REQUIRE(result3.get_value("text.zh") == "中文");
-    BOOST_TEST_REQUIRE(result3.get_value("text.ru") == "Россия");
-    BOOST_TEST_REQUIRE(result3.get_value("text.ja") == "にほんご");
+    // Test string tree
+    // The following data equal to
+    // @fi = "first"
+    // @fi.se = "second"
+    unsigned char tree_data[39] =
+    {
+        0x02, 0x00, 0x00, 0x00, 0x66, 0x69, 0x05, 0x00,
+        0x00, 0x00, 0x66, 0x69, 0x72, 0x73, 0x74, 0x01,
+        0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x73,
+        0x65, 0x06, 0x00, 0x00, 0x00, 0x73, 0x65, 0x63,
+        0x6f, 0x6e, 0x64, 0x00, 0x00, 0x00, 0x00,
+    };
+    ss.write((const char*)tree_data, 39);
+    auto stree = ParseTranslation(ss);
+    BOOST_REQUIRE(stree.get_value("fi") == "first");
+    BOOST_REQUIRE(stree.get_value("fi.se") == "second");
 }
