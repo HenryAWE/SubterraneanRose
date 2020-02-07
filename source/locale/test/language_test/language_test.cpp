@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE(test1)
     BOOST_TEST_REQUIRE(default_lc.gettext("srose.language.name") == "Default");
     BOOST_TEST_REQUIRE(default_lc.gettext("srose.language.iso") == "C");
 
-    locale::Language en("./locale/en/");
+    locale::Language en("en.srlc");
     BOOST_TEST_REQUIRE(en.gettext("srose.language.name") == "English");
     BOOST_TEST_REQUIRE(en.name() == "English");
     BOOST_TEST_REQUIRE(en.iso() == "en");
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(test1)
 
     boost::locale::generator gen;
     std::locale::global(gen("zh-CN.UTF-8"));
-    locale::Language zh_CN("./locale/zh-CN/");
+    locale::Language zh_CN("zh-CN.srlc");
     auto converted = boost::locale::conv::utf_to_utf<wchar_t>(zh_CN.gettext("srose.language.name"));
     BOOST_TEST_REQUIRE(bool(converted == L"简体中文"));
     BOOST_TEST_REQUIRE(zh_CN.gettext("srose.language.name") == "简体中文");

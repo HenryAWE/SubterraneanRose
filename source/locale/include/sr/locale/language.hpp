@@ -25,7 +25,7 @@ namespace srose::locale
             m_name(std::move(move.m_name)),
             m_iso(std::move(move.m_iso)),
             m_default(std::move(move.m_default)) {}
-        explicit Language(const std::filesystem::path& directory);
+        explicit Language(const filesystem::path& file);
 
         [[nodiscard]]
         std::string gettext(std::string_view path);
@@ -44,6 +44,7 @@ namespace srose::locale
         std::string m_name, m_iso;
         std::optional<std::string> m_default;
 
+        void Load(std::istream& is);
         void LoadSpecStrings();
     };
 

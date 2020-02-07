@@ -6,8 +6,8 @@
 
 #include <sr/locale/language.hpp>
 #include <sr/locale/parser.hpp>
+#include <cstring>
 #include <fstream>
-#include <sstream>
 #include <boost/locale.hpp>
 
 
@@ -19,21 +19,12 @@ namespace srose::locale
         m_tr.emplace_at("srose.language.iso", "C");
     }
 
-    Language::Language(const std::filesystem::path& directory)
+    Language::Language(const filesystem::path& file)
     {
-        namespace fs = std::filesystem;
-        fs::recursive_directory_iterator search(directory, fs::directory_options::skip_permission_denied);
-        for(auto& pt : search)
-        {
-            if(fs::is_regular_file(pt) && pt.path().extension()==".txt")
-            {
-                std::ifstream ifs(pt.path(), std::ios_base::binary);
-                if(ifs.good())
-                    m_tr.merge(parse_stream(ifs));
-            }
-        }
-
-        LoadSpecStrings();
+        std::ifstream ifs(file, std::ios_base::binary);
+        if(!ifs.good())
+            throw std::runtime_error("[locale] Load " + file.u8string() + " failed");
+        Load(ifs);
     }
 
     std::string Language::gettext(std::string_view path)
@@ -55,6 +46,37 @@ namespace srose::locale
         return opt.has_value() ? *opt : std::string(alternate);
     }
 
+    void Language::Load(std::istream& is)
+    {
+        is.exceptions(std::ios_base::failbit);
+        /* Check the header */
+        char header[5]{};
+        is.read(header, 4);
+        if(strncmp(header, "SRLC", 4) != 0)
+            throw std::runtime_error("[locale] Corrupted locale file");
+        /* Version number */
+        int major = detail::Decode_U32LE(is);
+        int minor = detail::Decode_U32LE(is);
+        int patch = detail::Decode_U32LE(is);
+        assert(major == 0);
+        assert(minor == 1);
+        assert(patch == 0);
+
+        char subheader[5]{};
+        is.read(subheader, 4);
+        if(strncmp(subheader, "@txt", 4) == 0)
+        {
+            try
+            {
+                while(is.good())
+                {
+                    m_tr.merge(detail::Decode_SRStrTree(is));
+                }
+            }
+            catch(std::ios_base::failure&) {}
+            LoadSpecStrings();
+        }
+    }
     void Language::LoadSpecStrings()
     {
         m_name = gettext("srose.language.name", "Default");
