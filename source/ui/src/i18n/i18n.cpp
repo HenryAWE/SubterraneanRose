@@ -10,6 +10,7 @@
 #include <memory>
 #include <algorithm>
 #include <stdexcept>
+#include <regex>
 #include <sr/locale/locale.hpp>
 #include <boost/locale.hpp>
 #include <sr/ui/console/cmdline.hpp>
@@ -49,47 +50,75 @@ namespace srose::ui
         if(g_lang_map.size() == 0) // Nothing was loaded
             throw LocaleNotFound();
     }
-    void SelectLanguage()
+    void SelectLanguage(const char* preferred)
     {
         // Set a specific locale as default locale
         auto sys_lc = locale::GetSystemLocale();
-        if(g_lang_map.count("en"))
-            g_default_lang = g_lang_map["en"];
-        g_default_lang = GetNearestLanguage(sys_lc);
+        g_default_lang = nullptr;
+        if(preferred)
+        { // User preferred language
+            g_default_lang = GetNearestLanguage(preferred);
+        }
+        if(!g_default_lang)
+        { // Operating system's setting
+            auto& lc_info = std::use_facet<boost::locale::info>(sys_lc);
+            g_default_lang = GetNearestLanguage(lc_info.name());;
+        }
+        if(!g_default_lang)
+        { // Use English(United States) as a back-up
+            g_default_lang = GetNearestLanguage("en_US");
+        }
         if(!g_default_lang)
             throw LocaleNotFound();
         std::locale::global(locale::CreateTranslation(sys_lc, g_default_lang));
     }
 
-    std::shared_ptr<locale::Language> GetNearestLanguage(std::locale lc)
+    std::shared_ptr<locale::Language> GetNearestLanguage(std::string locale_name)
     {
-        std::string preferred = console::GetPreferredLanguage();
-        auto& lc_info = std::use_facet<boost::locale::info>(lc);
-        std::vector<std::pair<std::string /*name*/, int /*weight*/>> lcs;
-        lcs.reserve(g_lang_map.size() + 1);
-        for(auto& i : g_lang_map)
-            lcs.emplace_back(std::make_pair(i.first, 0));
-        for(auto& j : lcs)
+        using namespace std;
+        regex locale_pattern = regex(R"(^([a-z]*)(?:[_-]([A-Z]*))?.*)");
+        if(!regex_match(locale_name, locale_pattern)) // Format error
+            return g_default_lang;
+        string language_name = regex_replace(locale_name, locale_pattern, "$1");
+        string country_name = regex_replace(locale_name, locale_pattern, "$2");
+
+        std::vector<std::pair<std::string /*name*/, int /*weight*/>> lcs_weight;
+        lcs_weight.reserve(g_lang_map.size());
+        std::for_each(
+            g_lang_map.begin(), g_lang_map.end(),
+            [&lcs_weight](auto& in){ lcs_weight.push_back(pair(in.first, 0)); }
+        );
+        for(auto& [name, weight] : lcs_weight)
         { // Calculate locale's weight
-            std::string_view sv = j.first;
-            if(sv=="C" || sv.size()==0) continue;
-            if(!preferred.empty() && preferred==sv) { j.second = 10; continue; }
-            std::size_t sep_pos = sv.find_first_of("_-");
-            if(sv.substr(0, sep_pos) == lc_info.language())
-                ++j.second;
-            if(sep_pos==sv.npos || sep_pos==sv.size()) continue;
+            std::string_view view = name;
+            if(view=="C" || view.size()==0) continue;
+            std::size_t sep_pos = view.find_first_of("_-");
+            if(view.substr(0, sep_pos) == language_name)
+                ++weight;
+            if(sep_pos==view.npos || sep_pos==view.size()) continue;
             ++sep_pos;
-            if(sv.substr(sep_pos)==lc_info.country() || sv.substr(sep_pos)==lc_info.variant())
-                ++j.second;
+            if(view.substr(sep_pos)==country_name)
+                ++weight;
         }
 
         // Chose the most suitable locale based on the weight
-        lcs.erase(std::unique(lcs.begin(), lcs.end()), lcs.end());
-        if(lcs.size() == 0) return g_default_lang;
-        std::sort(lcs.begin(), lcs.end(), [](auto& r, auto& l)->bool { return r.second>l.second; });
-        if(lcs[0].second != 0) lcs.erase(std::remove_if(lcs.begin(), lcs.end(), [](auto& i)->bool { return i.second==0; }), lcs.end());
-        if(lcs.size() == 0) return g_default_lang;
-
-        return g_lang_map[lcs[0].first];
+        lcs_weight.erase(
+            std::unique(lcs_weight.begin(), lcs_weight.end()),
+            lcs_weight.end()
+        );
+        if(lcs_weight.size() == 0) return g_default_lang;
+        std::sort(
+            lcs_weight.begin(), lcs_weight.end(),
+            [](auto& r, auto& l)->bool { return r.second>l.second; }
+        );
+        lcs_weight.erase(
+            std::remove_if(
+                lcs_weight.begin(), lcs_weight.end(),
+                [](auto& i)->bool { return i.second==0; }
+            ),
+            lcs_weight.end()
+        ); 
+        if(lcs_weight.size() == 0) return g_default_lang;
+        return g_lang_map[lcs_weight[0].first];
     }
 } // namespace srose::ui

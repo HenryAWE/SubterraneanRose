@@ -21,8 +21,10 @@ namespace srose::ui
     void LoadAllLanguage(const std::filesystem::path& lcres);
     /**
      * @brief Select a language as default one based on system setting and command line argument
+     * 
+     * @param preferred User preferred language, or nullptr for ignoring this argument
      */
-    void SelectLanguage();
+    void SelectLanguage(const char* preferred = nullptr);
 
     /**
      * @brief Get the default language
@@ -32,12 +34,13 @@ namespace srose::ui
      */
     locale::Language* GetDefaultLanguage() noexcept;
     /**
-     * @brief Get the nearest language based on the specific locale
+     * @brief Get the nearest language based on the specific locale name
+     * @remark Only recognize language_COUNTRY format, like zh_CN or en_US
      * 
-     * @param lc The specific locale
+     * @param locale_name The name of the locale
      * @return std::shared_ptr<locale::Language> The nearest language, or the default language on error
      */
-    std::shared_ptr<locale::Language> GetNearestLanguage(std::locale lc);
+    std::shared_ptr<locale::Language> GetNearestLanguage(std::string locale_name);
 } // namespace srose::ui
 
 
