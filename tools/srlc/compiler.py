@@ -36,6 +36,10 @@ class compiler:
                     break
                 else:
                     items[id] = [{}, None]
+            else:
+                if id == sepid[-1]:
+                    items[id][1] = tr
+                    break
             items = items[id][0]
 
     def parse_string(self, string, file, line):
