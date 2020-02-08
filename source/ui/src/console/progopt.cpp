@@ -14,7 +14,12 @@
 #include <cassert>
 #include <sr/core/version_info.h>
 #include <SDL.h>
+#include "../i18n/i18n.hpp"
 
+#ifdef _
+#   undef _
+#endif
+#define _(path) (SRTR(path).str())
 
 /*Global variables map */
 static std::unique_ptr<boost::program_options::variables_map> vm;
@@ -26,34 +31,37 @@ const boost::program_options::variables_map& GetVariablesMapInternal() noexcept
     return *vm.get();
 }
 
+
 int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
 {
     try
     {
+        using namespace srose;
         namespace po = boost::program_options;
 
         if(!vm)
             vm = std::make_unique<po::variables_map>();
 
-        po::options_description generic("Generic");
+        ui::SelectLanguage();
+        po::options_description generic(_("srose.cui.generic"));
         generic.add_options()
-            ("help", "This message")
-            ("version", "Version information");
+            ("help", _("srose.cui.generic.help").c_str())
+            ("version", _("srose.cui.generic.version").c_str());
 
-        po::options_description display("Display");
+        po::options_description display(_("srose.cui.display"));
         display.add_options()
-            ("language", po::value<std::string>()->value_name("name")->default_value("auto"), "Display language")
-            ("fullscreen,F", "Fullscreen");
+            ("language", po::value<std::string>()->value_name("name")->default_value("auto"), _("srose.cui.display.language").c_str())
+            ("fullscreen,F", _("srose.cui.display.fullscreen").c_str());
         
-        po::options_description video("Video");
+        po::options_description video(_("srose.cui.video"));
         video.add_options()
-            ("get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), "Get all available display mode(s) of the specific display");
+            ("get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), _("srose.cui.get-display-mode").c_str());
 
         po::options_description debug("Debug");
         debug.add_options()
             ("draw-debug-overlay", "Draw overlay debug UI");
 
-        po::options_description total("Allowed options");
+        po::options_description total(_("srose.cui.total"));
         total
             .add(generic)
             .add(display)

@@ -1,0 +1,14 @@
+# 命令行选项
+
+@srose.cui.generic = "通用"
+@srose.cui.generic.help = "这条文本"
+@srose.cui.generic.version = "版本信息"
+
+@srose.cui.display = "显示"
+@srose.cui.display.language = "显示语言"
+@srose.cui.display.fullscreen = "全屏"
+
+@srose.cui.video = "视频"
+@srose.cui.get-display-mode = "获取指定显示器的所有可用的显示模式"
+
+@srose.cui.total = "可用选项"
