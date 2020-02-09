@@ -10,7 +10,7 @@
 #include "mainmenu.hpp"
 #include <cassert>
 #include <imgui_internal.h>
-#include "uimgr.hpp"
+#include <sr/ui/gui/uimgr.hpp>
 #include "editor/editor_window.hpp"
 
 

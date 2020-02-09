@@ -4,7 +4,7 @@
  * @brief UI Manager
  */
 
-#include "uimgr.hpp"
+#include <sr/ui/gui/uimgr.hpp>
 #include <SDL_events.h>
 #include <memory>
 #include "mainmenu.hpp"

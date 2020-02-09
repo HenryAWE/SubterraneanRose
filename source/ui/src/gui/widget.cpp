@@ -4,7 +4,7 @@
  * @brief Widget base
  */
 
-#include "widget.hpp"
+#include <sr/ui/gui/widget.hpp>
 #include "../i18n/i18n.hpp"
 
 

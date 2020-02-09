@@ -8,7 +8,7 @@
 #include <cassert>
 #include <imgui.h>
 #include <imguisr.h>
-#include "../uimgr.hpp"
+#include <sr/ui/gui/uimgr.hpp>
 
 
 namespace srose::ui::editor

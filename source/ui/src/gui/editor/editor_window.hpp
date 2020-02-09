@@ -9,7 +9,7 @@
 
 #include <sr/ui/property.hpp>
 #include <imguisr.h>
-#include "../widget.hpp"
+#include <sr/ui/gui/widget.hpp>
 
 
 namespace srose::ui::editor

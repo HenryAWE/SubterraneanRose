@@ -10,7 +10,7 @@
 #include <sr/wm/event.h>
 #include <imgui.h>
 #include <sr/wm/winmgr.hpp>
-#include "gui/uimgr.hpp"
+#include <sr/ui/gui/uimgr.hpp>
 
 
 int SRSCALL main_loop(SR_WM_display* display)

@@ -12,7 +12,7 @@
 #include <imgui_internal.h>
 #include <imguisr.h>
 #include <sr/wm/winmgr.hpp>
-#include "uimgr.hpp"
+#include <sr/ui/gui/uimgr.hpp>
 
 
 namespace srose::ui

@@ -16,7 +16,7 @@
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/wm/winmgr.hpp>
 #include <sr/res/resmgr.hpp>
-#include "gui/uimgr.hpp"
+#include <sr/ui/gui/uimgr.hpp>
 #include "main_loop.hpp"
 #include "i18n/i18n.hpp"
 
