@@ -41,7 +41,7 @@ namespace srose::gpu::opengl3
         assert(m_gl_initialized);
         auto& io = ImGui::GetIO();
 
-        constexpr int background_flag = 
+        constexpr int background_flags = 
             ImGuiWindowFlags_NoSavedSettings |
             ImGuiWindowFlags_MenuBar;
         ImGui::SetNextWindowPosCenter(ImGuiCond_Appearing);
@@ -49,9 +49,58 @@ namespace srose::gpu::opengl3
         auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(
             "OpenGL3 Demo",
             &open,
-            background_flag
+            background_flags
         );
-        if(!background_flag)
+        if(!background)
             return;
+
+        UpdateMenuBar();
+
+        bool any_tab =
+            m_triangle_demo;
+        if(!any_tab)
+        {
+            ImGui::TextDisabled("(Empty)");
+            return;
+        }
+        else
+        {
+            UpdateTabBar();
+        }
+    }
+
+    void OpenGL3DemoWindow::UpdateMenuBar()
+    {
+        auto menubar = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_MenuBar>();
+        if(menubar)
+        {
+            auto demo_list = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Menu>("Demo List");
+            if(demo_list)
+            {
+                ImGui::Checkbox("Triangle Demo", &m_triangle_demo);
+            }
+        }
+    }
+    void OpenGL3DemoWindow::UpdateTabBar()
+    {
+        constexpr int tabbar_flags = 
+            ImGuiTabBarFlags_NoTooltip |
+            ImGuiTabBarFlags_NoTooltip;
+        auto tabbar = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabBar>("##tabbar", tabbar_flags);
+        if(tabbar)
+        {
+            if(m_triangle_demo) TriangleDemoTabItem();
+        }
+    }
+
+    void OpenGL3DemoWindow::TriangleDemoTabItem()
+    {
+        auto tabitem =  ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabItem>(
+            "Triangle Demo",
+            &m_triangle_demo
+        );
+        if(!tabitem)
+            return;
+
     }
 } // namespace srose::gpu::opengl3
