@@ -69,6 +69,7 @@ namespace srose::gpu::opengl3
         m_gl_initialized = false;
         m_triangle_vao.Destroy();
         m_triangle_vbo.Destroy();
+        m_triangle_shader.Destroy();
     }
 
     void OpenGL3DemoWindow::Update()
