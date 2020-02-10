@@ -29,11 +29,46 @@ namespace srose::gpu::opengl3
 
     void OpenGL3DemoWindow::InitializeGL()
     {
+        /* Triangle demo */
+        m_triangle_vao.Generate();
+        m_triangle_vbo.Generate();
+        glBindVertexArray(m_triangle_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_triangle_vbo);
+        constexpr float vertices[] = {
+            -1.0f, -1.0f, 0.0f,
+            1.0f, -1.0f, 0.0f,
+            0.0f,  1.0f, 0.0f
+        };
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        m_triangle_shader.Generate();
+        m_triangle_shader.Compile(
+            "#version 330 core\n"
+            "layout(location=0) in vec3 inpos;"
+            "void main()"
+            "{"
+            "    gl_Position=vec4(inpos, 1.0f);"
+            "}",
+            "#version 330 core\n"
+            "out vec4 outcolor;"
+            "uniform vec4 unicolor;"
+            "void main()"
+            "{"
+            "    outcolor = unicolor;"
+            "}"
+        );
+
         m_gl_initialized = true;
     }
     void OpenGL3DemoWindow::ReleaseGL() noexcept
     {
         m_gl_initialized = false;
+        m_triangle_vao.Destroy();
+        m_triangle_vbo.Destroy();
     }
 
     void OpenGL3DemoWindow::Update()
@@ -95,12 +130,59 @@ namespace srose::gpu::opengl3
 
     void OpenGL3DemoWindow::TriangleDemoTabItem()
     {
+        auto& io = ImGui::GetIO();
+
         auto tabitem =  ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabItem>(
             "Triangle Demo",
             &m_triangle_demo
         );
         if(!tabitem)
             return;
+        ImGui::ColorEdit4("Color of Triangle", &m_triangle_color[0]);
+        if(ImGui::BeginChild("##glcanvas", ImVec2(0,0), true))
+        {
+            auto& io = ImGui::GetIO();
+            auto* window = ImGui::GetCurrentWindow();
+            ImVec2 pos = window->Pos;
+            ImVec2 size = window->InnerRect.GetSize();
+            m_triangle_viewport = glm::vec4{ pos.x, pos.y+size.y , size.x, size.y };
 
+            auto* list = ImGui::GetWindowDrawList();
+            list->AddCallback(
+                [](const ImDrawList* parent, const ImDrawCmd* cmd)
+                {
+                    auto* this_ = (OpenGL3DemoWindow*)cmd->UserCallbackData;
+                    auto* draw_data = ImGui::GetDrawData();
+                    ImVec2 clip_off = draw_data->DisplayPos;
+                    ImVec2 clip_scale = draw_data->FramebufferScale;
+                    ImVec4 clip_rect;
+                    int fb_width = (int)(draw_data->DisplaySize.x * draw_data->FramebufferScale.x);
+                    int fb_height = (int)(draw_data->DisplaySize.y * draw_data->FramebufferScale.y);
+                    if (fb_width <= 0 || fb_height <= 0)
+                        return;
+                    clip_rect.x = (cmd->ClipRect.x - clip_off.x) * clip_scale.x;
+                    clip_rect.y = (cmd->ClipRect.y - clip_off.y) * clip_scale.y;
+                    clip_rect.z = (cmd->ClipRect.z - clip_off.x) * clip_scale.x;
+                    clip_rect.w = (cmd->ClipRect.w - clip_off.y) * clip_scale.y;
+                    if (clip_rect.x < fb_width && clip_rect.y < fb_height && clip_rect.z >= 0.0f && clip_rect.w >= 0.0f)
+                    {
+                        GLint last_vao; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vao);
+                        GLint last_program; glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
+                        glScissor((int)clip_rect.x, (int)(fb_height - clip_rect.w), (int)(clip_rect.z - clip_rect.x), (int)(clip_rect.w - clip_rect.y));
+                        auto viewport = this_->m_triangle_viewport;;
+                        glViewport(viewport.x, fb_height - viewport.y, viewport.z, viewport.w);
+                        glUseProgram(this_->m_triangle_shader);
+                        Uniform(this_->m_triangle_shader.UniformLocation("unicolor"), this_->m_triangle_color);
+                        glBindVertexArray(this_->m_triangle_vao);
+                        glDrawArrays(GL_TRIANGLES, 0, 3);
+                        glBindVertexArray(last_vao);
+                        glUseProgram(last_program);
+                    }
+                },
+                this
+            );
+            list->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
+        }
+        ImGui::EndChild();
     }
 } // namespace srose::gpu::opengl3

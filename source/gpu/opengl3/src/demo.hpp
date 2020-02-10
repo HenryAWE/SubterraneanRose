@@ -38,6 +38,11 @@ namespace srose::gpu::opengl3
         void UpdateTabBar();
 
         bool m_triangle_demo = true; // Open by default
+        VertexArray m_triangle_vao;
+        Buffer m_triangle_vbo;
+        glm::vec4 m_triangle_color = glm::vec4(1);
+        ShaderProgram m_triangle_shader;
+        glm::ivec4 m_triangle_viewport;
         void TriangleDemoTabItem();
     };
 } // namespace srose::gpu::opengl3
