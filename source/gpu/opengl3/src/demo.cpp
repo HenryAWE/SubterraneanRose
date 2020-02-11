@@ -62,6 +62,11 @@ namespace srose::gpu::opengl3
             "}"
         );
 
+        /* Texture Demo */
+        m_texture_location_buffer.resize(256);
+        m_texture_location.reserve(256);
+        m_texture_texture.LoadDefaultTexture();
+
         m_gl_initialized = true;
     }
     void OpenGL3DemoWindow::ReleaseGL() noexcept
@@ -70,6 +75,8 @@ namespace srose::gpu::opengl3
         m_triangle_vao.Destroy();
         m_triangle_vbo.Destroy();
         m_triangle_shader.Destroy();
+
+        m_texture_texture.Destroy();
     }
 
     void OpenGL3DemoWindow::Update()
@@ -93,7 +100,8 @@ namespace srose::gpu::opengl3
         UpdateMenuBar();
 
         bool any_tab =
-            m_triangle_demo;
+            m_triangle_demo ||
+            m_texture_demo;
         if(!any_tab)
         {
             ImGui::TextDisabled("(Empty)");
@@ -114,6 +122,7 @@ namespace srose::gpu::opengl3
             if(demo_list)
             {
                 ImGui::Checkbox("Triangle Demo", &m_triangle_demo);
+                ImGui::Checkbox("Texture Demo", &m_texture_demo);
             }
         }
     }
@@ -126,6 +135,7 @@ namespace srose::gpu::opengl3
         if(tabbar)
         {
             if(m_triangle_demo) TriangleDemoTabItem();
+            if(m_texture_demo) TextureDemoTabItem();
         }
     }
 
@@ -183,6 +193,66 @@ namespace srose::gpu::opengl3
                 this
             );
             list->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
+        }
+        ImGui::EndChild();
+    }
+    void OpenGL3DemoWindow::TextureDemoTabItem()
+    {
+        auto& io = ImGui::GetIO();
+
+        auto tabitem = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabItem>(
+            "Texture Demo",
+            &m_texture_demo
+        );
+        if(!tabitem)
+            return;
+        ImGui::InputText(
+            "##location",
+            m_texture_location_buffer.data(),
+            m_texture_location_buffer.size()
+        );
+        ImGui::SameLine();
+        if(ImGui::Button("Open"))
+        {
+            m_texture_location = m_texture_location_buffer;
+            m_texture_texture.LoadFromFile(filesystem::u8path(m_texture_location_buffer));
+            m_texture_uvs = { 0.0f, 0.0f, 1.0f, 1.0f };
+        }
+        ImGui::SameLine();
+        if(ImGui::Button("Reload"))
+        {
+            if(m_texture_location.empty())
+                m_texture_texture.LoadDefaultTexture();
+            else
+                m_texture_texture.LoadFromFile(filesystem::u8path(m_texture_location));
+            m_texture_uvs = { 0.0f, 0.0f, 1.0f, 1.0f };
+        }
+        ImGui::SameLine();
+        if(ImGui::Button("Clear"))
+        {
+            m_texture_location.clear();
+            m_texture_texture.LoadDefaultTexture();
+            m_texture_uvs = { 0.0f, 0.0f, 1.0f, 1.0f };
+        }
+        ImGui::SetNextItemWidth(200.0f);
+        ImGui::SliderFloat2("UV 0", &m_texture_uvs[0], -2.0f, 2.0f, "%.02f", 0.01f);
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(200.0f);
+        ImGui::SliderFloat2("UV 1", &m_texture_uvs[2], -2.0f, 2.0f, "%.02f", 0.01f);
+        ImGui::SameLine();
+        if(ImGui::Button("Reset"))
+        {
+            m_texture_uvs = { 0.0f, 0.0f, 1.0f, 1.0f };
+        }
+        ImGui::Separator();
+        if(ImGui::BeginChild("##texture", ImVec2(0, 0)))
+        {
+            ImGui::Image(
+                m_texture_texture.GetNativeHandle(),
+                ImGui::GetWindowSize(),
+                ImVec2(m_texture_uvs.x, m_texture_uvs.y),
+                ImVec2(m_texture_uvs.z, m_texture_uvs.w)
+            );
         }
         ImGui::EndChild();
     }

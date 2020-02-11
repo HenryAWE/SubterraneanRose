@@ -11,6 +11,7 @@
 #include <sr/ui/gui/widget.hpp>
 #include <sr/gpu/opengl3/buffer.hpp>
 #include <sr/gpu/opengl3/shader.hpp>
+#include <sr/gpu/opengl3/texture.hpp>
 
 
 namespace srose::gpu::opengl3
@@ -44,6 +45,13 @@ namespace srose::gpu::opengl3
         ShaderProgram m_triangle_shader;
         glm::ivec4 m_triangle_viewport;
         void TriangleDemoTabItem();
+
+        bool m_texture_demo = false;
+        std::string m_texture_location_buffer;
+        std::string m_texture_location;
+        Texture m_texture_texture;
+        glm::vec4 m_texture_uvs = { 0.0f, 0.0f, 1.0f, 1.0f };
+        void TextureDemoTabItem();
     };
 } // namespace srose::gpu::opengl3
 
