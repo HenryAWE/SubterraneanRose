@@ -94,6 +94,14 @@ BOOST_AUTO_TEST_CASE(test_string_tree)
     sts.merge(sts2);
     BOOST_TEST_REQUIRE(sts.get_value("ss.ss") == "true");
     BOOST_TEST_REQUIRE(sts.get_value("bs.ss") != "not true");
+    BOOST_TEST_REQUIRE(sts.has_value("bs.ss") == true);
+    sts.emplace("value");
+    BOOST_TEST_REQUIRE(sts.get_value() == "value");
+    sts.erase();
+    BOOST_TEST_REQUIRE(sts.has_value() == false);
+    sts.erase_at("bs.ss");
+    BOOST_TEST_REQUIRE(sts.has_value("bs.ss") == false);
+    sts.erase_at("never.throw");
 
     try
     {

@@ -175,6 +175,16 @@ namespace srose::util
         {
             return force_path(pt)->emplace(std::forward<Args>(args)...);
         }
+        void erase() noexcept
+        {
+            m_data.reset();
+        }
+        void erase_at(string_view_type pt) noexcept
+        {
+            auto iter = const_cast<self_type*>(walk_path(pt));
+            if(iter)
+                iter->erase();
+        }
 
         /**
          * @brief Merge data from another string tree
