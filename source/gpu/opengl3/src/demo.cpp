@@ -130,7 +130,8 @@ namespace srose::gpu::opengl3
     {
         constexpr int tabbar_flags = 
             ImGuiTabBarFlags_NoTooltip |
-            ImGuiTabBarFlags_NoTooltip;
+            ImGuiTabBarFlags_AutoSelectNewTabs |
+            ImGuiTabBarFlags_Reorderable;
         auto tabbar = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabBar>("##tabbar", tabbar_flags);
         if(tabbar)
         {
