@@ -34,7 +34,13 @@ namespace srose::gpu::opengl3
 
         std::unique_ptr<Texture> CreateTexture() { return std::unique_ptr<Texture>(NewTexture()); }
 
+        void ShowDemoWindow(bool* p_open = nullptr) override;
+
+        void ReleaseUIData() noexcept override;
+
     protected:
+        bool m_demo_initialized = false;
+
         Texture* NewTexture() override;
     };
 } // namespace srose::gpu::opengl3

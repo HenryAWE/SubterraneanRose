@@ -136,6 +136,7 @@ int SRSCALL program_entry(int argc, char* argv[])
     }
 
 quit_program:
+    wm::GetRenderer()->ReleaseUIData();
     ui::DestroyUIManager();
     res::DestroyResourceManager();
     wm::DestroyRenderer();

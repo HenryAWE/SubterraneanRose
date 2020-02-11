@@ -46,6 +46,19 @@ namespace srose::gpu
 
         bool LoadTextureFromFile(std::string_view as, const filesystem::path& file);
 
+        /**
+         * @brief Show the renderer's demo window
+         * @remark The implementation of the base class does nothing
+         * 
+         * @param p_open [Out] False if the window was closed
+         */
+        virtual void ShowDemoWindow(bool* p_open = nullptr) {};
+
+        /**
+         * @brief Release the UI data, used by the finalizing code since UI manager will be released earlier
+         */
+        virtual void ReleaseUIData() noexcept {};
+
     protected:
         virtual Texture* NewTexture() = 0;
     };
