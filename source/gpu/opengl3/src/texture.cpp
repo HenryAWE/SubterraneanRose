@@ -73,6 +73,15 @@ namespace srose::gpu::opengl3
     }
     bool Texture::LoadFromFile(const char* path)
     {
+        Description default_desc;
+        default_desc.s = REPEAT;
+        default_desc.t = REPEAT;
+        default_desc.min = LINEAR;
+        default_desc.mag = LINEAR;
+        return LoadFromFileEx(path, default_desc);
+    }
+    bool Texture::LoadFromFileEx(const char* path, const Description& desc)
+    {
         SR_ASSERT_CTX();
         if(!m_handle) Generate();
 
@@ -90,10 +99,14 @@ namespace srose::gpu::opengl3
         }
 
         glBindTexture(GL_TEXTURE_2D, m_handle);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        auto wrap_s = TranslateDesc(desc.s);
+        auto wrap_t = TranslateDesc(desc.t);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TranslateDesc(desc.min, true));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TranslateDesc(desc.mag, false));
+        if(wrap_s == CLAMP_TO_BORDER || wrap_t == CLAMP_TO_BORDER)
+            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &desc.border_color[0]);
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
@@ -120,5 +133,30 @@ namespace srose::gpu::opengl3
     bool Texture::LoadFromFile(const filesystem::path& file)
     {
         return LoadFromFile(file.u8string().c_str());
+    }
+    bool Texture::LoadFromFileEx(const filesystem::path& file, const Description& desc)
+    {
+        return LoadFromFileEx(file.u8string().c_str(), desc);
+    }
+
+    GLenum Texture::TranslateDesc(Filter filter, bool mipmap) noexcept
+    {
+        switch(filter)
+        {
+            default:
+            case LINEAR: return mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+            case NEAREST: return mipmap ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR;
+        }
+    }
+    GLenum Texture::TranslateDesc(Wrapping wrap) noexcept
+    {
+        switch(wrap)
+        {
+            default:
+            case REPEAT: return GL_REPEAT;
+            case MIRRORED_REPEAT: return GL_MIRRORED_REPEAT;
+            case CLAMP_TO_EDGE: return GL_CLAMP_TO_EDGE;
+            case CLAMP_TO_BORDER: return GL_CLAMP_TO_BORDER;
+        }
     }
 } // namespace srose::gpu::opengl3

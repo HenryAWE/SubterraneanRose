@@ -29,6 +29,7 @@ namespace srose::gpu::opengl3
         void Destroy() noexcept;
 
         bool LoadFromFile(const char* path);
+        bool LoadFromFileEx(const char* path, const Description& desc = {});
 
         [[nodiscard]]
         /**
@@ -45,6 +46,10 @@ namespace srose::gpu::opengl3
 
         bool LoadDefaultTexture() override;
         bool LoadFromFile(const filesystem::path& file) override;
+        bool LoadFromFileEx(const filesystem::path& file, const Description& desc = {}) override;
+
+        GLenum TranslateDesc(Filter filter, bool mipmap) noexcept;
+        GLenum TranslateDesc(Wrapping wrap) noexcept;
 
     private:
         handle_type m_handle = 0;

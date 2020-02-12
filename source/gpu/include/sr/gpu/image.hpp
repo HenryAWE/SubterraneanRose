@@ -10,6 +10,7 @@
 #include <utility>
 #include <imgui.h>
 #include <sr/filesystem/filesystem.hpp>
+#include <glm/vec4.hpp>
 
 
 namespace srose::gpu
@@ -49,6 +50,36 @@ namespace srose::gpu
         ImVec2 GetSizeImVec2() const noexcept;
 
         /**
+         * @brief Texture wrapping method
+         */
+        enum Wrapping : int
+        {
+            REPEAT,
+            MIRRORED_REPEAT,
+            CLAMP_TO_EDGE,
+            CLAMP_TO_BORDER
+        };
+        /**
+         * @brief Texture filter
+         */
+        enum Filter : int
+        {
+            LINEAR,
+            NEAREST,
+        };
+        /**
+         * @brief Texture description
+         */
+        struct Description
+        {
+            Wrapping s = REPEAT;
+            Wrapping t = REPEAT;
+            glm::vec4 border_color = {0, 0, 0, 0};
+            Filter min = LINEAR;
+            Filter mag = LINEAR;
+        };
+
+        /**
          * @brief Load a default red and black texture
          * 
          * @return bool Always true
@@ -62,6 +93,15 @@ namespace srose::gpu
          * @return false Failed
          */
         virtual bool LoadFromFile(const filesystem::path& file) = 0;
+        /**
+         * @brief [Advanced] Load a texture from file
+         * 
+         * @param file The texture file
+         * @param desc Texture description
+         * @return true Succeeded
+         * @return false Failed
+         */
+        virtual bool LoadFromFileEx(const filesystem::path& file, const Description& desc = {}) = 0;
     };
 } // namespace srose::gpu
 
