@@ -205,6 +205,29 @@ namespace srose::gpu::opengl3
             "Texture Demo",
             &m_texture_demo
         );
+
+        auto& desc = m_texture_desc;
+        ImGui::Text("Wrapping: ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(200.0f);
+        m_texture_descchanged |= ImGui::Combo("S", (int*)&desc.s, "Repeat\0Mirrored Repeat\0Clamp to Edge\0Clamp to Border\0");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(200.0f);
+        m_texture_descchanged |= ImGui::Combo("T", (int*)&desc.t, "Repeat\0Mirrored Repeat\0Clamp to Edge\0Clamp to Border\0");
+        if(desc.s == Texture::CLAMP_TO_BORDER || desc.t == Texture::CLAMP_TO_BORDER) // Clamp to Border
+        {
+            ImGui::SetNextItemWidth(400.0f);
+            m_texture_descchanged |= ImGui::ColorEdit4("Border", &m_texture_desc.border_color[0]);
+        }
+        ImGui::Text("Filter:");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(200.0f);
+        m_texture_descchanged |= ImGui::Combo("Min", (int*)&desc.min, "Linear\0Nearest\0");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(200.0f); 
+        m_texture_descchanged |= ImGui::Combo("Mag", (int*)&desc.mag, "Linear\0Nearest\0");
+        ImGui::Separator();
+
         if(!tabitem)
             return;
         ImGui::InputText(
@@ -216,22 +239,25 @@ namespace srose::gpu::opengl3
         if(ImGui::Button("Open"))
         {
             m_texture_location = m_texture_location_buffer;
-            m_texture_texture.LoadFromFile(filesystem::u8path(m_texture_location_buffer));
+            m_texture_descchanged = false;
+            m_texture_texture.LoadFromFileEx(filesystem::u8path(m_texture_location_buffer), m_texture_desc);
             m_texture_uvs = { 0.0f, 0.0f, 1.0f, 1.0f };
         }
         ImGui::SameLine();
-        if(ImGui::Button("Reload"))
+        if(ImGui::Button(m_texture_descchanged ? "Reload*###reload" : "Reload###reload"))
         {
+            m_texture_descchanged = false;
             if(m_texture_location.empty())
                 m_texture_texture.LoadDefaultTexture();
             else
-                m_texture_texture.LoadFromFile(filesystem::u8path(m_texture_location));
-            m_texture_uvs = { 0.0f, 0.0f, 1.0f, 1.0f };
+                m_texture_texture.LoadFromFileEx(filesystem::u8path(m_texture_location), m_texture_desc);
         }
         ImGui::SameLine();
         if(ImGui::Button("Clear"))
         {
             m_texture_location.clear();
+            m_texture_desc = Texture::Description();
+            m_texture_descchanged = false;
             m_texture_texture.LoadDefaultTexture();
             m_texture_uvs = { 0.0f, 0.0f, 1.0f, 1.0f };
         }

@@ -51,6 +51,8 @@ namespace srose::gpu::opengl3
         std::string m_texture_location;
         Texture m_texture_texture;
         glm::vec4 m_texture_uvs = { 0.0f, 0.0f, 1.0f, 1.0f };
+        Texture::Description m_texture_desc = {};
+        bool m_texture_descchanged = false;
         void TextureDemoTabItem();
     };
 } // namespace srose::gpu::opengl3
