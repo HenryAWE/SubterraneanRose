@@ -18,7 +18,7 @@ macro(test_lang lang)
     )
 endmacro()
 
-
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/locale)
 compile_lang(en)
 compile_lang(zh-CN)
 test_lang(en)
