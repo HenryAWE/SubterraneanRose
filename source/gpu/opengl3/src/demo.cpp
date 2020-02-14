@@ -205,6 +205,8 @@ namespace srose::gpu::opengl3
             "Texture Demo",
             &m_texture_demo
         );
+        if(!tabitem)
+            return;
 
         auto& desc = m_texture_desc;
         ImGui::Text("Wrapping: ");
