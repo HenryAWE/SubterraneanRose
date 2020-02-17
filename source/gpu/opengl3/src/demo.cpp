@@ -17,6 +17,37 @@
 
 namespace srose::gpu::opengl3
 {
+    namespace detail
+    {
+        bool SetupScissorsAndViewport(
+            ImDrawData* draw_data,
+            const ImVec4& clip,
+            const glm::ivec4& view
+        ) noexcept {
+            ImVec2 clip_off = draw_data->DisplayPos;
+            ImVec2 clip_scale = draw_data->FramebufferScale;
+            ImVec4 clip_rect;
+            int fb_width = (int)(draw_data->DisplaySize.x * draw_data->FramebufferScale.x);
+            int fb_height = (int)(draw_data->DisplaySize.y * draw_data->FramebufferScale.y);
+            if (fb_width <= 0 || fb_height <= 0)
+                return false;
+            clip_rect.x = (clip.x - clip_off.x) * clip_scale.x;
+            clip_rect.y = (clip.y - clip_off.y) * clip_scale.y;
+            clip_rect.z = (clip.z - clip_off.x) * clip_scale.x;
+            clip_rect.w = (clip.w - clip_off.y) * clip_scale.y;
+            if (clip_rect.x < fb_width && clip_rect.y < fb_height && clip_rect.z >= 0.0f && clip_rect.w >= 0.0f)
+            {
+                glScissor((int)clip_rect.x, (int)(fb_height - clip_rect.w), (int)(clip_rect.z - clip_rect.x), (int)(clip_rect.w - clip_rect.y));
+                glViewport(view.x, fb_height - view.y, view.z, view.w);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    } // namespace detail
+
     OpenGL3DemoWindow::OpenGL3DemoWindow(bool initgl)
     {
         if(initgl)
@@ -164,25 +195,11 @@ namespace srose::gpu::opengl3
                 [](const ImDrawList* parent, const ImDrawCmd* cmd)
                 {
                     auto* this_ = (OpenGL3DemoWindow*)cmd->UserCallbackData;
-                    auto* draw_data = ImGui::GetDrawData();
-                    ImVec2 clip_off = draw_data->DisplayPos;
-                    ImVec2 clip_scale = draw_data->FramebufferScale;
-                    ImVec4 clip_rect;
-                    int fb_width = (int)(draw_data->DisplaySize.x * draw_data->FramebufferScale.x);
-                    int fb_height = (int)(draw_data->DisplaySize.y * draw_data->FramebufferScale.y);
-                    if (fb_width <= 0 || fb_height <= 0)
-                        return;
-                    clip_rect.x = (cmd->ClipRect.x - clip_off.x) * clip_scale.x;
-                    clip_rect.y = (cmd->ClipRect.y - clip_off.y) * clip_scale.y;
-                    clip_rect.z = (cmd->ClipRect.z - clip_off.x) * clip_scale.x;
-                    clip_rect.w = (cmd->ClipRect.w - clip_off.y) * clip_scale.y;
-                    if (clip_rect.x < fb_width && clip_rect.y < fb_height && clip_rect.z >= 0.0f && clip_rect.w >= 0.0f)
+
+                    if(detail::SetupScissorsAndViewport(ImGui::GetDrawData(), cmd->ClipRect, this_->m_triangle_viewport))
                     {
                         GLint last_vao; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vao);
                         GLint last_program; glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-                        glScissor((int)clip_rect.x, (int)(fb_height - clip_rect.w), (int)(clip_rect.z - clip_rect.x), (int)(clip_rect.w - clip_rect.y));
-                        auto viewport = this_->m_triangle_viewport;;
-                        glViewport(viewport.x, fb_height - viewport.y, viewport.z, viewport.w);
                         glUseProgram(this_->m_triangle_shader);
                         Uniform(this_->m_triangle_shader.UniformLocation("unicolor"), this_->m_triangle_color);
                         glBindVertexArray(this_->m_triangle_vao);
