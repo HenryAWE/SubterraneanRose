@@ -98,6 +98,53 @@ namespace srose::gpu::opengl3
         m_texture_location.reserve(256);
         m_texture_texture.LoadDefaultTexture();
 
+        /* Effect Demo */
+        m_effect_vao.Generate();
+        m_effect_vbo.Generate();
+        m_effect_ebo.Generate();
+        glBindVertexArray(m_effect_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_effect_vbo);
+        constexpr float rect_vertices[] = {
+            1.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+            1.0f, -1.0f, 0.0f,  1.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+            -1.0f, 1.0f, 0.0f,  0.0f, 0.0f
+        };
+
+        glBufferData(GL_ARRAY_BUFFER, sizeof(rect_vertices), rect_vertices, GL_STATIC_DRAW);
+        constexpr unsigned int rect_indices[] = {
+            0, 1, 3,
+            1, 2, 3
+        };
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_effect_ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rect_indices), rect_indices, GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
+        glEnableVertexAttribArray(1);
+        glBindVertexArray(0);
+
+        m_effect_id = 0;
+        m_effect_shaders.emplace_back().Compile(
+            "#version 330 core\n"
+            "layout(location=0) in vec3 inpos;"
+            "layout(location=1) in vec2 intexcoord;"
+            "out vec2 texcoord;"
+            "void main()"
+            "{"
+            "    gl_Position=vec4(inpos, 1.0f);"
+            "    texcoord = intexcoord;"
+            "}",
+            "#version 330 core\n"
+            "in vec2 texcoord;"
+            "out vec4 outcolor;"
+            "uniform sampler2D tex;"
+            "void main()"
+            "{"
+            "    outcolor = texture(tex, texcoord);"
+            "}"
+        );
+
         m_gl_initialized = true;
     }
     void OpenGL3DemoWindow::ReleaseGL() noexcept
@@ -108,6 +155,13 @@ namespace srose::gpu::opengl3
         m_triangle_shader.Destroy();
 
         m_texture_texture.Destroy();
+
+        m_effect_vao.Destroy();
+        m_effect_vbo.Destroy();
+        m_effect_ebo.Destroy();
+        for(auto& i : m_effect_shaders)
+            i.Destroy();
+        m_effect_id = 0;
     }
 
     void OpenGL3DemoWindow::Update()
@@ -132,7 +186,8 @@ namespace srose::gpu::opengl3
 
         bool any_tab =
             m_triangle_demo ||
-            m_texture_demo;
+            m_texture_demo ||
+            m_effect_demo;
         if(!any_tab)
         {
             ImGui::TextDisabled("(Empty)");
@@ -154,6 +209,7 @@ namespace srose::gpu::opengl3
             {
                 ImGui::Checkbox("Triangle Demo", &m_triangle_demo);
                 ImGui::Checkbox("Texture Demo", &m_texture_demo);
+                ImGui::Checkbox("Effect Demo", &m_effect_demo);
             }
         }
     }
@@ -168,6 +224,7 @@ namespace srose::gpu::opengl3
         {
             if(m_triangle_demo) TriangleDemoTabItem();
             if(m_texture_demo) TextureDemoTabItem();
+            if(m_effect_demo) EffectDemoTabItem();
         }
     }
 
@@ -299,6 +356,62 @@ namespace srose::gpu::opengl3
                 ImVec2(m_texture_uvs.x, m_texture_uvs.y),
                 ImVec2(m_texture_uvs.z, m_texture_uvs.w)
             );
+        }
+        ImGui::EndChild();
+    }
+
+    void OpenGL3DemoWindow::EffectDemoTabItem()
+    {
+        auto tabitem = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabItem>(
+            "Effect Demo",
+            &m_effect_demo
+        );
+        if(!tabitem)
+            return;
+        if(m_texture_location.empty())
+        {
+            ImGui::TextDisabled("(Please open an image in the Texture Demo)");
+        }
+        else
+        {
+            ImGui::Text("Texture: %s", m_texture_location.c_str());
+        }
+
+        if(ImGui::BeginChild("##effectcanvas"))
+        {
+            auto& io = ImGui::GetIO();
+            auto* window = ImGui::GetCurrentWindow();
+            ImVec2 pos = window->Pos;
+            ImVec2 size = window->InnerRect.GetSize();
+            m_effect_viewport = glm::vec4{ pos.x, pos.y+size.y , size.x, size.y };
+
+            auto* list = ImGui::GetWindowDrawList();
+            list->AddCallback(
+                [](const ImDrawList* parent, const ImDrawCmd* cmd)
+                {
+                    auto* this_ = (OpenGL3DemoWindow*)cmd->UserCallbackData;
+
+                    if(detail::SetupScissorsAndViewport(ImGui::GetDrawData(), cmd->ClipRect, this_->m_effect_viewport))
+                    {
+                        GLint last_vao; glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vao);
+                        GLint last_program; glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
+
+                        glActiveTexture(GL_TEXTURE0);
+                        glBindTexture(GL_TEXTURE_2D, this_->m_texture_texture.handle());
+
+                        auto& sh = this_->m_effect_shaders[this_->m_effect_id];
+                        glUseProgram(sh);
+                        glBindVertexArray(this_->m_effect_vao);
+                        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+                        glBindVertexArray(last_vao);
+                        glUseProgram(last_program);
+                        glBindTexture(GL_TEXTURE_2D, 0);
+                    }
+                },
+                this
+            );
+            list->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
         }
         ImGui::EndChild();
     }

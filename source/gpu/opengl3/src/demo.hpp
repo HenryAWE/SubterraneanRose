@@ -8,6 +8,7 @@
 #define SROSE_GPU_OPENGL3_demo_hpp_
 
 #include <glad/glad.h>
+#include <vector>
 #include <sr/ui/gui/widget.hpp>
 #include <sr/gpu/opengl3/buffer.hpp>
 #include <sr/gpu/opengl3/shader.hpp>
@@ -54,6 +55,15 @@ namespace srose::gpu::opengl3
         Texture::Description m_texture_desc = {};
         bool m_texture_descchanged = false;
         void TextureDemoTabItem();
+
+        bool m_effect_demo = false;
+        VertexArray m_effect_vao;
+        Buffer m_effect_vbo;
+        Buffer m_effect_ebo;
+        std::vector<ShaderProgram> m_effect_shaders;
+        std::size_t m_effect_id;
+        glm::ivec4 m_effect_viewport;
+        void EffectDemoTabItem();
     };
 } // namespace srose::gpu::opengl3
 
