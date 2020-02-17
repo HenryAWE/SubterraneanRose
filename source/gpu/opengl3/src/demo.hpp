@@ -13,6 +13,7 @@
 #include <sr/gpu/opengl3/buffer.hpp>
 #include <sr/gpu/opengl3/shader.hpp>
 #include <sr/gpu/opengl3/texture.hpp>
+#include <sr/gpu/opengl3/effect.hpp>
 
 
 namespace srose::gpu::opengl3

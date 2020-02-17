@@ -125,6 +125,7 @@ namespace srose::gpu::opengl3
         glBindVertexArray(0);
 
         m_effect_id = 0;
+        m_effect_shaders.reserve(static_cast<int>(EffectID::EffectID_MAX) + 1);
         m_effect_shaders.emplace_back().Compile(
             "#version 330 core\n"
             "layout(location=0) in vec3 inpos;"
@@ -144,6 +145,7 @@ namespace srose::gpu::opengl3
             "    outcolor = texture(tex, texcoord);"
             "}"
         );
+        m_effect_shaders.emplace_back(CreateEffect(EffectID::INVERSION));
 
         m_gl_initialized = true;
     }
@@ -376,6 +378,11 @@ namespace srose::gpu::opengl3
         {
             ImGui::Text("Texture: %s", m_texture_location.c_str());
         }
+
+        int selected_effect = static_cast<int>(m_effect_id);
+        ImGui::SetNextItemWidth(200.0f);
+        ImGui::Combo("Effect", &selected_effect, "Normal\0Inversion\0");
+        m_effect_id = selected_effect;
 
         if(ImGui::BeginChild("##effectcanvas"))
         {
