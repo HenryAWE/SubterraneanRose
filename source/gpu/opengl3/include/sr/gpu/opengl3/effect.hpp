@@ -15,8 +15,11 @@ namespace srose::gpu::opengl3
 {
     enum class EffectID : int
     {
-        INVERSION = 0,
-        EffectID_MAX = 0
+        INVERSION = 1,
+        GRAYSCALE = 2,
+        SHARPEN = 3,
+        BLUR = 4,
+        EffectID_MAX = 4
     };
 
     ShaderProgram CreateEffect(EffectID id);
