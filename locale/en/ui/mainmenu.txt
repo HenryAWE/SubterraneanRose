@@ -1,0 +1,4 @@
+# Main menu
+
+@srose.ui.mainmenu.config = "Configuration"
+@srose.ui.mainmenu.exit = "Exit"

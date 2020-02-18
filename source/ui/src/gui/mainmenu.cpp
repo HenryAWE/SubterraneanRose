@@ -20,10 +20,11 @@ namespace srose::ui
     {
         using std::make_pair;
 
-        constexpr int BUTTON_COUNT = 3;
+        constexpr int BUTTON_COUNT = 4;
         m_buttons.reserve(BUTTON_COUNT);
         m_buttons.push_back(make_pair(gettext("srose.ui.editor") + "###editor", &MainMenu::Button_Editor));
         m_buttons.push_back(make_pair(gettext("srose.ui.mainmenu.config") + "###config", &MainMenu::Button_Config));
+        m_buttons.push_back(make_pair(gettext("srose.ui.about") + "###about", &MainMenu::Button_About));
         m_buttons.push_back(make_pair(gettext("srose.ui.mainmenu.exit") + "###exit", &MainMenu::Button_Exit));
     }
 
@@ -71,6 +72,11 @@ namespace srose::ui
     {
         auto& uimgr = *GetUIManager();
         uimgr.widget_stack.push(uimgr.widget_tree["configpanel"]);
+    }
+    void MainMenu::Button_About()
+    {
+        auto& uimgr = *GetUIManager();
+        uimgr.widget_stack.push(uimgr.widget_tree["about"]);
     }
     void MainMenu::Button_Exit()
     {

@@ -3,4 +3,6 @@
 @srose.ui.configpanel.video = "视频选项"
 @srose.ui.configpanel.video.windowed = "窗口模式"
 @srose.ui.configpanel.lang = "显示语言"
+@srose.ui.configpanel.developer = "开发者选项"
+@srose.ui.configpanel.developer.showdemo = "渲染测试"
 @srose.ui.configpanel.return = "返回"

@@ -64,6 +64,9 @@ namespace srose::ui
             (this->*m_content_func)();
         }
         ImGui::EndChild();
+
+        if(m_show_demo)
+            wm::GetRenderer()->ShowDemoWindow(&m_show_demo);
     }
 
     void ConfigPanel::LoadButtons()
@@ -74,9 +77,11 @@ namespace srose::ui
         m_buttons.reserve(BUTTON_COUNT);
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.video") + "###video", &ConfigPanel::Button_Video));
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.lang") + "###lang", &ConfigPanel::Button_Language));
+        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.developer") + "###developer", &ConfigPanel::Button_Developer));
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
 
         m_str_windowed = gettext("srose.ui.configpanel.video.windowed");
+        m_str_show_demo = gettext("srose.ui.configpanel.developer.showdemo");
     }
     void ConfigPanel::ResetStates()
     {
@@ -99,9 +104,18 @@ namespace srose::ui
             m_content_func = &ConfigPanel::Content_Language;
         }
     }
+    void ConfigPanel::Button_Developer()
+    {
+        if(m_content_func != &ConfigPanel::Content_Developer)
+        {
+            ResetStates();
+            m_content_func = &ConfigPanel::Content_Developer;
+        }
+    }
     void ConfigPanel::Button_Return()
     {
         ResetStates();
+        m_show_demo = false;
         auto& uimgr = *GetUIManager();
         if(&*uimgr.widget_stack.top() == this)
             uimgr.widget_stack.pop();
@@ -116,5 +130,9 @@ namespace srose::ui
     void ConfigPanel::Content_Language()
     {
 
+    }
+    void ConfigPanel::Content_Developer()
+    {
+        ImGui::Checkbox(m_str_show_demo.c_str(), &m_show_demo);
     }
 } // namespace srose::ui

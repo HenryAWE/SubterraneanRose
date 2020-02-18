@@ -1,0 +1,4 @@
+# “关于” 页面
+
+@srose.ui.about = "关于"
+@srose.ui.about.website = "项目网站"

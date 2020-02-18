@@ -30,12 +30,16 @@ namespace srose::ui
 
         void Button_Video();
         void Button_Language();
+        void Button_Developer();
         void Button_Return();
 
         callback_type m_content_func = nullptr;
 
         std::string m_str_windowed;
         void Content_Video();
+        std::string m_str_show_demo;
+        bool m_show_demo = false;
+        void Content_Developer();
         void Content_Language();
     };
 } // namespace srose::ui

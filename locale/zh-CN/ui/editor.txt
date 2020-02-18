@@ -1,0 +1,3 @@
+# 编辑器
+
+@srose.ui.editor = "编辑器"
