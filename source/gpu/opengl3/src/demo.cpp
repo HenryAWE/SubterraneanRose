@@ -146,6 +146,9 @@ namespace srose::gpu::opengl3
             "}"
         );
         m_effect_shaders.emplace_back(CreateEffect(EffectID::INVERSION));
+        m_effect_shaders.emplace_back(CreateEffect(EffectID::GRAYSCALE));
+        m_effect_shaders.emplace_back(CreateEffect(EffectID::SHARPEN));
+        m_effect_shaders.emplace_back(CreateEffect(EffectID::BLUR));
 
         m_gl_initialized = true;
     }
@@ -381,8 +384,11 @@ namespace srose::gpu::opengl3
 
         int selected_effect = static_cast<int>(m_effect_id);
         ImGui::SetNextItemWidth(200.0f);
-        ImGui::Combo("Effect", &selected_effect, "Normal\0Inversion\0");
+        ImGui::Combo("Effect", &selected_effect, "Normal\0Inversion\0Grayscale\0Sharpen\0Blur\0");
         m_effect_id = selected_effect;
+
+        ImGui::SameLine();
+        ImGui::TextDisabled("(Use \"Clamp to Edge\" as wrapping method for better result)");
 
         if(ImGui::BeginChild("##effectcanvas"))
         {
