@@ -1,11 +1,11 @@
 /**
  * @file entry.cpp
  * @author HenryAWE
- * @brief Program entry on PC like Windows, OSX, Linux
+ * @brief Program entry
  */
 
-#include <assert.h>
-#include <stdlib.h>
+#include <cassert>
+#include <cstdlib>
 #include <SDL.h>
 #include <typeinfo>
 #include <future>

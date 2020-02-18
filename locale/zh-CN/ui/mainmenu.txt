@@ -1,0 +1,4 @@
+# 主菜单
+
+@srose.ui.mainmenu.config = "设置"
+@srose.ui.mainmenu.exit = "退出"
