@@ -8,7 +8,6 @@
 2. [Build & Install](./build.en.md): Build and install the project
 
 ## What's Our Goal
-- Open source
 - Cross-platform
 - Easy-to-use
 
