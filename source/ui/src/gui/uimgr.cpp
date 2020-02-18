@@ -10,6 +10,7 @@
 #include "mainmenu.hpp"
 #include "editor/editor_window.hpp"
 #include "configmenu.hpp"
+#include "about.hpp"
 
 
 namespace srose::ui
@@ -35,6 +36,7 @@ namespace srose::ui
         widget_tree.emplace_at("mainmenu", widget_stack.top());
         widget_tree.emplace_at("editor.window", std::make_shared<editor::EditorWindow>());
         widget_tree.emplace_at("configpanel", std::make_shared<ConfigPanel>());
+        widget_tree.emplace_at("about", std::make_shared<About>());
     }
 
     static std::unique_ptr<UIManager> g_uimgr;

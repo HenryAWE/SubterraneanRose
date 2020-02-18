@@ -1,0 +1,4 @@
+# The About Page
+
+@srose.ui.about = "About"
+@srose.ui.about.website = "Project website"

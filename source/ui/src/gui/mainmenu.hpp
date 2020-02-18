@@ -29,6 +29,7 @@ namespace srose::ui
 
         void Button_Editor();
         void Button_Config();
+        void Button_About();
         void Button_Exit();
     };
 } // namespace srose::ui
