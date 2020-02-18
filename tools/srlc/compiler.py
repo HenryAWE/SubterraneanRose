@@ -42,6 +42,17 @@ class compiler:
                     break
             items = items[id][0]
 
+    @staticmethod
+    def translate_str(string):
+        string = string.replace('\\\\', '\\')
+        string = string.replace('\\n', '\n')
+        string = string.replace('\\t', '\t')
+        string = string.replace('\\f', '\f')
+        string = string.replace('\\v', '\v')
+        string = string.replace('\\"', '"')
+
+        return string
+
     def parse_string(self, string, file, line):
         string.strip()
         if(not string or string[0] == '\n'):
@@ -59,11 +70,12 @@ class compiler:
             return
         strid = string[1:eqidx].strip()
         tr = string[eqidx+1:].strip()
-        if(tr[0] != '"' or tr[-1] != '"'):
+        if(tr[0] != '"' or tr[-1] != '"' or tr[-2:] == '\\"'):
             self.emit_warning('''Missing '"' at the begin/end of the translation string ''', file=file, line=line, fatal=self.stop_on_err)
             return
         # Remove the '"' characters around the string
         tr = tr[1:-1]
+        tr = self.translate_str(tr)
         if self.verbose>=3 or self.mode==option.DISPLAY:
             print("[compiler]", strid.split('.'), "= \"%s\""%tr)
 
