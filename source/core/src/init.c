@@ -8,6 +8,7 @@
 #include <sr/core/init.h>
 #include <SDL.h>
 #include <SDL_video.h>
+#include <SDL_mixer.h>
 #include <sr/core/version_info.h>
 
 
@@ -39,7 +40,7 @@ int SRSCALL SR_CORE_InitSDL(int msgbox_on_err)
     SDL_GetVersion(&sdl_version_linked);;
     SDL_LogInfo(
         SDL_LOG_CATEGORY_APPLICATION,
-        "[CORE] SDL_Init() success\n"
+        "[CORE] SDL_Init() successfully initialized\n"
         "SDL Info:\n"
         "  Version %d.%d.%d\n"
         "  Runtime Version: %d.%d.%d",
@@ -47,58 +48,63 @@ int SRSCALL SR_CORE_InitSDL(int msgbox_on_err)
         VERSION_NUMBER_2_ARG(sdl_version_linked)
     );
 
-    if(SR_CORE_OpenAudio(NULL, NULL) == -1)
-    {
-        return -1;
-    }
-
-    return 0;
-}
-
-static SDL_AudioSpec obtained;
-static SDL_AudioDeviceID dev;
-
-int SRSCALL SR_CORE_OpenAudio(SDL_AudioCallback callback, void* user)
-{
-    SDL_AudioSpec want;
-    memset(&want, 0, sizeof(want));
-
-    want.freq = SR_AUDIO_SAMPLE_RATE;
-    want.format = AUDIO_S16SYS;
-    want.channels = 2;
-    want.samples = 4096;
-    want.callback = callback;
-    want.userdata = user;
-
-    dev = SDL_OpenAudioDevice(NULL, 0, &want, &obtained, 0);
-    if(dev == 0)
+    if(Mix_Init(MIX_INIT_FLAC | MIX_INIT_OGG) == 0)
     {
         SDL_LogError(
             SDL_LOG_CATEGORY_APPLICATION,
-            "[CORE] SDL_OpenAudioDevice() failed: %s",
-            SDL_GetError()
+            "[CORE] Mix_Init() failed %s",
+            Mix_GetError()
         );
+        if(msgbox_on_err)
+        {
+            SDL_ShowSimpleMessageBox(
+                SDL_MESSAGEBOX_ERROR,
+                "Mix_Init() failed",
+                SDL_GetError(),
+                NULL
+            );
+        }
 
-        return -1;
+        SDL_Quit();
+        return 1;
     }
-
+    SDL_version mix_version;
+    const SDL_version* mix_version_linked;
+    SDL_MIXER_VERSION(&mix_version);
+    mix_version_linked = Mix_Linked_Version();
     SDL_LogInfo(
         SDL_LOG_CATEGORY_APPLICATION,
-        "[CORE] SDL_OpenAudioDevice() succeeded\n"
-        "  Device ID: %u - \"%s\"\n"
-        "  Driver: %s",
-        dev-2,
-        SDL_GetAudioDeviceName(dev-2, 0),
-        SDL_GetCurrentAudioDriver()
+        "[CORE] Mix_Init() successfully initialized\n"
+        "SDL_Mixer Info:\n"
+        "  Version %d.%d.%d\n"
+        "  Runtime Version: %d.%d.%d",
+        VERSION_NUMBER_2_ARG(mix_version),
+        VERSION_NUMBER_2_ARG(*mix_version_linked)
     );
 
+    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+    {
+        SDL_LogError(
+            SDL_LOG_CATEGORY_APPLICATION,
+            "[CORE] Mix_OpenAudio() failed %s",
+            Mix_GetError()
+        );
+        if(msgbox_on_err)
+        {
+            SDL_ShowSimpleMessageBox(
+                SDL_MESSAGEBOX_ERROR,
+                "Mix_OpenAudio() failed",
+                SDL_GetError(),
+                NULL
+            );
+        }
+
+        Mix_Quit();
+        SDL_Quit();
+        return 1;
+    }
+
     return 0;
-}
-void SRSCALL SR_CORE_CloseAudio(void)
-{
-    if(dev > 1)
-        SDL_CloseAudioDevice(dev);
-    memset(&obtained, 0, sizeof(obtained));
 }
 
 int SRSCALL SR_CORE_InitGL(void)
@@ -118,7 +124,8 @@ int SRSCALL SR_CORE_InitGL(void)
 
 void SRSCALL SR_CORE_QuitSDL(void)
 {
-    SR_CORE_CloseAudio();
+    Mix_CloseAudio();
+    Mix_Quit();
     SDL_Quit();
 }
 
