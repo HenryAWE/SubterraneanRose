@@ -42,7 +42,13 @@ namespace srose::gpu::opengl3
         void UpdateMenuBar();
         void UpdateTabBar();
 
-        bool m_triangle_demo = true; // Open by default
+        bool m_integrate_demo = true; // Open by default
+        Framebuffer m_integrate_fbo;
+        Texture m_integrate_frametex;
+        Renderbuffer m_integrate_rbo;
+        void IntegrateDemoTabItem();
+
+        bool m_triangle_demo = false;
         VertexArray m_triangle_vao;
         Buffer m_triangle_vbo;
         glm::vec4 m_triangle_color = glm::vec4(1);
