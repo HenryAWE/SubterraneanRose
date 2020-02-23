@@ -15,6 +15,7 @@
 #include <sr/ui/console/cmdline.hpp>
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/wm/winmgr.hpp>
+#include <sr/audio/aumgr.hpp>
 #include <sr/res/resmgr.hpp>
 #include <sr/ui/gui/uimgr.hpp>
 #include "main_loop.hpp"
@@ -95,6 +96,7 @@ int SRSCALL program_entry(int argc, char* argv[])
         auto font_ready = std::async(std::launch::async, LoadFonts);
         std::string preferred = console::GetPreferredLanguage();
         SelectLanguage(preferred.empty() ? nullptr : preferred.c_str());
+        audio::CreateAudioManager();
         res::CreateResourceManager();
         SDL_SetWindowTitle(display->win, GetDefaultLanguage()->gettext("srose", "Subterranean Rose").c_str());
         font_ready.get();
@@ -139,6 +141,7 @@ quit_program:
     wm::GetRenderer()->ReleaseUIData();
     ui::DestroyUIManager();
     res::DestroyResourceManager();
+    audio::DestroyAudioManager();
     wm::DestroyRenderer();
     SR_WM_DestroyDisplay(display);
     SR_CORE_QuitSDL();
