@@ -169,6 +169,11 @@ namespace srose::gpu::opengl3
         m_effect_id = 0;
     }
 
+    void OpenGL3DemoWindow::Render()
+    {
+        
+    }
+
     void OpenGL3DemoWindow::Update()
     {
         assert(m_gl_initialized);

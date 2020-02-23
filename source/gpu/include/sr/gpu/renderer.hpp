@@ -38,6 +38,7 @@ namespace srose::gpu
         const glm::vec4& GetCurrentColor() const noexcept;
 
         virtual void ClearScreen() = 0;
+        virtual void Render() {};
         virtual void Present() {}
 
         util::string_tree<std::shared_ptr<Texture>, '/'> textures;

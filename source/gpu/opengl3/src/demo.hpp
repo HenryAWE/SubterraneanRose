@@ -31,6 +31,8 @@ namespace srose::gpu::opengl3
         [[nodiscard]]
         bool gl_initialized() const noexcept { return m_gl_initialized; }
 
+        void Render();
+
         bool open = true;
         void Update() override;
 

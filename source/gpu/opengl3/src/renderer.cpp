@@ -37,6 +37,14 @@ namespace srose::gpu::opengl3
         SR_ASSERT_CTX();
         SDL_GL_SwapWindow(GetDisplay()->win);
     }
+    void Renderer::Render()
+    {
+        if(m_demo_initialized)
+        {
+            auto ptr = ui::GetUIManager()->widget_tree["srose.opengl3.demo"].get();
+            static_cast<OpenGL3DemoWindow*>(ptr)->Render();
+        }
+    }
 
     std::string Renderer::Information()
     {
