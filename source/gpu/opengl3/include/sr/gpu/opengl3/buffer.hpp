@@ -62,6 +62,56 @@ namespace srose::gpu::opengl3
     private:
         handle_type m_handle = 0;
     };
+
+    class Framebuffer
+    {
+    public:
+        typedef GLuint handle_type;
+
+        Framebuffer() noexcept = default;
+        Framebuffer(const Framebuffer& rhs) = delete;
+        Framebuffer(Framebuffer&& move) noexcept
+            : m_handle(std::exchange(move.m_handle, 0)) {}
+
+        ~Framebuffer() noexcept;
+        
+        void Generate();
+
+        void Destroy() noexcept;
+
+        [[nodiscard]]
+        constexpr handle_type handle() const noexcept { return m_handle; }
+        [[nodiscard]]
+        constexpr operator handle_type() const noexcept { return m_handle; }
+
+    private:
+        handle_type m_handle = 0;
+    };
+
+    class Renderbuffer
+    {
+    public:
+        typedef GLuint handle_type;
+
+        Renderbuffer() noexcept = default;
+        Renderbuffer(const Renderbuffer& rhs) = delete;
+        Renderbuffer(Renderbuffer&& move) noexcept
+            : m_handle(std::exchange(move.m_handle, 0)) {}
+
+        ~Renderbuffer() noexcept;
+        
+        void Generate();
+
+        void Destroy() noexcept;
+
+        [[nodiscard]]
+        constexpr handle_type handle() const noexcept { return m_handle; }
+        [[nodiscard]]
+        constexpr operator handle_type() const noexcept { return m_handle; }
+
+    private:
+        handle_type m_handle = 0;
+    };
 } // namespace srose::gpu::opengl3
 
 

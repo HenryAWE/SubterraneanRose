@@ -51,4 +51,44 @@ namespace srose::gpu::opengl3
             return;
         glDeleteVertexArrays(1, &m_handle);
     }
+
+    Framebuffer::~Framebuffer() noexcept
+    {
+        Destroy();
+    }
+
+    void Framebuffer::Generate()
+    {
+        SR_ASSERT_CTX();
+        Destroy();
+        glGenFramebuffers(1, &m_handle);
+    }
+
+    void Framebuffer::Destroy() noexcept
+    {
+        SR_ASSERT_CTX();
+        if(!m_handle)
+            return;
+        glDeleteFramebuffers(1, &m_handle);
+    }
+
+    Renderbuffer::~Renderbuffer() noexcept
+    {
+        Destroy();
+    }
+
+    void Renderbuffer::Generate()
+    {
+        SR_ASSERT_CTX();
+        Destroy();
+        glGenRenderbuffers(1, &m_handle);
+    }
+
+    void Renderbuffer::Destroy() noexcept
+    {
+        SR_ASSERT_CTX();
+        if(!m_handle)
+            return;
+        glDeleteRenderbuffers(1, &m_handle);
+    }
 } // namespace srose::gpu::opengl3
