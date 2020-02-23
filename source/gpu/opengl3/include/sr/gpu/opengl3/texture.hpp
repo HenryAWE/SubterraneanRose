@@ -48,10 +48,12 @@ namespace srose::gpu::opengl3
         bool LoadFromFile(const filesystem::path& file) override;
         bool LoadFromFileEx(const filesystem::path& file, const Description& desc = {}) override;
 
-        GLenum TranslateDesc(Filter filter, bool mipmap) noexcept;
-        GLenum TranslateDesc(Wrapping wrap) noexcept;
+        static GLenum TranslateDesc(Filter filter, bool mipmap) noexcept;
+        static GLenum TranslateDesc(Wrapping wrap) noexcept;
 
     private:
+        static void ApplyDesc(const Description& desc) noexcept;
+
         handle_type m_handle = 0;
         std::pair<int, int> m_size = {0, 0};
     };

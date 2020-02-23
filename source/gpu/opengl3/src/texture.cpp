@@ -99,14 +99,7 @@ namespace srose::gpu::opengl3
         }
 
         glBindTexture(GL_TEXTURE_2D, m_handle);
-        auto wrap_s = TranslateDesc(desc.s);
-        auto wrap_t = TranslateDesc(desc.t);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TranslateDesc(desc.min, true));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TranslateDesc(desc.mag, false));
-        if(wrap_s == GL_CLAMP_TO_BORDER || wrap_t == GL_CLAMP_TO_BORDER)
-            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &desc.border_color[0]);
+        ApplyDesc(desc);
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
@@ -158,5 +151,17 @@ namespace srose::gpu::opengl3
             case CLAMP_TO_EDGE: return GL_CLAMP_TO_EDGE;
             case CLAMP_TO_BORDER: return GL_CLAMP_TO_BORDER;
         }
+    }
+
+    void Texture::ApplyDesc(const Description& desc) noexcept
+    {
+        auto wrap_s = TranslateDesc(desc.s);
+        auto wrap_t = TranslateDesc(desc.t);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TranslateDesc(desc.min, true));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TranslateDesc(desc.mag, false));
+        if(wrap_s == GL_CLAMP_TO_BORDER || wrap_t == GL_CLAMP_TO_BORDER)
+            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &desc.border_color[0]);
     }
 } // namespace srose::gpu::opengl3
