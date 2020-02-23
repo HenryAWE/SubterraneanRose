@@ -14,7 +14,6 @@
 - External libraries (Third party libraries included in the project source code are not listed)
   | Name | Version |
   |:-|:-|
-  | ffmpeg | 4.2 or higher |
   | SDL | 2.0.9 or higher |
   | Boost | 1.70.0 or higher |
 
