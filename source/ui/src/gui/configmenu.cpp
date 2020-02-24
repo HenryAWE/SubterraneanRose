@@ -13,6 +13,7 @@
 #include <imguisr.h>
 #include <sr/wm/winmgr.hpp>
 #include <sr/ui/gui/uimgr.hpp>
+#include <sr/audio/aumgr.hpp>
 
 
 namespace srose::ui
@@ -65,8 +66,10 @@ namespace srose::ui
         }
         ImGui::EndChild();
 
-        if(m_show_demo)
-            wm::GetRenderer()->ShowDemoWindow(&m_show_demo);
+        if(m_show_render_demo)
+            wm::GetRenderer()->ShowDemoWindow(&m_show_render_demo);
+        if(m_show_audio_demo)
+            audio::GetAudioManager()->ShowDemoWindow(&m_show_audio_demo);
     }
 
     void ConfigPanel::LoadButtons()
@@ -81,7 +84,8 @@ namespace srose::ui
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
 
         m_str_windowed = gettext("srose.ui.configpanel.video.windowed");
-        m_str_show_demo = gettext("srose.ui.configpanel.developer.showdemo");
+        m_str_show_render_demo = gettext("srose.ui.configpanel.developer.show-render-demo");
+        m_str_show_audio_demo = gettext("srose.ui.configpanel.developer.show-audio-demo");
     }
     void ConfigPanel::ResetStates()
     {
@@ -115,7 +119,8 @@ namespace srose::ui
     void ConfigPanel::Button_Return()
     {
         ResetStates();
-        m_show_demo = false;
+        m_show_render_demo = false;
+        m_show_audio_demo = false;
         auto& uimgr = *GetUIManager();
         if(&*uimgr.widget_stack.top() == this)
             uimgr.widget_stack.pop();
@@ -133,6 +138,8 @@ namespace srose::ui
     }
     void ConfigPanel::Content_Developer()
     {
-        ImGui::Checkbox(m_str_show_demo.c_str(), &m_show_demo);
+        ImGui::Checkbox(m_str_show_render_demo.c_str(), &m_show_render_demo);
+        ImGui::SameLine();
+        ImGui::Checkbox(m_str_show_audio_demo.c_str(), &m_show_audio_demo);
     }
 } // namespace srose::ui

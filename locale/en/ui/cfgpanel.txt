@@ -3,6 +3,7 @@
 @srose.ui.configpanel.video = "Video Options"
 @srose.ui.configpanel.video.windowed = "Windowed"
 @srose.ui.configpanel.developer = "Developer Option"
-@srose.ui.configpanel.developer.showdemo = "Rendering test"
+@srose.ui.configpanel.developer.show-render-demo = "Rendering test"
+@srose.ui.configpanel.developer.show-audio-demo = "Audio test"
 @srose.ui.configpanel.lang = "Display Language"
 @srose.ui.configpanel.return = "Return"

@@ -20,6 +20,11 @@ namespace srose::audio
         AudioManager(const AudioManager&) = delete;
 
         ~AudioManager() noexcept;
+
+        void ShowDemoWindow(bool* p_open = nullptr);
+
+    private:
+        bool m_demo_initialized = false;
     };
 
     AudioManager* SRSCALL CreateAudioManager();
