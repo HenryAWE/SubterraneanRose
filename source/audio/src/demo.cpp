@@ -18,6 +18,7 @@ namespace srose::audio
 {
     AudioDemoWindow::AudioDemoWindow()
     {
+        m_music_location_cache.resize(256);
         LoadDevicesList();
     }
 
@@ -46,6 +47,7 @@ namespace srose::audio
         UpdateMenuBar();
 
         bool any_tab =
+            m_show_music_demo ||
             m_show_information;
         if(!any_tab)
         {
@@ -66,6 +68,7 @@ namespace srose::audio
             auto tabs = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Menu>("Tabs");
             if(tabs)
             {
+                ImGui::Checkbox("Music", &m_show_music_demo);
                 ImGui::Checkbox("Information", &m_show_information);
             }
         }
@@ -79,6 +82,7 @@ namespace srose::audio
         auto tabbar = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabBar>("##tabbar", tabbar_flags);
         if(tabbar)
         {
+            if(m_show_music_demo) MusicTabItem();
             if(m_show_information) InformationTabItem();
         }
     }
@@ -98,6 +102,55 @@ namespace srose::audio
         }
     }
 
+    void AudioDemoWindow::MusicTabItem()
+    {
+        auto tabitem =  ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabItem>(
+            "Music",
+            &m_show_music_demo
+        );
+        if(!tabitem)
+            return;
+        
+        ImGui::InputText(
+            "Location",
+            m_music_location_cache.data(),
+            m_music_location_cache.size()
+        );
+        ImGui::SameLine();
+        if(ImGui::Button("Open"))
+        {
+            if(m_music.Load(m_music_location_cache) == false)
+            {
+                ImGui::OpenPopup("Load failed");
+            }
+        }
+        bool p_popup_open = true;
+        constexpr int popup_flags = 
+            ImGuiWindowFlags_NoSavedSettings |
+            ImGuiWindowFlags_NoMove |
+            ImGuiWindowFlags_NoResize;
+        if(ImGui::BeginPopupModal("Load failed", &p_popup_open, popup_flags))
+        {
+            ImGui::TextColored(ImVec4(1.0f, 0, 0, 1.0f), "Load music failed, please check console for detailed information");
+            if(ImGui::Button("OK") || p_popup_open == false)
+            {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+
+        ImGui::Separator();
+        if(ImGui::Button("Play"))
+        {
+            if(m_music.handle())
+                Mix_PlayMusic(m_music, 1);
+        }
+        ImGui::SameLine();
+        if(ImGui::Button("Halt"))
+        {
+            Mix_HaltMusic();
+        }
+    }
     void AudioDemoWindow::InformationTabItem()
     {
         auto tabitem =  ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabItem>(
