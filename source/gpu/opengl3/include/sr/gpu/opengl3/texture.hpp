@@ -28,8 +28,9 @@ namespace srose::gpu::opengl3
         void Generate() noexcept;
         void Destroy() noexcept;
 
-        bool LoadFromFile(const char* path);
-        bool LoadFromFileEx(const char* path, const Description& desc = {});
+        bool LoadFromFile(const char* path, bool mipmap = true);
+        bool LoadFromFileEx(const char* path, const Description& desc = {}, bool mipmap = true);
+        bool LoadFromCurrentFramebuffer(std::pair<int, int> framesize, const Description& desc = {}, bool mipmap = false);
 
         [[nodiscard]]
         /**
@@ -48,10 +49,12 @@ namespace srose::gpu::opengl3
         bool LoadFromFile(const filesystem::path& file) override;
         bool LoadFromFileEx(const filesystem::path& file, const Description& desc = {}) override;
 
-        GLenum TranslateDesc(Filter filter, bool mipmap) noexcept;
-        GLenum TranslateDesc(Wrapping wrap) noexcept;
+        static GLenum TranslateDesc(Filter filter, bool mipmap) noexcept;
+        static GLenum TranslateDesc(Wrapping wrap) noexcept;
 
     private:
+        static void ApplyDesc(const Description& desc, bool mipmap = true) noexcept;
+
         handle_type m_handle = 0;
         std::pair<int, int> m_size = {0, 0};
     };

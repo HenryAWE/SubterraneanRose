@@ -60,6 +60,25 @@ namespace srose::gpu::opengl3
 
     void OpenGL3DemoWindow::InitializeGL()
     {
+        /* Integrate Demo */
+        m_integrate_fbo.Generate();
+        glBindFramebuffer(GL_FRAMEBUFFER, m_integrate_fbo);
+        m_integrate_frametex.Generate();
+        const std::pair<int, int> framesize = {960, 720};
+        Texture::Description frametex_desc{};
+        frametex_desc.s = Texture::Wrapping::CLAMP_TO_EDGE;
+        frametex_desc.t = Texture::Wrapping::CLAMP_TO_EDGE;
+        m_integrate_frametex.LoadFromCurrentFramebuffer(framesize, frametex_desc);
+        m_integrate_rbo.Generate();
+        glBindRenderbuffer(GL_RENDERBUFFER, m_integrate_rbo);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, framesize.first, framesize.second);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_integrate_rbo);
+        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        {
+            throw std::runtime_error("[OpenGL3] Incomplete framebuffer");
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
         /* Triangle demo */
         m_triangle_vao.Generate();
         m_triangle_vbo.Generate();
@@ -169,6 +188,16 @@ namespace srose::gpu::opengl3
         m_effect_id = 0;
     }
 
+    void OpenGL3DemoWindow::Render()
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, m_integrate_fbo);
+        auto view = m_integrate_frametex.size();
+        glViewport(0, 0, view.first, view.second);
+        glClearColor(1, 1, 1, 1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
     void OpenGL3DemoWindow::Update()
     {
         assert(m_gl_initialized);
@@ -190,6 +219,7 @@ namespace srose::gpu::opengl3
         UpdateMenuBar();
 
         bool any_tab =
+            m_integrate_demo ||
             m_triangle_demo ||
             m_texture_demo ||
             m_effect_demo;
@@ -212,6 +242,7 @@ namespace srose::gpu::opengl3
             auto demo_list = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Menu>("Demo List");
             if(demo_list)
             {
+                ImGui::Checkbox("Integrate Demo", &m_integrate_demo);
                 ImGui::Checkbox("Triangle Demo", &m_triangle_demo);
                 ImGui::Checkbox("Texture Demo", &m_texture_demo);
                 ImGui::Checkbox("Effect Demo", &m_effect_demo);
@@ -227,12 +258,33 @@ namespace srose::gpu::opengl3
         auto tabbar = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabBar>("##tabbar", tabbar_flags);
         if(tabbar)
         {
+            if(m_integrate_demo) IntegrateDemoTabItem();
             if(m_triangle_demo) TriangleDemoTabItem();
             if(m_texture_demo) TextureDemoTabItem();
             if(m_effect_demo) EffectDemoTabItem();
         }
     }
 
+    void OpenGL3DemoWindow::IntegrateDemoTabItem()
+    {
+        auto tabitem =  ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabItem>(
+            "Integrate Demo",
+            &m_integrate_demo
+        );
+        if(!tabitem)
+            return;
+        
+        std::pair<int, int> framesize = m_integrate_frametex.size();
+        ImGui::Text("Frame size: %dx%d", framesize.first, framesize.second);
+        if(ImGui::BeginChild("##frametex"))
+        {
+            ImGui::Image(
+                m_integrate_frametex.GetNativeHandle(),
+                ImGui::GetWindowSize()
+            );
+        }
+        ImGui::EndChild();
+    }
     void OpenGL3DemoWindow::TriangleDemoTabItem()
     {
         auto& io = ImGui::GetIO();

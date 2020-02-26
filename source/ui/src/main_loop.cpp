@@ -40,6 +40,7 @@ int SRSCALL main_loop(SR_WM_display* display)
 
         /*Rendering */
         renderer.ClearScreen();
+        renderer.Render();
         SR_WM_RenderFrame();
         renderer.Present();
     }

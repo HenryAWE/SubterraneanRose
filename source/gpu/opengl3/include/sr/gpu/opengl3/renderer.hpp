@@ -31,6 +31,7 @@ namespace srose::gpu::opengl3
         std::string Information();
 
         void ClearScreen() override;
+        void Render() override;
 
         std::unique_ptr<Texture> CreateTexture() { return std::unique_ptr<Texture>(NewTexture()); }
 
