@@ -7,6 +7,7 @@
 #ifndef SROSE_AUDIO_demo_hpp_
 #define SROSE_AUDIO_demo_hpp_
 
+#include <vector>
 #include <sr/ui/gui/widget.hpp>
 
 
@@ -27,6 +28,8 @@ namespace srose::audio
         void UpdateTabBar();
 
         bool m_show_information = false;
+        std::vector<std::string> m_devices_list;
+        void LoadDevicesList();
         void InformationTabItem();
     };
 } // namespace srose::audio

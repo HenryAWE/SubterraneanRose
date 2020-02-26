@@ -18,7 +18,7 @@ namespace srose::audio
 {
     AudioDemoWindow::AudioDemoWindow()
     {
-        
+        LoadDevicesList();
     }
 
     AudioDemoWindow::~AudioDemoWindow()
@@ -83,6 +83,21 @@ namespace srose::audio
         }
     }
 
+    void AudioDemoWindow::LoadDevicesList()
+    {
+        int count = SDL_GetNumAudioDevices(false);
+        if(count < 0)
+        {
+            m_devices_list.clear();
+            return;
+        }
+        m_devices_list.resize(count);
+        for(int i = 0; i < count; ++i)
+        {
+            m_devices_list[i] = SDL_GetAudioDeviceName(i, false);
+        }
+    }
+
     void AudioDemoWindow::InformationTabItem()
     {
         auto tabitem =  ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabItem>(
@@ -107,5 +122,27 @@ namespace srose::audio
             "Current: %s",
             SDL_GetCurrentAudioDriver()
         );
+
+        ImGui::BulletText("%d audio device(s)", (int)m_devices_list.size());
+        ImGui::SameLine();
+        if(ImGui::Button("Refresh"))
+        {
+            LoadDevicesList();
+        }
+        if(ImGui::BeginChild("##devices", ImVec2(0, 0), true))
+        {
+            if(m_devices_list.empty())
+            {
+                ImGui::TextDisabled("(Audio device not existed)");
+            }
+            else
+            {
+                for(int i = 0; i < m_devices_list.size(); ++i)
+                {
+                    ImGui::Text("%d\t%s", i, m_devices_list[i].c_str());
+                }
+            }
+        }
+        ImGui::EndChild();
     }
 } // namespace srose::audio
