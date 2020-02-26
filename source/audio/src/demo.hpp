@@ -21,6 +21,13 @@ namespace srose::audio
 
         bool open = true;
         void Update() override;
+
+    private:
+        void UpdateMenuBar();
+        void UpdateTabBar();
+
+        bool m_show_information = false;
+        void InformationTabItem();
     };
 } // namespace srose::audio
 
