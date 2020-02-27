@@ -1,0 +1,4 @@
+# Graphic console
+
+@srose.ui.conwin = "Console"
+@srose.ui.conwin.log = "Log"

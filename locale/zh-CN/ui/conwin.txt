@@ -1,0 +1,4 @@
+# 图形命令行
+
+@srose.ui.conwin = "命令行"
+@srose.ui.conwin.log = "日志"

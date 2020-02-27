@@ -4,6 +4,7 @@
 @srose.ui.configpanel.video.windowed = "窗口模式"
 @srose.ui.configpanel.lang = "显示语言"
 @srose.ui.configpanel.developer = "开发者选项"
+@srose.ui.configpanel.developer.show-conwin = "命令行"
 @srose.ui.configpanel.developer.show-render-demo = "渲染测试"
 @srose.ui.configpanel.developer.show-audio-demo = "音频测试"
 @srose.ui.configpanel.return = "返回"

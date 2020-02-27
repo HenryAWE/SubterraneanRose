@@ -37,6 +37,8 @@ namespace srose::ui
 
         std::string m_str_windowed;
         void Content_Video();
+        std::string m_str_show_conwin;
+        bool m_show_conwin = false;
         std::string m_str_show_render_demo;
         bool m_show_render_demo = false;
         std::string m_str_show_audio_demo;

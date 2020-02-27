@@ -14,6 +14,7 @@
 #include <sr/wm/winmgr.hpp>
 #include <sr/ui/gui/uimgr.hpp>
 #include <sr/audio/aumgr.hpp>
+#include "conwin.hpp"
 
 
 namespace srose::ui
@@ -66,6 +67,13 @@ namespace srose::ui
         }
         ImGui::EndChild();
 
+        if(m_show_conwin)
+        {
+            auto conwin = GetUIManager()->widget_tree["conwin"].get();
+            static_cast<ConsoleWindow*>(conwin)->open = true;
+            conwin->Update();
+            m_show_conwin = static_cast<ConsoleWindow*>(conwin)->open;
+        }
         if(m_show_render_demo)
             wm::GetRenderer()->ShowDemoWindow(&m_show_render_demo);
         if(m_show_audio_demo)
@@ -84,6 +92,7 @@ namespace srose::ui
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
 
         m_str_windowed = gettext("srose.ui.configpanel.video.windowed");
+        m_str_show_conwin = gettext("srose.ui.configpanel.developer.show-conwin");
         m_str_show_render_demo = gettext("srose.ui.configpanel.developer.show-render-demo");
         m_str_show_audio_demo = gettext("srose.ui.configpanel.developer.show-audio-demo");
     }
@@ -119,6 +128,7 @@ namespace srose::ui
     void ConfigPanel::Button_Return()
     {
         ResetStates();
+        m_show_conwin = false;
         m_show_render_demo = false;
         m_show_audio_demo = false;
         auto& uimgr = *GetUIManager();
@@ -138,6 +148,8 @@ namespace srose::ui
     }
     void ConfigPanel::Content_Developer()
     {
+        ImGui::Checkbox(m_str_show_conwin.c_str(), &m_show_conwin);
+        ImGui::Separator();
         ImGui::Checkbox(m_str_show_render_demo.c_str(), &m_show_render_demo);
         ImGui::SameLine();
         ImGui::Checkbox(m_str_show_audio_demo.c_str(), &m_show_audio_demo);
