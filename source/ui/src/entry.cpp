@@ -94,8 +94,6 @@ int SRSCALL program_entry(int argc, char* argv[])
     {
         wm::CreateRenderer(display);
         auto font_ready = std::async(std::launch::async, LoadFonts);
-        std::string preferred = console::GetPreferredLanguage();
-        SelectLanguage(preferred.empty() ? nullptr : preferred.c_str());
         audio::CreateAudioManager();
         res::CreateResourceManager();
         SDL_SetWindowTitle(display->win, GetDefaultLanguage()->gettext("srose", "Subterranean Rose").c_str());

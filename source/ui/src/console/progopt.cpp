@@ -14,6 +14,7 @@
 #include <cassert>
 #include <sr/core/version_info.h>
 #include <SDL.h>
+#include <sr/ui/console/cmdline.hpp>
 #include "../i18n/i18n.hpp"
 
 #ifdef _
@@ -31,6 +32,32 @@ const boost::program_options::variables_map& GetVariablesMapInternal() noexcept
     return *vm.get();
 }
 
+static boost::program_options::options_description SRSCALL BuildDescription()
+{
+    using namespace srose;
+    namespace po = boost::program_options;
+
+    po::options_description generic(_("srose.cui.generic"));
+    generic.add_options()
+        ("help", _("srose.cui.generic.help").c_str())
+        ("version", _("srose.cui.generic.version").c_str());
+
+    po::options_description display(_("srose.cui.display"));
+    display.add_options()
+        ("language", po::value<std::string>()->value_name("name")->default_value("auto"), _("srose.cui.display.language").c_str())
+        ("fullscreen,F", _("srose.cui.display.fullscreen").c_str());
+    
+    po::options_description video(_("srose.cui.video"));
+    video.add_options()
+        ("get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), _("srose.cui.get-display-mode").c_str());
+
+    return po::options_description(_("srose.cui.total"))
+        .add(generic)
+        .add(display)
+        .add(video);
+}
+
+bool GetDisplayMode();
 
 int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
 {
@@ -43,38 +70,21 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
             vm = std::make_unique<po::variables_map>();
 
         ui::SelectLanguage();
-        po::options_description generic(_("srose.cui.generic"));
-        generic.add_options()
-            ("help", _("srose.cui.generic.help").c_str())
-            ("version", _("srose.cui.generic.version").c_str());
-
-        po::options_description display(_("srose.cui.display"));
-        display.add_options()
-            ("language", po::value<std::string>()->value_name("name")->default_value("auto"), _("srose.cui.display.language").c_str())
-            ("fullscreen,F", _("srose.cui.display.fullscreen").c_str());
-        
-        po::options_description video(_("srose.cui.video"));
-        video.add_options()
-            ("get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), _("srose.cui.get-display-mode").c_str());
-
-        po::options_description debug("Debug");
-        debug.add_options()
-            ("draw-debug-overlay", "Draw overlay debug UI");
-
-        po::options_description total(_("srose.cui.total"));
-        total
-            .add(generic)
-            .add(display)
-            .add(video)
-            .add(debug);
-
-        po::store(po::parse_command_line(argc, argv, total), *vm);
+        auto desc = BuildDescription();
+        po::store(po::parse_command_line(argc, argv, desc), *vm);
         po::notify(*vm);
+
+        std::string preferred = ui::console::GetPreferredLanguage();
+        ui::SelectLanguage(preferred.empty() ? nullptr : preferred.c_str());
 
         if(vm->count("help"))
         {
             std::stringstream ss;
-            ss << total;
+            if(preferred.empty())
+                ss << desc;
+            else
+                ss << BuildDescription();
+
             std::printf(ss.str().c_str());
 
             return 1;
@@ -91,9 +101,6 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
         }
         if(vm->count("get-display-mode"))
         {
-            int disp_index = 0;
-            try{ disp_index = (*vm)["get-display-mode"].as<int>(); }catch(...){}
-
             if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
             {
                 std::printf(
@@ -103,42 +110,7 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
                 return 1;
             }
 
-            int dm_count = SDL_GetNumDisplayModes(disp_index);
-            if(dm_count < 1)
-            {
-                std::printf(
-                    "Get number of the display modes of the display-%02d failed: %s\n",
-                    disp_index,
-                    SDL_GetError()
-                );
-                return 1;
-            }
-
-            const char* disp_name = SDL_GetDisplayName(disp_index);
-            std::printf("Display-%02d Name: %s\n", disp_index, disp_name?disp_name:"(failed)");
-            std::printf("Display mode count: %d\n", dm_count);
-            std::printf("Mode\tBits per Pixel - Format Name\t\tWidth x Height @Refresh Rate\n");
-            for(int i = 0; i < dm_count; ++i)
-            {
-                SDL_DisplayMode mode{};
-                if(SDL_GetDisplayMode(disp_index, i, &mode) != 0)
-                {
-                    std::printf(
-                        "%03d:\tfailed - %s\n",
-                        i,
-                        SDL_GetError()
-                    );
-                    continue;
-                }
-
-                std::printf(
-                    "%03d:\t%ibpp - %s\t\t%i x %i @%dHz\n",
-                    i,
-                    SDL_BITSPERPIXEL(mode.format), SDL_GetPixelFormatName(mode.format),
-                    mode.w, mode.h,
-                    mode.refresh_rate
-                );
-            }
+            GetDisplayMode();
 
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
             return 1;
@@ -156,6 +128,56 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
         std::printf("An unknown exception is caught in SR_UI_CONSOLE_ParseArg()\n");
         return 1;
     }
+}
+
+bool GetDisplayMode()
+{
+    int disp_index = 0;
+    try{ disp_index = (*vm)["get-display-mode"].as<int>(); }catch(...){}
+    int dm_count = SDL_GetNumDisplayModes(disp_index);
+    if(dm_count < 1)
+    {
+        std::printf(
+            "Get number of the display modes of the display-%02d failed: %s\n",
+            disp_index,
+            SDL_GetError()
+        );
+        return false;
+    }
+
+    const char* disp_name = SDL_GetDisplayName(disp_index);
+    std::printf(_("srose.cui.get-display-mode.display-name").c_str(), disp_index, disp_name?disp_name:"(failed)");
+    std::printf("\n");
+    std::printf(_("srose.cui.get-display-mode.display-mode-count").c_str(), dm_count);
+    std::printf("\n");
+    std::printf(_("srose.cui.get-display-mode.format-desc").c_str());
+    std::printf("\n");
+
+    auto fmt = _("srose.cui.get-display-mode.format") + '\n';
+    for(int i = 0; i < dm_count; ++i)
+    {
+        SDL_DisplayMode mode{};
+        if(SDL_GetDisplayMode(disp_index, i, &mode) != 0)
+        {
+            std::printf(
+                "%03d:\tfailed - %s\n",
+                i,
+                SDL_GetError()
+            );
+            continue;
+        }
+
+        std::printf(
+            fmt.c_str(),
+            i,
+            SDL_BITSPERPIXEL(mode.format),
+            SDL_GetPixelFormatName(mode.format) + sizeof("SDL_PIXELFORMAT"),
+            mode.w, mode.h,
+            mode.refresh_rate
+        );
+    }
+
+    return true;
 }
 
 
