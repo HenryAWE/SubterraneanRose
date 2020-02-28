@@ -72,6 +72,11 @@ namespace srose::ui
             throw LocaleNotFound();
         std::locale::global(locale::CreateTranslation(sys_lc, g_default_lang));
     }
+    void SelectLanguage(std::shared_ptr<locale::Language> lang)
+    {
+        assert(lang);
+        g_default_lang.swap(lang);
+    }
 
     std::shared_ptr<locale::Language> GetNearestLanguage(std::string locale_name)
     {
@@ -120,5 +125,10 @@ namespace srose::ui
         ); 
         if(lcs_weight.size() == 0) return g_default_lang;
         return g_lang_map[lcs_weight[0].first];
+    }
+
+    const std::map<std::string, std::shared_ptr<locale::Language>>& GetLanguageMap() noexcept
+    {
+        return g_lang_map;
     }
 } // namespace srose::ui

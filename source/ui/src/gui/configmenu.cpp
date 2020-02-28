@@ -14,6 +14,7 @@
 #include <sr/wm/winmgr.hpp>
 #include <sr/ui/gui/uimgr.hpp>
 #include <sr/audio/aumgr.hpp>
+#include "../i18n/i18n.hpp"
 #include "conwin.hpp"
 
 
@@ -144,7 +145,26 @@ namespace srose::ui
     }
     void ConfigPanel::Content_Language()
     {
+        auto langs = GetLanguageMap();
+        bool first = true;
+        for(auto&[id, lang] : langs)
+        {
+            ImGui::PushID(id.c_str());
+            if(!first)
+                ImGui::SameLine();
+            else
+                first = false;
+            if(ImGui::Button(lang->name().c_str()))
+            {
+                SelectLanguage(lang);
+            }
 
+            ImGui::PopID();
+        }
+        ImGui::Separator();
+        ImGui::Text(GetDefaultLanguage()->name().c_str());
+        ImGui::SameLine();
+        ImGui::TextDisabled("(%s)", GetDefaultLanguage()->iso().c_str());
     }
     void ConfigPanel::Content_Developer()
     {

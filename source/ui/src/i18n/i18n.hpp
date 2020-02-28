@@ -25,6 +25,12 @@ namespace srose::ui
      * @param preferred User preferred language, or nullptr for ignoring this argument
      */
     void SelectLanguage(const char* preferred = nullptr);
+    /**
+     * @brief Set a specific language as default language
+     * 
+     * @param lang The pointer to the language object, shouldn't be null
+     */
+    void SelectLanguage(std::shared_ptr<locale::Language> lang);
 
     /**
      * @brief Get the default language
@@ -41,6 +47,13 @@ namespace srose::ui
      * @return std::shared_ptr<locale::Language> The nearest language, or the default language on error
      */
     std::shared_ptr<locale::Language> GetNearestLanguage(std::string locale_name);
+
+    /**
+     * @brief Get the reference of the global language map
+     * 
+     * @return const std::map<std::string, std::shared_ptr<locale::Language>>& Reference of the map
+     */
+    const std::map<std::string, std::shared_ptr<locale::Language>>& GetLanguageMap() noexcept;
 } // namespace srose::ui
 
 
