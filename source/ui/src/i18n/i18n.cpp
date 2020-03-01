@@ -27,9 +27,9 @@ namespace srose::ui
     static std::map<std::string, std::shared_ptr<locale::Language>> g_lang_map;
     static std::shared_ptr<locale::Language> g_default_lang;
 
-    locale::Language* GetDefaultLanguage() noexcept
+    std::shared_ptr<locale::Language> GetDefaultLanguage() noexcept
     {
-        return g_default_lang.get();
+        return g_default_lang;
     }
 
     void LoadAllLanguage(const std::filesystem::path& lcres)
@@ -76,6 +76,8 @@ namespace srose::ui
     {
         assert(lang);
         g_default_lang.swap(lang);
+        auto sys_lc = locale::GetSystemLocale();
+        std::locale::global(locale::CreateTranslation(sys_lc, g_default_lang));
     }
 
     std::shared_ptr<locale::Language> GetNearestLanguage(std::string locale_name)

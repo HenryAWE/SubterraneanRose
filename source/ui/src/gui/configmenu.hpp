@@ -25,6 +25,8 @@ namespace srose::ui
         void LoadButtons();
         void ResetStates();
 
+        void OnImbue() override;
+
         using callback_type = void(ConfigPanel::*)();
         std::vector<std::pair<std::string, callback_type>> m_buttons;
 

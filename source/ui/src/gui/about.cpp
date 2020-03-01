@@ -57,4 +57,8 @@ namespace srose::ui
         m_str_return = gettext("srose.ui.common.return");
         m_str_website = gettext("srose.ui.about.website");
     }
+    void About::OnImbue()
+    {
+        Load();
+    }
 } // namespace srose::ui

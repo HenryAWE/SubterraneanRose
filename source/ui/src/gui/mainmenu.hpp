@@ -27,6 +27,9 @@ namespace srose::ui
         using callback_type = void(MainMenu::*)();
         std::vector<std::pair<std::string, callback_type>> m_buttons;
 
+        void Load();
+        void OnImbue() override;
+
         void Button_Editor();
         void Button_Config();
         void Button_About();

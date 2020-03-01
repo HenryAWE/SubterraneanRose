@@ -41,6 +41,22 @@ namespace srose::ui
         widget_tree.emplace_at("conwin", std::make_shared<ConsoleWindow>());
     }
 
+    void imbue_impl(
+        util::string_tree<std::shared_ptr<Widget>>& tree,
+        const std::locale& loc
+    ) {
+        auto func = [&loc](auto& w) { w->imbue(loc); };
+        for(auto& i : tree)
+        {
+            i.second.modify(func);
+            imbue_impl(i.second, loc);
+        }
+    }
+    void UIManager::imbue(const std::locale& loc)
+    {
+        imbue_impl(widget_tree, loc);
+    }
+
     static std::unique_ptr<UIManager> g_uimgr;
 
     UIManager* SRSCALL CreateUIManager()

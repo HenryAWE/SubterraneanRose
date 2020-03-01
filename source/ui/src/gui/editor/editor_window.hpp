@@ -24,6 +24,7 @@ namespace srose::ui::editor
     private:
         std::string m_title;
         void LoadAll();
+        void OnImbue() override;
 
         void UpdateMenuBar();
 

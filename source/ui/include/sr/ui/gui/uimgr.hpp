@@ -34,6 +34,13 @@ namespace srose::ui
 
         util::string_tree<std::shared_ptr<Widget>> widget_tree;
         std::stack<std::shared_ptr<Widget>> widget_stack;
+
+        /**
+         * @brief Pass a new locale to every widget
+         * 
+         * @param loc Locale object
+         */
+        void imbue(const std::locale& loc);
     };
 
     UIManager* SRSCALL CreateUIManager();

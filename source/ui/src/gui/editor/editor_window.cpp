@@ -46,6 +46,10 @@ namespace srose::ui::editor
         m_title = gettext("srose.ui.editor");
         m_button_return = gettext("srose.ui.common.return") + "##return";
     }
+    void EditorWindow::OnImbue()
+    {
+        LoadAll();
+    }
 
     void EditorWindow::UpdateMenuBar()
     {

@@ -24,6 +24,7 @@ namespace srose::ui
         std::string m_str_website;
 
         void Load();
+        void OnImbue() override;
     };
 } // namespace srose::ui
 

@@ -63,6 +63,18 @@ namespace srose::ui
         }
     }
 
+    void MainMenu::Load()
+    {
+        m_buttons[0].first = gettext("srose.ui.editor") + "###editor";
+        m_buttons[1].first = gettext("srose.ui.mainmenu.config") + "###config";
+        m_buttons[2].first = gettext("srose.ui.about") + "###about";
+        m_buttons[3].first = gettext("srose.ui.mainmenu.exit") + "###exit";
+    }
+    void MainMenu::OnImbue()
+    {
+        Load();
+    }
+
     void MainMenu::Button_Editor()
     {
         auto& uimgr = *GetUIManager();

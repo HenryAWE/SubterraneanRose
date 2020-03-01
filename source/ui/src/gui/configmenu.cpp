@@ -102,6 +102,19 @@ namespace srose::ui
         m_content_func = nullptr;
     }
 
+    void ConfigPanel::OnImbue()
+    {
+        m_buttons[0].first = gettext("srose.ui.configpanel.video") + "###video";
+        m_buttons[1].first = gettext("srose.ui.configpanel.lang") + "###lang";
+        m_buttons[2].first = gettext("srose.ui.configpanel.developer") + "###developer";
+        m_buttons[3].first = gettext("srose.ui.configpanel.return") + "###return";
+
+        m_str_windowed = gettext("srose.ui.configpanel.video.windowed");
+        m_str_show_conwin = gettext("srose.ui.configpanel.developer.show-conwin");
+        m_str_show_render_demo = gettext("srose.ui.configpanel.developer.show-render-demo");
+        m_str_show_audio_demo = gettext("srose.ui.configpanel.developer.show-audio-demo");
+    }
+
     void ConfigPanel::Button_Video()
     {
         if(m_content_func != &ConfigPanel::Content_Video)
@@ -157,6 +170,7 @@ namespace srose::ui
             if(ImGui::Button(lang->name().c_str()))
             {
                 SelectLanguage(lang);
+                GetUIManager()->imbue(std::locale());
             }
 
             ImGui::PopID();

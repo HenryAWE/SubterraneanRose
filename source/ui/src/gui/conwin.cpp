@@ -63,6 +63,10 @@ namespace srose::ui
         m_title = gettext("srose.ui.conwin") + "###conwin";
         m_logviewer = gettext("srose.ui.conwin.log");
     }
+    void ConsoleWindow::OnImbue()
+    {
+        Load();
+    }
 
     void ConsoleWindow::UpdateLogViewerTabItem()
     {

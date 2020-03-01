@@ -31,6 +31,7 @@ namespace srose::ui
         std::string m_title;
         std::string m_logviewer;
         void Load();
+        void OnImbue() override;
 
         void UpdateLogViewerTabItem();
 
