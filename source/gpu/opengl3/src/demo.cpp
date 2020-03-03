@@ -280,7 +280,9 @@ namespace srose::gpu::opengl3
         {
             ImGui::Image(
                 m_integrate_frametex.GetNativeHandle(),
-                ImGui::GetWindowSize()
+                ImGui::GetWindowSize(),
+                ImVec2(0, 1),
+                ImVec2(1, 0)
             );
         }
         ImGui::EndChild();
