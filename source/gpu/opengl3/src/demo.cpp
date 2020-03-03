@@ -13,6 +13,9 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imguisr.h>
+#include <sr/wm/winmgr.hpp>
+#include <sr/gpu/opengl3/renderer.hpp>
+#include <sr/gpu/sprite.hpp>
 
 
 namespace srose::gpu::opengl3
@@ -195,6 +198,14 @@ namespace srose::gpu::opengl3
         glViewport(0, 0, view.first, view.second);
         glClearColor(1, 1, 1, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        Sprite sp;
+        sp.SetTexture(&m_texture_texture);
+        sp.position({100.0f, 100.0f});
+        sp.scale({20.0f, 20.0f});
+        sp.rotation(45.0f);
+        auto ren = static_cast<opengl3::Renderer*>(wm::GetRenderer());
+        ren->AppendSpriteData(sp.GetTexture(), sp.CalcMatrix());
+        ren->RenderSprite({960, 720});
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
