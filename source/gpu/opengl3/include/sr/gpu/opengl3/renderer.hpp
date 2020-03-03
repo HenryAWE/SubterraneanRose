@@ -9,6 +9,7 @@
 
 #include <glad/glad.h>
 #include <string>
+#include <map>
 #include <glm/glm.hpp>
 #include <sr/wm/display.h>
 #include <sr/gpu/renderer.hpp>
@@ -39,10 +40,26 @@ namespace srose::gpu::opengl3
 
         void ReleaseUIData() noexcept override;
 
+        void AppendSpriteData(Texture* tex, const glm::mat4& transform);
+        void RenderSprite(glm::vec2 viewport_size);
+
     protected:
         bool m_demo_initialized = false;
 
+        Texture m_default_texture;
+
         Texture* NewTexture() override;
+
+        VertexArray m_sprite_vao;
+        Buffer m_sprite_vbo[2];
+        Buffer m_sprite_ebo;
+        ShaderProgram m_sprite_shader;
+        struct SpriteRenderData
+        {
+            glm::mat4 transform;
+        };
+        std::map<GLuint /* Texture ID */, std::vector<SpriteRenderData>> m_sprite_data;
+        void InitSpriteRenderer();
     };
 } // namespace srose::gpu::opengl3
 
