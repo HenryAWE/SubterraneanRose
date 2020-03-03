@@ -198,13 +198,17 @@ namespace srose::gpu::opengl3
         glViewport(0, 0, view.first, view.second);
         glClearColor(1, 1, 1, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-        Sprite sp;
-        sp.SetTexture(&m_texture_texture);
-        sp.position({100.0f, 100.0f});
-        sp.scale({20.0f, 20.0f});
-        sp.rotation(45.0f);
         auto ren = static_cast<opengl3::Renderer*>(wm::GetRenderer());
-        ren->AppendSpriteData(sp.GetTexture(), sp.CalcMatrix());
+        static float t = 0.0f;
+        for(int i = 0; i < 80; ++i)
+        {
+            Sprite sp;
+            sp.SetTexture(&m_texture_texture);
+            sp.position({i * 10.0f, std::pow(i - 40, 2) * 0.5f + 10.0f});
+            sp.scale({10, 10});
+            sp.rotation(t += ImGui::GetIO().DeltaTime);
+            ren->AppendSpriteData(sp.GetTexture(), sp.CalcMatrix());
+        }
         ren->RenderSprite({960, 720});
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
