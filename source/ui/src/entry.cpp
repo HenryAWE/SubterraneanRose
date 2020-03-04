@@ -99,7 +99,7 @@ int SRSCALL program_entry(int argc, char* argv[])
         SDL_SetWindowTitle(display->win, GetDefaultLanguage()->gettext("srose", "Subterranean Rose").c_str());
         font_ready.get();
         ui::CreateUIManager()->InitializeWidgets();
-        main_loop(display);
+        BeginMainLoop();
     }
     catch(std::exception& ex)
     {

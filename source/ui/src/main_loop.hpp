@@ -7,11 +7,10 @@
 #ifndef SROSE_PLAYER_main_loop_h_internal_
 #define SROSE_PLAYER_main_loop_h_internal_
 
-
 #include <sr/core/macros.h>
-#include <sr/wm/display.h>
 
-int SRSCALL main_loop(SR_WM_display* display);
+
+int SRSCALL BeginMainLoop(int fps = 60);
 
 
 #endif
