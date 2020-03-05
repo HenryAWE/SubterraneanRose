@@ -44,7 +44,9 @@ namespace srose::gpu::opengl3
         void RenderSprite(glm::vec2 viewport_size);
 
     protected:
+#ifndef SROSE_DISABLE_DEMO
         bool m_demo_initialized = false;
+#endif
 
         Texture m_default_texture;
 

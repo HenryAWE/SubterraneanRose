@@ -12,6 +12,8 @@
 #include <sr/ui/gui/widget.hpp>
 
 
+#ifndef SROSE_DISABLE_DEMO
+
 namespace srose::audio
 {
     class AudioDemoWindow : public ui::Widget
@@ -39,6 +41,8 @@ namespace srose::audio
         void InformationTabItem();
     };
 } // namespace srose::audio
+
+#endif
 
 
 #endif

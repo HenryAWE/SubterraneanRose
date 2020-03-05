@@ -41,10 +41,10 @@ namespace srose::ui
         void Content_Video();
         std::string m_str_show_conwin;
         bool m_show_conwin = false;
-        std::string m_str_show_render_demo;
+#ifndef SROSE_DISABLE_DEMO
         bool m_show_render_demo = false;
-        std::string m_str_show_audio_demo;
         bool m_show_audio_demo = false;
+#endif
         void Content_Developer();
         void Content_Language();
     };

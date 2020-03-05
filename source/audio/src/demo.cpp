@@ -14,6 +14,8 @@
 #include <SDL_mixer.h>
 
 
+#ifndef SROSE_DISABLE_DEMO
+
 namespace srose::audio
 {
     AudioDemoWindow::AudioDemoWindow()
@@ -199,3 +201,5 @@ namespace srose::audio
         ImGui::EndChild();
     }
 } // namespace srose::audio
+
+#endif

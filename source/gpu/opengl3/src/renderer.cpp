@@ -64,11 +64,13 @@ namespace srose::gpu::opengl3
     }
     void Renderer::Render()
     {
+#ifndef SROSE_DISABLE_DEMO
         if(m_demo_initialized)
         {
             auto ptr = ui::GetUIManager()->widget_tree["srose.opengl3.demo"].get();
             static_cast<OpenGL3DemoWindow*>(ptr)->Render();
         }
+#endif
     }
 
     std::string Renderer::Information()
@@ -92,6 +94,7 @@ namespace srose::gpu::opengl3
     void Renderer::ShowDemoWindow(bool* p_open)
     {
         auto& uimgr = *ui::GetUIManager();
+#ifndef SROSE_DISABLE_DEMO
         if(!m_demo_initialized)
         {
             uimgr.widget_tree.emplace_at(
@@ -105,14 +108,20 @@ namespace srose::gpu::opengl3
         ptr->Update();
         if(p_open)
             *p_open = static_cast<OpenGL3DemoWindow*>(ptr)->open;
+#else
+        if(p_open)
+            *p_open = false;
+#endif
     }
 
     void Renderer::ReleaseUIData() noexcept
     {
+#ifndef SROSE_DISABLE_DEMO
         if(!m_demo_initialized)
             return;
         m_demo_initialized = false;
         ui::GetUIManager()->widget_tree.erase_at("srose.opengl3.demo");
+#endif
     }
 
     void Renderer::AppendSpriteData(Texture* tex, const glm::mat4& transform)

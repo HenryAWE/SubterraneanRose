@@ -24,7 +24,9 @@ namespace srose::audio
         void ShowDemoWindow(bool* p_open = nullptr);
 
     private:
+#ifndef SROSE_DISABLE_DEMO
         bool m_demo_initialized = false;
+#endif
     };
 
     AudioManager* SRSCALL CreateAudioManager();

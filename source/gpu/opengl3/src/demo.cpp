@@ -18,6 +18,8 @@
 #include <sr/gpu/sprite.hpp>
 
 
+#ifndef SROSE_DISABLE_DEMO
+
 namespace srose::gpu::opengl3
 {
     namespace detail
@@ -498,3 +500,5 @@ namespace srose::gpu::opengl3
         ImGui::EndChild();
     }
 } // namespace srose::gpu::opengl3
+
+#endif

@@ -31,5 +31,8 @@ if(NOT ${SROSE_DISABLE_CUI})
 else()
     target_compile_definitions("srose-ui" PUBLIC SROSE_DISABLE_CUI=1)
 endif()
+if(${SROSE_DISABLE_DEMO})
+    target_compile_definitions("srose-ui" PUBLIC SROSE_DISABLE_DEMO=1)
+endif()
 
 add_subdirectory(./test)

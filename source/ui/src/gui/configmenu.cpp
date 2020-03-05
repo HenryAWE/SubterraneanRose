@@ -75,10 +75,12 @@ namespace srose::ui
             conwin->Update();
             m_show_conwin = static_cast<ConsoleWindow*>(conwin)->open;
         }
+#ifndef SROSE_DISABLE_DEMO
         if(m_show_render_demo)
             wm::GetRenderer()->ShowDemoWindow(&m_show_render_demo);
         if(m_show_audio_demo)
             audio::GetAudioManager()->ShowDemoWindow(&m_show_audio_demo);
+#endif
     }
 
     void ConfigPanel::LoadButtons()
@@ -94,8 +96,6 @@ namespace srose::ui
 
         m_str_windowed = gettext("srose.ui.configpanel.video.windowed");
         m_str_show_conwin = gettext("srose.ui.configpanel.developer.show-conwin");
-        m_str_show_render_demo = gettext("srose.ui.configpanel.developer.show-render-demo");
-        m_str_show_audio_demo = gettext("srose.ui.configpanel.developer.show-audio-demo");
     }
     void ConfigPanel::ResetStates()
     {
@@ -111,8 +111,6 @@ namespace srose::ui
 
         m_str_windowed = gettext("srose.ui.configpanel.video.windowed");
         m_str_show_conwin = gettext("srose.ui.configpanel.developer.show-conwin");
-        m_str_show_render_demo = gettext("srose.ui.configpanel.developer.show-render-demo");
-        m_str_show_audio_demo = gettext("srose.ui.configpanel.developer.show-audio-demo");
     }
 
     void ConfigPanel::Button_Video()
@@ -143,8 +141,10 @@ namespace srose::ui
     {
         ResetStates();
         m_show_conwin = false;
+#ifndef SROSE_DISABLE_DEMO
         m_show_render_demo = false;
         m_show_audio_demo = false;
+#endif
         auto& uimgr = *GetUIManager();
         if(&*uimgr.widget_stack.top() == this)
             uimgr.widget_stack.pop();
@@ -183,9 +183,11 @@ namespace srose::ui
     void ConfigPanel::Content_Developer()
     {
         ImGui::Checkbox(m_str_show_conwin.c_str(), &m_show_conwin);
+#ifndef SROSE_DISABLE_DEMO
         ImGui::Separator();
-        ImGui::Checkbox(m_str_show_render_demo.c_str(), &m_show_render_demo);
+        ImGui::Checkbox("Rendering test", &m_show_render_demo);
         ImGui::SameLine();
-        ImGui::Checkbox(m_str_show_audio_demo.c_str(), &m_show_audio_demo);
+        ImGui::Checkbox("Audio test", &m_show_audio_demo);
+#endif
     }
 } // namespace srose::ui

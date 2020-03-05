@@ -25,6 +25,7 @@ namespace srose::audio
     void AudioManager::ShowDemoWindow(bool* p_open)
     {
         auto& uimgr = *ui::GetUIManager();
+#ifndef SROSE_DISABLE_DEMO
         if(!m_demo_initialized)
         {
             uimgr.widget_tree.emplace_at(
@@ -39,6 +40,10 @@ namespace srose::audio
         ptr->Update();
         if(p_open)
             *p_open = static_cast<AudioDemoWindow*>(ptr)->open;
+#else
+        if(p_open)
+            *p_open = false;
+#endif
     }
 
     std::unique_ptr<AudioManager> g_aumgr;

@@ -16,6 +16,8 @@
 #include <sr/gpu/opengl3/effect.hpp>
 
 
+#ifndef SROSE_DISABLE_DEMO
+
 namespace srose::gpu::opengl3
 {
     class OpenGL3DemoWindow : public ui::Widget
@@ -75,6 +77,8 @@ namespace srose::gpu::opengl3
         void EffectDemoTabItem();
     };
 } // namespace srose::gpu::opengl3
+
+#endif
 
 
 #endif

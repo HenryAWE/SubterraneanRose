@@ -14,6 +14,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Build options
 option(SROSE_DISABLE_CUI "Disable console inferface" OFF)
+option(SROSE_DISABLE_DEMO "Disable demo codes" OFF)
 set(SROSE_RENDER_BACKEND "OpenGL3" CACHE STRING "Choose a render backend from: OpenGL3")
 
 
@@ -22,7 +23,6 @@ add_compile_definitions(SR_VERSION_MAJOR=${CMAKE_PROJECT_VERSION_MAJOR})
 add_compile_definitions(SR_VERSION_MINOR=${CMAKE_PROJECT_VERSION_MINOR})
 add_compile_definitions(SR_VERSION_PATCH=${CMAKE_PROJECT_VERSION_PATCH})
 
-add_compile_definitions(SR_HOMEPAGE_URL=${CMAKE_PROJECT_HOMEPAGE_URL})
 
 # Dependencies
 add_subdirectory(./ext)
