@@ -197,6 +197,7 @@ int SRSCALL SR_UI_CONSOLE_DrawDebugOverlay()
 #pragma message("Use dummy implementation for CUI")
 #include <sr/ui/console/progopt.h>
 #include <cstdio>
+#include "../i18n/i18n.hpp"
 
 
 int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
@@ -210,6 +211,7 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
         );
     }
 
+    srose::ui::SelectLanguage();
     return 0;
 }
 
