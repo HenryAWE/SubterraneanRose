@@ -209,7 +209,7 @@ namespace srose::gpu::opengl3
             sp.position({i * 10.0f, std::pow(i - 40, 2) * 0.5f + 10.0f});
             sp.scale({10, 10});
             sp.rotation(t += ImGui::GetIO().DeltaTime);
-            ren->AppendSpriteData(sp.GetTexture(), sp.CalcMatrix());
+            ren->AppendSpriteData(dynamic_cast<Texture*>(sp.GetTexture()), sp.CalcMatrix());
         }
         ren->RenderSprite({960, 720});
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

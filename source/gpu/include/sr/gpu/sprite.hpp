@@ -1,7 +1,7 @@
 /**
  * @file sprite.hpp
  * @author HenryAWE
- * @brief OpenGL sprite
+ * @brief Sprite
  */
 
 #ifndef SROSE_GPU_OPENGL3_sprite_hpp_
@@ -11,7 +11,7 @@
 #include "image.hpp"
 
 
-namespace srose::gpu::opengl3
+namespace srose::gpu
 {
     class Sprite
     {
@@ -73,7 +73,7 @@ namespace srose::gpu::opengl3
         float m_rotation = 0.0f; // In radians, not in degrees!
         Texture* m_texture = nullptr;
     };
-} // namespace srose::gpu::opengl3
+} // namespace srose::gpu
 
 
 #endif

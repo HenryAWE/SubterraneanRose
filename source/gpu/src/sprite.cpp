@@ -1,14 +1,14 @@
 /**
  * @file sprite.cpp
  * @author HenryAWE
- * @brief OpenGL sprite
+ * @brief Sprite
  */
 
 #include <sr/gpu/sprite.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 
-namespace srose::gpu::opengl3
+namespace srose::gpu
 {
     glm::mat4 Sprite::CalcMatrix() const noexcept
     {
@@ -19,4 +19,4 @@ namespace srose::gpu::opengl3
 
         return result;
     }
-} // namespace srose::gpu::opengl3
+} // namespace srose::gpu
