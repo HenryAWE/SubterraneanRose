@@ -40,10 +40,12 @@ namespace srose::gpu::opengl3
 
         void ReleaseUIData() noexcept override;
 
-        void AppendSpriteData(Texture* tex, const glm::mat4& transform);
-        void RenderSprite(glm::vec2 viewport_size);
+        void AddSprite(const Sprite& sp) override;
+        void RenderSprite(glm::vec2 viewport, bool clear = true) override;
+        void ClearSprite() override;
 
     protected:
+        void AppendSpriteData(Texture* tex, const glm::mat4& transform);
 #ifndef SROSE_DISABLE_DEMO
         bool m_demo_initialized = false;
 #endif

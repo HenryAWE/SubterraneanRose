@@ -124,15 +124,17 @@ namespace srose::gpu::opengl3
 #endif
     }
 
-    void Renderer::AppendSpriteData(Texture* tex, const glm::mat4& transform)
+    void Renderer::AddSprite(const Sprite& sp)
     {
-        SpriteRenderData data{ transform };
-        m_sprite_data[tex->handle()].emplace_back(std::move(data));
+        AppendSpriteData(
+            static_cast<Texture*>(sp.GetTexture()),
+            sp.CalcMatrix()
+        );
     }
-    void Renderer::RenderSprite(glm::vec2 viewport_size)
+    void Renderer::RenderSprite(glm::vec2 viewport, bool clear)
     {
         glUseProgram(m_sprite_shader);
-        Uniform(m_sprite_shader.UniformLocation("proj"), glm::ortho(0.0f, viewport_size.x, 0.0f, viewport_size.y));
+        Uniform(m_sprite_shader.UniformLocation("proj"), glm::ortho(0.0f, viewport.x, 0.0f, viewport.y));
         for(auto& [tex, data] : m_sprite_data)
         {
             glBindBuffer(GL_ARRAY_BUFFER, m_sprite_vbo[1]);
@@ -142,8 +144,21 @@ namespace srose::gpu::opengl3
             glBindVertexArray(m_sprite_vao);
             glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, (GLsizei)data.size());
             glBindVertexArray(0);
-            data.clear();
+            if(clear)
+                data.clear();
         }
+    }
+    void Renderer::ClearSprite()
+    {
+        for(auto& i : m_sprite_data)
+            i.second.clear();
+    }
+
+    void Renderer::AppendSpriteData(Texture* tex, const glm::mat4& transform)
+    {
+        SpriteRenderData data{ transform };
+        GLuint handle = tex ? tex->handle() : m_default_texture.handle();
+        m_sprite_data[handle].emplace_back(std::move(data));
     }
 
     Texture* Renderer::NewTexture()

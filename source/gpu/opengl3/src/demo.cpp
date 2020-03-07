@@ -209,8 +209,15 @@ namespace srose::gpu::opengl3
             sp.position({i * 10.0f, std::pow(i - 40, 2) * 0.5f + 10.0f});
             sp.scale({10, 10});
             sp.rotation(t += ImGui::GetIO().DeltaTime);
-            ren->AppendSpriteData(dynamic_cast<Texture*>(sp.GetTexture()), sp.CalcMatrix());
+            ren->AddSprite(sp);
         }
+
+        Sprite sp2;
+        sp2.SetTexture(nullptr); // Should use the default texture
+        sp2.position(glm::vec2(960/2, 720/2) + 50.0f*glm::vec2(cos(t/50.0f), sin(t/50.0f)));
+        sp2.scale({25, 25});
+        ren->AddSprite(sp2);
+
         ren->RenderSprite({960, 720});
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }

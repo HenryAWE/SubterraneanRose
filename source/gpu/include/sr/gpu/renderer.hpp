@@ -13,6 +13,7 @@
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/util/string_tree.hpp>
 #include "image.hpp"
+#include "sprite.hpp"
 
 
 namespace srose::gpu
@@ -46,6 +47,10 @@ namespace srose::gpu
         std::unique_ptr<Texture> CreateTexture() { return std::unique_ptr<Texture>(NewTexture()); }
 
         bool LoadTextureFromFile(std::string_view as, const filesystem::path& file);
+
+        virtual void AddSprite(const Sprite& sp) = 0;
+        virtual void RenderSprite(glm::vec2 viewport, bool clear = true) = 0;
+        virtual void ClearSprite() = 0;
 
         /**
          * @brief Show the renderer's demo window
