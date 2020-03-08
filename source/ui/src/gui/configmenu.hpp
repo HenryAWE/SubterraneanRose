@@ -42,6 +42,7 @@ namespace srose::ui
         std::string m_str_show_conwin;
         bool m_show_conwin = false;
 #ifndef SROSE_DISABLE_DEMO
+        bool m_show_player_demo = false;
         bool m_show_render_demo = false;
         bool m_show_audio_demo = false;
 #endif

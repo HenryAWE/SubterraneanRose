@@ -18,6 +18,7 @@
 #include <sr/audio/aumgr.hpp>
 #include <sr/res/resmgr.hpp>
 #include <sr/ui/gui/uimgr.hpp>
+#include <sr/player/player.hpp>
 #include "main_loop.hpp"
 #include "i18n/i18n.hpp"
 
@@ -136,6 +137,7 @@ int SRSCALL program_entry(int argc, char* argv[])
     }
 
 quit_program:
+    player::ReleaseUIData();
     wm::GetRenderer()->ReleaseUIData();
     ui::DestroyUIManager();
     res::DestroyResourceManager();
