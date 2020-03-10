@@ -83,6 +83,8 @@ namespace srose::ui
             wm::GetRenderer()->ShowDemoWindow(&m_show_render_demo);
         if(m_show_audio_demo)
             audio::GetAudioManager()->ShowDemoWindow(&m_show_audio_demo);
+
+        player::RenderDemoWindow();
 #endif
     }
 
