@@ -34,6 +34,17 @@ namespace srose::player
         if(p_open)
             *p_open = static_cast<PlayerDemoWindow*>(ptr)->open;
     }
+
+    void RenderDemoWindow()
+    {
+        if(!g_demo_initialized)
+            return;
+
+        auto& uimgr = *ui::GetUIManager();
+        auto ptr = uimgr.widget_tree["srose.player.demo"].get();
+        if(static_cast<PlayerDemoWindow*>(ptr)->open)
+            static_cast<PlayerDemoWindow*>(ptr)->Render();
+    }
 #endif
 
     void ReleaseUIData() noexcept

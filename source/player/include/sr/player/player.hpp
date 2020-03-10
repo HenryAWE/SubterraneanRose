@@ -8,12 +8,15 @@
 #define SROSE_PLAYER_player_hpp_
 
 #include "entity.hpp"
+#include "stage.hpp"
 
 
 namespace srose::player
 {
 #ifndef SROSE_DISABLE_DEMO
     void ShowDemoWindow(bool* p_open = nullptr);
+
+    void RenderDemoWindow();
 #endif
 
     void ReleaseUIData() noexcept;

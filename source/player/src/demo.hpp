@@ -9,6 +9,7 @@
 
 #include <sr/gpu/image.hpp>
 #include <sr/ui/gui/widget.hpp>
+#include <sr/player/player.hpp>
 
 
 #ifndef SROSE_DISABLE_DEMO
@@ -17,7 +18,10 @@ namespace srose::player
 {
     class PlayerDemoWindow : public ui::Widget
     {
+        Stage m_stage;
     public:
+        PlayerDemoWindow();
+
         bool open = true;
         void Update() override;
 
