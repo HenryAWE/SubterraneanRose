@@ -165,6 +165,10 @@ namespace srose::gpu::opengl3
     {
         return new Texture;
     }
+    Scene* Renderer::NewScene(glm::ivec2 size)
+    {
+        return new Scene(size);
+    }
 
     void Renderer::InitSpriteRenderer()
     {

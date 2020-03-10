@@ -16,6 +16,7 @@
 #include "texture.hpp"
 #include "buffer.hpp"
 #include "shader.hpp"
+#include "scene.hpp"
 
 
 namespace srose::gpu::opengl3
@@ -35,6 +36,7 @@ namespace srose::gpu::opengl3
         void Render() override;
 
         std::unique_ptr<Texture> CreateTexture() { return std::unique_ptr<Texture>(NewTexture()); }
+        std::unique_ptr<Scene> CreateScene(glm::ivec2 size) { return std::unique_ptr<Scene>(NewScene(size)); }
 
         void ShowDemoWindow(bool* p_open = nullptr) override;
 
@@ -53,6 +55,7 @@ namespace srose::gpu::opengl3
         Texture m_default_texture;
 
         Texture* NewTexture() override;
+        Scene* NewScene(glm::ivec2 size) override;
 
         VertexArray m_sprite_vao;
         Buffer m_sprite_vbo[2];
