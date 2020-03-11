@@ -21,10 +21,7 @@ namespace srose::player
     PlayerDemoWindow::PlayerDemoWindow()
         : m_stage({350, 430}, *wm::GetRenderer())
     {
-        std::unique_ptr<Entity> e = std::make_unique<SpriteEntity>();
-        e->SetPosition({350/2, 430/2});
-        e->SetScale({10, 10});
-        m_stage.AddEntity(std::move(e));
+
     }
 
     void PlayerDemoWindow::Update()
