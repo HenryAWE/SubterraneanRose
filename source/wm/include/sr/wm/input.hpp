@@ -9,13 +9,22 @@
 
 #include <SDL_events.h>
 #include <sr/core/macros.h>
+#include <sr/wm/event.h>
 
 
 namespace srose::wm
 {
     class InputManager
     {
+        bool m_loop = true;
     public:
+        void ProcessAllEvent();
+
+        void HandleEvent(SDL_Event& e);
+
+        void NotifyImGui(SDL_Event& e);
+
+        operator bool() const noexcept { return m_loop; }
     };
 
     InputManager* SRSCALL CreateInputManager();

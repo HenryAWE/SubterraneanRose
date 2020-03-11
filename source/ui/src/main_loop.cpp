@@ -10,6 +10,7 @@
 #include <sr/wm/event.h>
 #include <sr/wm/winmgr.hpp>
 #include <sr/ui/gui/uimgr.hpp>
+#include <sr/wm/input.hpp>
 
 
 static bool g_loop = true;
@@ -20,9 +21,11 @@ void DoMainLoop()
     using namespace srose::ui;
     auto& renderer =  *wm::GetRenderer();
     auto& gui = *ui::GetUIManager();
+    auto& input = *wm::GetInputManager();
     
     /*Event processing*/
-    g_loop = SR_WM_ProcessEvent();
+    input.ProcessAllEvent();
+    g_loop = static_cast<bool>(input);
     SR_WM_NewFrame();
     try
     {
