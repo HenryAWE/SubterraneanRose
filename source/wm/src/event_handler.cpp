@@ -55,25 +55,6 @@ void SRSCALL SR_WM_QuitEventSystem()
     g_display = nullptr;
 }
 
-int SRSCALL SR_WM_ProcessEvent()
-{
-    bool retval = SDL_TRUE;
-    SDL_Event event{};
-    while(SDL_PollEvent(&event))
-    {
-        ImGui_ImplSDL2_ProcessEvent(&event);
-
-        switch(event.type)
-        {
-        case SDL_QUIT:
-            retval = SDL_FALSE;
-            break;
-        }
-    }
-
-    return (int)retval;
-}
-
 void SRSCALL SR_WM_NewFrame()
 {
     ImGui_ImplOpenGL3_NewFrame();

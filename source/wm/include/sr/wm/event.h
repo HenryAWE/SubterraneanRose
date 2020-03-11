@@ -36,13 +36,6 @@ SR_WM_display* SRSCALL SR_WM_GetDisplay();
 void SRSCALL SR_WM_QuitEventSystem();
 
 /**
- * @brief Process the events 
- * 
- * @return int SR_WM_ProcessEvent 
- */
-int SRSCALL SR_WM_ProcessEvent();
-
-/**
  * @brief Begin a new frame
  */
 void SRSCALL SR_WM_NewFrame();
