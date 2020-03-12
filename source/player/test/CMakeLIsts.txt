@@ -1,0 +1,3 @@
+# Tests of the Subterranean Rose Player module
+
+add_subdirectory(./ecs_test)

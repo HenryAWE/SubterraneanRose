@@ -7,9 +7,6 @@
 #ifndef SROSE_PLAYER_player_hpp_
 #define SROSE_PLAYER_player_hpp_
 
-#include "entity.hpp"
-#include "stage.hpp"
-
 
 namespace srose::player
 {

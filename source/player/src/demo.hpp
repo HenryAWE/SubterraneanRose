@@ -10,6 +10,7 @@
 #include <sr/gpu/image.hpp>
 #include <sr/ui/gui/widget.hpp>
 #include <sr/player/player.hpp>
+#include <sr/player/stage.hpp>
 
 
 #ifndef SROSE_DISABLE_DEMO

@@ -19,15 +19,13 @@
 namespace srose::player
 {
     PlayerDemoWindow::PlayerDemoWindow()
-        : m_stage({350, 430}, *wm::GetRenderer())
+        : m_stage({350, 430})
     {
 
     }
 
     void PlayerDemoWindow::Update()
     {
-        m_stage.Update();
-
         auto& io = ImGui::GetIO();
 
         constexpr int background_flags = 
@@ -42,24 +40,11 @@ namespace srose::player
         );
         if(!background)
             return;
-
-        auto& screen = m_stage.GetScene().GetScreenTexture();
-        if(ImGui::BeginChild("##screen"))
-        {
-            ImGui::Image(
-                screen.GetNativeHandle(),
-                screen.GetSizeImVec2(),
-                ImVec2(0, 1),
-                ImVec2(1, 0)
-            );
-        }
-        ImGui::EndChild();
     }
 
     void PlayerDemoWindow::Render()
     {
-        auto& ren = *wm::GetRenderer();
-        m_stage.Render(ren);
+
     }
 } // namespace srose::player
 
