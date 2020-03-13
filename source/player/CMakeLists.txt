@@ -2,7 +2,12 @@
 
 aux_source_directory(./src player_src_list)
 aux_source_directory(./src/entity player_entity_src_list)
-add_library("srose-player" STATIC ${player_src_list} ${player_entity_src_list})
+aux_source_directory(./src/component player_component_src_list)
+add_library("srose-player" STATIC
+    ${player_src_list}
+    ${player_entity_src_list}
+    ${player_component_src_list}
+)
 target_include_directories("srose-player" PUBLIC ./include)
 
 target_link_libraries("srose-player" PUBLIC "srose-core")

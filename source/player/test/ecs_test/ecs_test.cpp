@@ -12,6 +12,35 @@
 #include <sr/player/system/move.hpp>
 
 
+BOOST_AUTO_TEST_CASE(test_entitiy)
+{
+    using namespace srose::player;
+
+    using Id = entity::Entity::Id;
+    Id id(1,1);
+    BOOST_TEST_REQUIRE(id.id() == 0x100000001ul);
+
+    entity::EntityManager mgr;
+    auto e = mgr.CreateEntity();
+    BOOST_TEST_REQUIRE(e.GetManager() == &mgr);
+    BOOST_TEST_REQUIRE(e.GetId() == Id(1, 1));
+    BOOST_TEST_REQUIRE(mgr.CreateEntity().GetId() == Id(2, 1));
+    BOOST_TEST_REQUIRE(mgr.GetEntity(Id(1,1)).GetId() == e.GetId());
+    BOOST_TEST_REQUIRE(mgr.ValidateEntity(Id(1, 1)));
+    BOOST_TEST_REQUIRE(mgr.ValidateEntity(Id(2, 1)));
+    BOOST_TEST_REQUIRE(mgr.GetEntity(Id(-1, -1)).GetId() == Id::INVALID);
+    mgr.DestroyEntity(Id(1, 1));
+    BOOST_TEST_REQUIRE(mgr.ValidateEntity(Id(1, 1)) == false);
+}
+
+BOOST_AUTO_TEST_CASE(test_component)
+{
+    using namespace srose::player;
+    component::Move m;
+    component::Transform t;
+    BOOST_TEST_REQUIRE(m.GetFamily() != t.GetFamily());
+}
+
 BOOST_AUTO_TEST_CASE(test_ecs)
 {
     using namespace srose::player;

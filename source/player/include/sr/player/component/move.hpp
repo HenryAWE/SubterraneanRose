@@ -7,10 +7,12 @@
 #ifndef SROSE_PLAYER_COMPONENT_move_hpp_
 #define SROSE_PLAYER_COMPONENT_move_hpp_
 
+#include "component.hpp"
+
 
 namespace srose::player::component
 {
-    struct Move
+    struct Move : public Component<Move>
     {
         float speed = 0;
         float direction = 0;
