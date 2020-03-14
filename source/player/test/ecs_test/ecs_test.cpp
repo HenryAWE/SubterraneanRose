@@ -12,7 +12,7 @@
 #include <sr/player/system/move.hpp>
 
 
-BOOST_AUTO_TEST_CASE(test_entitiy)
+BOOST_AUTO_TEST_CASE(test_entitiy, *boost::unit_test::tolerance(0.005))
 {
     using namespace srose::player;
 
@@ -31,6 +31,14 @@ BOOST_AUTO_TEST_CASE(test_entitiy)
     BOOST_TEST_REQUIRE(mgr.GetEntity(Id(-1, -1)).GetId() == Id::INVALID);
     mgr.DestroyEntity(Id(1, 1));
     BOOST_TEST_REQUIRE(mgr.ValidateEntity(Id(1, 1)) == false);
+    BOOST_TEST_REQUIRE(mgr.CreateEntity().GetId() == Id(1, 2));
+
+    mgr.AssignComponent<component::Move>(Id(2,1), 1.0f, 0.0f);
+    auto* c = mgr.GetComponent<component::Move>(Id(2, 1));
+    BOOST_TEST(c->speed == 1.0f);
+    BOOST_TEST(c->direction == 0.0f);
+    mgr.DestroyEntity(Id(2, 1));
+    BOOST_TEST_REQUIRE(mgr.GetComponent<component::Move>(Id(2, 1)) == nullptr);
 }
 
 BOOST_AUTO_TEST_CASE(test_component)

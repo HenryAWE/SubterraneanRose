@@ -19,6 +19,10 @@ namespace srose::player::component
     public:
         typedef std::size_t Family;
 
+        BaseComponent() noexcept = default;
+
+        virtual ~BaseComponent() noexcept = default;
+
     protected:
         static Family m_family_counter;
     };
@@ -27,7 +31,7 @@ namespace srose::player::component
     class Component : public BaseComponent
     {
     public:
-        Component()
+        Component() noexcept
         {
             Register();
         }

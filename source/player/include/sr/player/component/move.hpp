@@ -14,6 +14,11 @@ namespace srose::player::component
 {
     struct Move : public Component<Move>
     {
+        Move() noexcept = default;
+        Move(const Move& other) noexcept = default;
+        Move(float speed_, float direction_) noexcept
+            : speed(speed_), direction(direction_) {}
+
         float speed = 0;
         float direction = 0;
     };

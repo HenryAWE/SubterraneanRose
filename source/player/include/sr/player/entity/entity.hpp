@@ -9,7 +9,12 @@
 
 #include <memory>
 #include <vector>
+#include <stack>
+#include <bitset>
+#include <map>
+#include <type_traits>
 #include <cstdint>
+#include <boost/pool/pool_alloc.hpp>
 #include <sr/player/component/transform.hpp>
 #include <sr/player/component/move.hpp>
 
@@ -74,10 +79,26 @@ namespace srose::player::entity
         Id m_id;
     };
 
+    template <typename Com>
+    using ComponentHandle = Com*;
+
     class EntityManager
     {
         std::vector<Entity> m_entities;
+        std::stack<std::size_t> m_freed;
         std::vector<std::int32_t> m_entities_life;
+
+        template <typename Key, typename T>
+        using MapType = std::map<
+            Key, T,
+            std::less<std::int32_t>,
+            boost::pool_allocator<std::pair<const Key, T>>
+        >;
+
+        // Stores components
+        // The index of this vector is the family of the component
+        // The index of the map is the index of the entity
+        std::vector<MapType<std::int32_t, std::shared_ptr<component::BaseComponent>>> m_components;
     public:
         EntityManager(std::size_t reserve = 1024);
 
@@ -87,6 +108,50 @@ namespace srose::player::entity
         bool ValidateEntity(Entity::Id id) noexcept;
 
         Entity GetEntity(Entity::Id id) const;
+
+        template <typename Com, typename... Args>
+        ComponentHandle<Com> AssignComponent(Entity::Id id, Args&&... args)
+        {
+            if(!ValidateEntity(id))
+                return nullptr;
+
+            static_assert(std::is_base_of_v<component::BaseComponent, Com>);
+            std::size_t family = Com::GetFamily();
+            if(family >= m_components.size())
+                m_components.resize(family + 1);
+
+            return static_cast<Com*>(m_components[family].insert_or_assign(
+                id.index(),
+                std::make_shared<Com>(std::forward<Args>(args)...)
+            ).first->second.get());
+        }
+        template <typename Com>
+        void RemoveComponent(Entity::Id id)
+        {
+            if(!ValidateEntity(id))
+                return;
+
+            std::size_t family = Com::GetFamily();
+            if(family >= m_components.size())
+                return;
+            m_components[family].erase(id.index());
+        }
+
+        template <typename Com>
+        ComponentHandle<Com> GetComponent(Entity::Id id)
+        {
+            if(!ValidateEntity(id))
+                return nullptr;
+
+            std::size_t family = Com::GetFamily();
+            if(family >= m_components.size())
+                return nullptr;
+            auto& com_map = m_components[family];
+            auto iter = com_map.find(id.index());
+            if(iter == com_map.end())
+                return nullptr;
+            return static_cast<Com*>(iter->second.get());
+        }
     };
 } // namespace srose::player::entity
 
