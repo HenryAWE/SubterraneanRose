@@ -84,16 +84,53 @@ namespace srose::player::entity
 
     class EntityManager
     {
+        typedef std::bitset<SROSE_PLAYER_ECS_MAXCOMPONENTS> BitMask;
+
         std::vector<Entity> m_entities;
         std::stack<std::size_t> m_freed;
-        std::vector<std::int32_t> m_entities_life;
+        struct EntityData
+        {
+            std::int32_t life = 0;
+            BitMask mask;
+
+            EntityData(std::int32_t life_) noexcept
+                : life(life_), mask() {}
+        };
+        std::vector<EntityData> m_entities_data;
+
+        Entity& AccommodateEntity();
+
+        class BasePool
+        {
+        public:
+            virtual ~BasePool() = default;
+        };
+        template <typename Alloc>
+        class Pool : public BasePool
+        {
+        public:
+            typedef Alloc allocator_type;
+
+            Alloc allocator;
+        };
+        std::vector<std::unique_ptr<BasePool>> m_component_pools;
+
+        template <typename T>
+        using ComAlloc = boost::pool_allocator<T>;
+
+        template <typename Com>
+        ComAlloc<Com>& AccommodateComponentAlloc()
+        {
+            std::size_t family = Com::GetFamily();
+            if(family >= m_component_pools.size())
+                m_component_pools.resize(family + 1);
+            if(!m_component_pools[family])
+                m_component_pools[family] = std::make_unique<Pool<ComAlloc<Com>>>();
+            return static_cast<Pool<ComAlloc<Com>>*>(m_component_pools[family].get())->allocator;
+        }
 
         template <typename Key, typename T>
-        using MapType = std::map<
-            Key, T,
-            std::less<std::int32_t>,
-            boost::pool_allocator<std::pair<const Key, T>>
-        >;
+        using MapType = std::map<Key, T>;
 
         // Stores components
         // The index of this vector is the family of the component
@@ -117,13 +154,17 @@ namespace srose::player::entity
 
             static_assert(std::is_base_of_v<component::BaseComponent, Com>);
             std::size_t family = Com::GetFamily();
+            std::int32_t index = id.index();
             if(family >= m_components.size())
                 m_components.resize(family + 1);
 
-            return static_cast<Com*>(m_components[family].insert_or_assign(
-                id.index(),
-                std::make_shared<Com>(std::forward<Args>(args)...)
+            auto ret =  static_cast<Com*>(m_components[family].insert_or_assign(
+                index,
+                std::allocate_shared<Com>(AccommodateComponentAlloc<Com>(), std::forward<Args>(args)...)
             ).first->second.get());
+            m_entities_data[index].mask.set(family);
+            
+            return ret;
         }
         template <typename Com>
         void RemoveComponent(Entity::Id id)
@@ -137,6 +178,13 @@ namespace srose::player::entity
             m_components[family].erase(id.index());
         }
 
+        template <typename Com>
+        bool HasComponent(Entity::Id id) noexcept
+        {
+            if(!ValidateEntity(id))
+                return false;
+            return m_entities_data[id.index()].mask.test(Com::GetFamily());
+        }
         template <typename Com>
         ComponentHandle<Com> GetComponent(Entity::Id id)
         {
