@@ -59,6 +59,14 @@ BOOST_AUTO_TEST_CASE(test_component)
     component::Move m;
     component::Transform t;
     BOOST_TEST_REQUIRE(m.GetFamily() != t.GetFamily());
+
+    entity::EntityManager mgr;
+    auto i = (mgr.GetComponentMask<component::Move>().test(component::Move::GetFamily()));
+    BOOST_TEST_REQUIRE(mgr.GetComponentMask<>().none());
+    BOOST_TEST_REQUIRE((
+        mgr.GetComponentMask<component::Move, component::Transform>()
+        == std::bitset<SROSE_PLAYER_ECS_MAXCOMPONENTS>().set(component::Move::GetFamily()).set(component::Transform::GetFamily())
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(test_ecs)

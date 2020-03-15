@@ -201,6 +201,20 @@ namespace srose::player::entity
                 return nullptr;
             return static_cast<Com*>(iter->second.get());
         }
+
+        template <typename... Coms>
+        static BitMask GetComponentMask()
+        {
+            if constexpr(sizeof...(Coms)==0)
+            {
+                return BitMask();
+            }
+            else
+            {
+                static_assert((... | std::is_base_of_v<component::BaseComponent, Coms>));
+                return (... | BitMask().set(Coms::GetFamily()));
+            }
+        }
     };
 } // namespace srose::player::entity
 
