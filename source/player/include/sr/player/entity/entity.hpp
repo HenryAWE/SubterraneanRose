@@ -176,6 +176,7 @@ namespace srose::player::entity
             if(family >= m_components.size())
                 return;
             m_components[family].erase(id.index());
+            m_entities_data[id.index()].mask.set(family, false);
         }
 
         template <typename Com>

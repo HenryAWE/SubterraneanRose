@@ -39,6 +39,15 @@ BOOST_AUTO_TEST_CASE(test_entitiy, *boost::unit_test::tolerance(0.005))
     auto* c = mgr.GetComponent<component::Move>(Id(2, 1));
     BOOST_TEST(c->speed == 1.0f);
     BOOST_TEST(c->direction == 0.0f);
+    c = mgr.AssignComponent<component::Move>(Id(2, 1), 0.0f, 0.0f);
+    BOOST_TEST(c->speed == 0.0f);
+    BOOST_TEST(c->direction == 0.0f);
+    mgr.RemoveComponent<component::Move>(Id(2, 1));
+    BOOST_TEST_REQUIRE(mgr.GetComponent<component::Move>(Id(2, 1)) == nullptr);
+    BOOST_TEST_REQUIRE(mgr.HasComponent<component::Move>(Id(2, 1)) == false);
+
+    mgr.AssignComponent<component::Move>(Id(2, 1));
+    BOOST_TEST_REQUIRE(mgr.HasComponent<component::Move>(Id(2, 1)));
     mgr.DestroyEntity(Id(2, 1));
     BOOST_TEST_REQUIRE(mgr.GetComponent<component::Move>(Id(2, 1)) == nullptr);
     BOOST_TEST_REQUIRE(mgr.HasComponent<component::Move>(Id(2, 1)) == false);
