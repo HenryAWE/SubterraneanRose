@@ -15,8 +15,8 @@
 #include <type_traits>
 #include <cstdint>
 #include <boost/pool/pool_alloc.hpp>
-#include <sr/player/component/transform.hpp>
-#include <sr/player/component/move.hpp>
+#include <sr/player/component/component.hpp>
+#include "../config.h"
 
 
 namespace srose::player::entity
@@ -68,9 +68,6 @@ namespace srose::player::entity
         constexpr EntityManager* GetManager() const noexcept { return m_pmgr; }
         [[nodiscard]]
         constexpr const Id& GetId() const noexcept { return m_id; }
-
-        [[nodiscard]]
-        constexpr bool valid() const noexcept { return m_id == Id::INVALID; }
 
     private:
         friend class EntityManager;
@@ -214,6 +211,91 @@ namespace srose::player::entity
                 static_assert((... | std::is_base_of_v<component::BaseComponent, Coms>));
                 return (... | BitMask().set(Coms::GetFamily()));
             }
+        }
+
+        BitMask GetEntityMask(Entity::Id id)
+        {
+            if(!ValidateEntity(id))
+                return BitMask();
+            return m_entities_data[id.index()].mask;
+        }
+
+        template <typename... Coms>
+        std::tuple<ComponentHandle<Coms>...> GetComponentTuple(Entity::Id id)
+        {
+            typedef std::tuple<ComponentHandle<Coms>...> ReturnType;
+            if(!ValidateEntity(id))
+                return ReturnType((sizeof(Coms), nullptr)...);
+            auto index = id.index();
+            auto mask = GetComponentMask<Coms...>();
+            if((m_entities_data[index].mask & mask) != mask)
+                return ReturnType((sizeof(Coms), nullptr)...);
+            return std::make_tuple(static_cast<Coms*>(m_components[Coms::GetFamily()][id.index()].get())...);
+        }
+
+        class ComponentIterator
+        {
+            EntityManager* m_pmgr;
+            std::size_t m_index;
+            BitMask m_mask;
+        public:
+            ComponentIterator(EntityManager* pmgr, BitMask mask_)
+                : m_pmgr(pmgr), m_index(0), m_mask(mask_) {}
+            ComponentIterator(EntityManager* pmgr, std::size_t index, BitMask mask_)
+                : m_pmgr(pmgr), m_index(index), m_mask(mask_) {}
+            ComponentIterator(const ComponentIterator& other) = default;
+
+            [[nodiscard]]
+            Entity operator*() const noexcept { return m_pmgr->m_entities[m_index]; }
+            ComponentIterator& operator++() noexcept { Next(); return *this; }
+            [[nodiscard]]
+            bool operator!=(const ComponentIterator& rhs) const
+            {
+                return m_index != rhs.m_index;
+            }
+            [[nodiscard]]
+            operator bool() const noexcept
+            {
+                return m_index < m_pmgr->m_entities.size();
+            }
+
+            [[nodiscard]]
+            BitMask mask() const noexcept { return m_mask; }
+
+        private:
+            void Next() noexcept
+            {
+                if(!*this)
+                    return;
+                ++m_index;
+                if(!*this)
+                    return;
+                if(
+                    m_pmgr->m_entities[m_index].m_id == Entity::Id::INVALID ||
+                    ((m_pmgr->m_entities_data[m_index].mask & m_mask) != m_mask)
+                ) {
+                    Next();
+                }
+            }
+        };
+
+        template <typename... Coms>
+        struct TypedView
+        {
+            EntityManager* const pmgr;
+            BitMask mask;
+            TypedView(EntityManager* pmgr_) noexcept
+                : pmgr(pmgr_), mask(GetComponentMask<Coms...>()) {}
+
+            typedef ComponentIterator iterator;
+            iterator begin() { return ++iterator(pmgr, 0, mask); }
+            iterator end() { return iterator(pmgr, pmgr->m_entities.size(), mask); }
+        };
+
+        template <typename... Coms>
+        TypedView<Coms...> EntitiesWithComponent()
+        {
+            return TypedView<Coms...>(this);
         }
     };
 } // namespace srose::player::entity
