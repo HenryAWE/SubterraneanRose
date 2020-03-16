@@ -62,6 +62,13 @@ namespace srose::player::system
     public:
         SystemManager(entity::EntityManager* pmgr);
 
+        /**
+         * @brief Add a new system
+         * 
+         * @tparam Sys System type
+         * @tparam RequiredComponent A tuple of required components, e.g. std::tuple<MoveComponent, TransformComponent>
+         * @param args Arguments passed to the constructor of the system
+         */
         template <
             typename Sys,
             typename RequiredComponent = std::tuple<>,

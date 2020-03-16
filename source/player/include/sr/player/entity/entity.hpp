@@ -26,6 +26,7 @@ namespace srose::player::entity
     class Entity
     {
     public:
+        /* ID of the entity */
         class Id
         {
             std::uint64_t m_id;
@@ -81,18 +82,22 @@ namespace srose::player::entity
 
     class EntityManager
     {
+        // BitMask type, the index of it is the Component::GetFamily()
         typedef std::bitset<SROSE_PLAYER_ECS_MAXCOMPONENTS> BitMask;
 
+        // References to entities, the index of the vector is the GetId().index() of the entity
         std::vector<Entity> m_entities;
+        // Indexes of freed entities
         std::stack<std::size_t> m_freed;
         struct EntityData
         {
-            std::int32_t life = 0;
-            BitMask mask;
+            std::int32_t life = 0; // Life of the entity, will increase by 1 every time the entity is destroyed
+            BitMask mask; // Component mask
 
             EntityData(std::int32_t life_) noexcept
                 : life(life_), mask() {}
         };
+        // Entities' data, the index of the vector is the GetId().index() of the entity
         std::vector<EntityData> m_entities_data;
 
         Entity& AccommodateEntity();
@@ -110,6 +115,7 @@ namespace srose::player::entity
 
             Alloc allocator;
         };
+        // Pool allocators for components, the index of the vector is the Component::GetFamily()
         std::vector<std::unique_ptr<BasePool>> m_component_pools;
 
         template <typename T>
@@ -143,6 +149,14 @@ namespace srose::player::entity
 
         Entity GetEntity(Entity::Id id) const;
 
+        /**
+         * @brief Assign a component to an entity
+         * 
+         * @tparam Com Component type
+         * @param id Entity ID
+         * @param args Arguments passed to the constructor of the component
+         * @return ComponentHandle<Com> Null if the id is invalid
+         */
         template <typename Com, typename... Args>
         ComponentHandle<Com> AssignComponent(Entity::Id id, Args&&... args)
         {
@@ -163,6 +177,12 @@ namespace srose::player::entity
             
             return ret;
         }
+        /**
+         * @brief Remove a commponent from an entitiy, nothing will happen if the id is invalid
+         * 
+         * @tparam Com Component type
+         * @param id Entity ID
+         */
         template <typename Com>
         void RemoveComponent(Entity::Id id)
         {
@@ -183,6 +203,14 @@ namespace srose::player::entity
                 return false;
             return m_entities_data[id.index()].mask.test(Com::GetFamily());
         }
+
+        /**
+         * @brief Get a component assigned to an entity
+         * 
+         * @tparam Com Component type
+         * @param id Entity ID
+         * @return ComponentHandle<Com> Null if the id is invalid or the component not exist
+         */
         template <typename Com>
         ComponentHandle<Com> GetComponent(Entity::Id id)
         {
