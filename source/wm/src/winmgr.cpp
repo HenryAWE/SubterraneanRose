@@ -8,10 +8,19 @@
 #include <sr/wm/winmgr.hpp>
 #include <SDL_video.h>
 #include <sr/gpu/opengl3/renderer.hpp>
+#include <string>
 
 
 namespace srose::wm
 {
+    void SetWindowSubTitle(SR_WM_display* disp, const char* subtitle)
+    {
+        std::string title = !subtitle || subtitle[0] == '\0'?
+            "Subterranean Rose":
+            subtitle + std::string(" | Subterranean Rose");
+        SDL_SetWindowTitle(disp->win, title.c_str());
+    }
+
     static std::unique_ptr<gpu::Renderer> g_renderer;
 
     gpu::Renderer* SRSCALL CreateRenderer(SR_WM_display* display)

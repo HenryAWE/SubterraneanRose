@@ -16,6 +16,7 @@ namespace srose::ui::editor
 {
     class EditorWindow : public Widget
     {
+        bool first_appeared = true;
     public:
         EditorWindow();
 
@@ -30,6 +31,8 @@ namespace srose::ui::editor
 
         std::string m_button_return;
         void Button_Return();
+
+        void OnSetWindowSubtitle() override { DoSetWindowSubtitle(m_title.c_str()); }
     };
 } // namespace srose::ui
 

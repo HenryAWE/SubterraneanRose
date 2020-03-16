@@ -6,6 +6,7 @@
 
 #include <sr/ui/gui/widget.hpp>
 #include "../i18n/i18n.hpp"
+#include <sr/wm/winmgr.hpp>
 
 
 namespace srose::ui
@@ -24,5 +25,15 @@ namespace srose::ui
     {
         auto& fct = std::use_facet<locale::TranslationFacet>(m_loc);
         return fct.get().gettext(id);
+    }
+
+    void Widget::OnSetWindowSubtitle()
+    {
+        DoSetWindowSubtitle(nullptr);
+    }
+
+    void Widget::DoSetWindowSubtitle(const char* subtitle)
+    {
+        wm::SetWindowSubTitle(wm::GetRenderer()->GetDisplay(), subtitle);
     }
 } // namespace srose::ui

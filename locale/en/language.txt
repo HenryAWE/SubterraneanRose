@@ -2,5 +2,3 @@
 @srose.language.name = "English"
 @srose.language.iso = "en"
 @srose.language.default = "Load failed"
-
-@srose = "Subterranean Rose ~ Dream of Unconscious"

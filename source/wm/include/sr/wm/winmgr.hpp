@@ -16,6 +16,8 @@ namespace srose::wm
 {
     using ::SR_WM_display;
 
+    void SetWindowSubTitle(SR_WM_display* disp, const char* subtitle);
+
     /**
      * @brief Create renderer
      * 

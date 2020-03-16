@@ -99,7 +99,6 @@ int SRSCALL program_entry(int argc, char* argv[])
         audio::CreateAudioManager();
         res::CreateResourceManager();
         wm::CreateInputManager();
-        SDL_SetWindowTitle(display->win, GetDefaultLanguage()->gettext("srose", "Subterranean Rose").c_str());
         font_ready.get();
         ui::CreateUIManager()->InitializeWidgets();
         BeginMainLoop();

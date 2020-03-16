@@ -37,6 +37,11 @@ namespace srose::ui::editor
         auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>("##srose.ui.editor", nullptr, background_flags);
         assert(background);
         ImGui::PopStyleVar();
+        if(first_appeared)
+        {
+            SetWindowSubtitle();
+            first_appeared = false;
+        }
 
         UpdateMenuBar();
     }
@@ -67,6 +72,11 @@ namespace srose::ui::editor
     {
         auto& uimgr = *GetUIManager();
         if(&*uimgr.widget_stack.top() == this)
+        {
             uimgr.widget_stack.pop();
+            if(!uimgr.widget_stack.empty())
+                uimgr.widget_stack.top()->SetWindowSubtitle();
+        }
+        first_appeared = true;
     }
 } // namespace srose::ui

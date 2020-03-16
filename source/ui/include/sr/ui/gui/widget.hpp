@@ -32,8 +32,13 @@ namespace srose::ui
         [[nodiscard]]
         std::string gettext(std::string_view id) const;
 
+        void SetWindowSubtitle() { OnSetWindowSubtitle(); }
+
     protected:
         virtual void OnImbue() {}
+        virtual void OnSetWindowSubtitle();
+
+        void DoSetWindowSubtitle(const char* subtitle = nullptr);
     };
 } // namespace srose::ui
 
