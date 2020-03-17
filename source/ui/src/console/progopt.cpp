@@ -42,9 +42,13 @@ static boost::program_options::options_description SRSCALL BuildDescription()
         ("help", _("srose.cui.generic.help").c_str())
         ("version", _("srose.cui.generic.version").c_str());
 
+    po::options_description language(_("srose.cui.lang"));
+    language.add_options()
+        ("language", po::value<std::string>()->value_name("name")->default_value("auto"), _("srose.cui.lang.language").c_str())
+        ("available-language", _("srose.cui.lang.available").c_str());
+
     po::options_description display(_("srose.cui.display"));
     display.add_options()
-        ("language", po::value<std::string>()->value_name("name")->default_value("auto"), _("srose.cui.display.language").c_str())
         ("fullscreen,F", _("srose.cui.display.fullscreen").c_str());
     
     po::options_description video(_("srose.cui.video"));
@@ -53,6 +57,7 @@ static boost::program_options::options_description SRSCALL BuildDescription()
 
     return po::options_description(_("srose.cui.total"))
         .add(generic)
+        .add(language)
         .add(display)
         .add(video);
 }
@@ -96,6 +101,24 @@ int SRSCALL SR_UI_CONSOLE_ParseArg(int argc, char* argv[])
                 SR_VERSION_MAJOR, SR_VERSION_MINOR, SR_VERSION_PATCH,
                 SR_CORE_GitCommitShortID()
             );
+
+            return 1;
+        }
+        if(vm->count("available-language"))
+        {
+            auto& lm = ui::GetLanguageMap();
+            std::stringstream ss;
+            ss << _("srose.cui.lang.available.msg") << std::endl;
+            for(auto& i : lm)
+            {
+                ss
+                    << i.second->iso()
+                    << "\t: "
+                    << i.second->name()
+                    << std::endl;
+            }
+
+            std::printf(ss.str().c_str());
 
             return 1;
         }

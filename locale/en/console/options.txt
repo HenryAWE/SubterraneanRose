@@ -4,8 +4,12 @@
 @srose.cui.generic.help = "This message"
 @srose.cui.generic.version = "Version information"
 
+@srose.cui.lang = "Language"
+@srose.cui.lang.language = "Display language"
+@srose.cui.lang.available = "Available language"
+@srose.cui.lang.available.msg = "Available languages (At location ./locale/ )"
+
 @srose.cui.display = "Display"
-@srose.cui.display.language = "Display language"
 @srose.cui.display.fullscreen = "Fullscreen"
 
 @srose.cui.video = "Video"
