@@ -12,20 +12,62 @@
 #include <imgui_internal.h>
 #include <imguisr.h>
 #include <sr/wm/winmgr.hpp>
+#include <sr/player/component/transform.hpp>
+#include <sr/player/component/move.hpp>
+#include <sr/player/component/image.hpp>
+#include <sr/player/system/system.hpp>
 
 
 #ifndef SROSE_DISABLE_DEMO
 
 namespace srose::player
 {
-    PlayerDemoWindow::PlayerDemoWindow()
-        : m_stage({350, 430})
+    struct DemoCounter : public component::Component<DemoCounter>
     {
+        DemoCounter() noexcept {}
+        std::size_t counter = 0;
+    };
+    struct DemoSystem
+    {
+        typedef std::tuple<DemoCounter, component::Transform> Components;
 
+        void Update(entity::Entity e, DemoCounter& t, component::Transform& tr)
+        {
+            float val = float(t.counter++) / 10.0f / 3.1415926f;
+            tr.position = glm::vec2(350/2, 430/2);
+            tr.position += 80.0f * glm::vec2(std::cos(val), std::sin(val));
+            tr.rotation += glm::radians(30.0f);
+        }
+    };
+
+    PlayerDemoWindow::PlayerDemoWindow()
+        : m_stage({350, 430}, wm::GetRenderer())
+    {
+        auto& emgr = m_stage.world.GetEntityManager();
+        auto id = emgr.CreateEntity().GetId();
+        emgr.AssignComponent<component::Image>(id, nullptr);
+        emgr.AssignComponent<component::Transform>(id, glm::vec2(350/2, 430/2), glm::vec2(10));
+        emgr.AssignComponent<DemoCounter>(id);
+
+        m_stage.world.GetSystemManager(m_stage.world.UPDATE)
+            .Add<DemoSystem, DemoSystem::Components>();
+
+        for(int i = 0; i < 12; ++i)
+        {
+            auto id = emgr.CreateEntity().GetId();
+            emgr.AssignComponent<component::Image>(id, nullptr);
+            glm::vec2 position = glm::vec2(350/2, 430/2);
+            float val = i * 3.1415926f / 4.0f;
+            position.x += 100.0f * std::cos(val);
+            position.y += 100.0f * std::sin(val);
+
+            emgr.AssignComponent<component::Transform>(id, position, glm::vec2(8.5f));
+        }
     }
 
     void PlayerDemoWindow::Update()
     {
+        m_stage.world.Update();
         auto& io = ImGui::GetIO();
 
         constexpr int background_flags = 
@@ -40,11 +82,23 @@ namespace srose::player
         );
         if(!background)
             return;
+
+        auto& screen = m_stage.GetScene().GetScreenTexture();
+        if(ImGui::BeginChild("##screen"))
+        {
+            ImGui::Image(
+                screen.GetNativeHandle(),
+                screen.GetSizeImVec2(),
+                ImVec2(0, 1),
+                ImVec2(1, 0)
+            );
+        }
+        ImGui::EndChild();
     }
 
     void PlayerDemoWindow::Render()
     {
-
+        m_stage.Render();
     }
 } // namespace srose::player
 
