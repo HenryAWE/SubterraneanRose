@@ -15,6 +15,7 @@
 #include "image.hpp"
 #include "sprite.hpp"
 #include "scene.hpp"
+#include <sr/player/system/system.hpp>
 
 
 namespace srose::gpu
@@ -53,6 +54,8 @@ namespace srose::gpu
         virtual void AddSprite(const Sprite& sp) = 0;
         virtual void RenderSprite(glm::vec2 viewport, bool clear = true) = 0;
         virtual void ClearSprite() = 0;
+
+        virtual void Renderer::AddRenderSystem(player::system::SystemManager& smgr) = 0;
 
         /**
          * @brief Show the renderer's demo window

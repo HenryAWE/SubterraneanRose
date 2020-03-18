@@ -11,6 +11,7 @@
 #include <sr/ui/gui/uimgr.hpp>
 #include "gl_assert.h"
 #include "demo.hpp"
+#include "render_system.hpp"
 
 
 const char sprite_vs[] =
@@ -152,6 +153,15 @@ namespace srose::gpu::opengl3
     {
         for(auto& i : m_sprite_data)
             i.second.clear();
+    }
+
+    void Renderer::AddRenderSystem(player::system::SystemManager& smgr)
+    {
+        using Components = std::tuple<
+            player::component::Transform,
+            player::component::Image
+        >;
+        smgr.Add<RenderSystem, Components>(this);
     }
 
     void Renderer::AppendSpriteData(Texture* tex, const glm::mat4& transform)

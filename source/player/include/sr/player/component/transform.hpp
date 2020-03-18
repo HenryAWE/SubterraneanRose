@@ -15,9 +15,14 @@ namespace srose::player::component
 {
     struct Transform : public Component<Transform>
     {
-        glm::vec2 position = glm::vec2(0);
-        glm::vec2 scale = glm::vec2(1);
-        float rotation = 0; // In radians!!!
+        Transform(glm::vec2 position_ = glm::vec2(0), glm::vec2 scale_ = glm::vec2(1), float rotation_ = 0.0f) noexcept
+            : position(position_),
+            scale(scale_),
+            rotation(rotation_) {}
+
+        glm::vec2 position;
+        glm::vec2 scale;
+        float rotation; // In radians!!!
     };
 } // namespace srose::player::component
 
