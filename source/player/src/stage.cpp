@@ -5,43 +5,30 @@
  */
 
 #include <sr/player/stage.hpp>
+#include <cassert>
+#include <sr/gpu/renderer.hpp>
 
 
 namespace srose::player
 {
-    Stage::Stage(glm::ivec2 size, gpu::Renderer& ren)
-        : m_size(size),
-        m_scene(ren.CreateScene(size))
+    Stage::Stage(glm::ivec2 size, gpu::Renderer* ren)
+        : m_ren(ren), m_size(size), m_scene(ren->CreateScene(size))
     {
-        using namespace std;
-        m_scene->SetRenderCallback([this](gpu::Renderer& ren, gpu::Scene&){ DoRender(ren); });
+        assert(m_ren);
+        m_ren->AddRenderSystem(world.GetSystemManager(world.RENDER));
+
+        m_scene->SetRenderCallback([this](auto& ,auto&) {
+            world.Render();
+            gpu::Sprite sp;
+            sp.scale(glm::vec2(5)) ;
+            sp.SetTexture(nullptr);
+
+            m_ren->RenderSprite(m_size, true);
+        });
     }
 
-    void Stage::Update()
+    void Stage::Render()
     {
-        for(auto& i : m_entities)
-        {
-            if(i) i->Update();
-        }
-    }
-
-    void Stage::Render(gpu::Renderer& ren)
-    {
-        m_scene->Render(ren, true);
-    }
-
-    void Stage::AddEntity(std::unique_ptr<Entity> entity)
-    {
-        m_entities.emplace_back(std::move(entity));
-    }
-
-    void Stage::DoRender(gpu::Renderer& ren)
-    {
-        for(auto& i : m_entities)
-        {
-            if(i) i->Render(ren);
-        }
-
-        ren.RenderSprite(m_size);
+        m_scene->Render(*m_ren);
     }
 } // namespace srose::player

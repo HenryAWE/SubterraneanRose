@@ -46,6 +46,8 @@ namespace srose::gpu::opengl3
         void RenderSprite(glm::vec2 viewport, bool clear = true) override;
         void ClearSprite() override;
 
+        void AddRenderSystem(player::system::SystemManager& smgr) override;
+
     protected:
         void AppendSpriteData(Texture* tex, const glm::mat4& transform);
 #ifndef SROSE_DISABLE_DEMO
