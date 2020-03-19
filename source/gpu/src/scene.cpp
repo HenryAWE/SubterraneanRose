@@ -9,8 +9,8 @@
 
 namespace srose::gpu
 {
-    Scene::Scene(glm::ivec2 size)
-        : m_size(size) {}
+    Scene::Scene(glm::ivec2 size, Renderer* ren)
+        : m_size(size), m_ren(ren) {}
 
     Scene::~Scene() = default;
 

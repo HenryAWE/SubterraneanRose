@@ -19,12 +19,16 @@ namespace srose::gpu
     class Scene
     {
         glm::ivec2 m_size = glm::ivec2(0);
-    public:
-        Scene(glm::ivec2 size);
+        Renderer* m_ren;
+    protected:
+        Scene(glm::ivec2 size, Renderer* ren);
 
+        [[nodiscard]]
+        Renderer* GetRenderer() const noexcept { return m_ren; }
+    public:
         virtual ~Scene();
 
-        virtual void Render(Renderer& ren, bool to_texture = true) = 0;
+        virtual void Render(bool to_texture = true) = 0;
 
         [[nodiscard]]
         virtual const Texture& GetScreenTexture() const = 0;
@@ -32,7 +36,7 @@ namespace srose::gpu
         [[nodiscard]]
         constexpr glm::ivec2 GetSize() const noexcept { return m_size; }
 
-        using callback_type = void(Renderer&, Scene&);
+        using callback_type = void();
         void SetRenderCallback(std::function<callback_type> func);
 
     protected:

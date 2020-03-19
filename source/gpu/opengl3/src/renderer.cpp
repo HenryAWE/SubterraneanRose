@@ -177,7 +177,7 @@ namespace srose::gpu::opengl3
     }
     Scene* Renderer::NewScene(glm::ivec2 size)
     {
-        return new Scene(size);
+        return new Scene(size, this);
     }
 
     void Renderer::InitSpriteRenderer()

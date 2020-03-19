@@ -16,20 +16,25 @@
 
 namespace srose::gpu::opengl3
 {
-    class Scene : public gpu::Scene
+    class Renderer;
+
+    class Scene final : public gpu::Scene
     {
         Framebuffer m_fbo;
         Renderbuffer m_rbo;
         Texture m_screen;
     public:
-        Scene(glm::ivec2 size);
+        Scene(glm::ivec2 size, Renderer* ren);
 
-        void Render(gpu::Renderer& ren, bool to_texture = true) override;
+        void Render(bool to_texture = true) override;
 
         [[nodiscard]]
         const Texture& GetScreenTexture() const override;
 
     private:
+        [[nodiscard]]
+        Renderer* GetRenderer() const noexcept;
+
         void Generate();
     };
 } // namespace srose::gpu::opengl3

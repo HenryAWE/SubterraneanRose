@@ -11,15 +11,14 @@
 
 namespace srose::gpu::opengl3
 {
-    Scene::Scene(glm::ivec2 size)
-        : gpu::Scene(size)
+    Scene::Scene(glm::ivec2 size, Renderer* ren)
+        : gpu::Scene(size, ren)
     {
         Generate();
     }
 
-    void Scene::Render(gpu::Renderer& ren, bool to_texture)
+    void Scene::Render(bool to_texture)
     {
-        auto& glren = static_cast<opengl3::Renderer&>(ren);
         if(to_texture)
             glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
@@ -27,7 +26,7 @@ namespace srose::gpu::opengl3
         glClear(GL_COLOR_BUFFER_BIT);
         glViewport(0, 0, GetSize().x, GetSize().y);
         if(m_render_callback)
-            m_render_callback(glren, *this);
+            m_render_callback();
 
         if(to_texture)
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -57,5 +56,10 @@ namespace srose::gpu::opengl3
             throw std::runtime_error("[OpenGL3] Incomplete framebuffer");
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    Renderer* Scene::GetRenderer() const noexcept
+    {
+        return static_cast<Renderer*>(gpu::Scene::GetRenderer());
     }
 } // namespace srose::gpu::opengl3

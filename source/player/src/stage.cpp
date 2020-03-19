@@ -17,7 +17,7 @@ namespace srose::player
         assert(m_ren);
         m_ren->AddRenderSystem(world.GetSystemManager(world.RENDER));
 
-        m_scene->SetRenderCallback([this](auto& ,auto&) {
+        m_scene->SetRenderCallback([this]() {
             world.Render();
             gpu::Sprite sp;
             sp.scale(glm::vec2(5)) ;
@@ -29,6 +29,6 @@ namespace srose::player
 
     void Stage::Render()
     {
-        m_scene->Render(*m_ren);
+        m_scene->Render();
     }
 } // namespace srose::player
