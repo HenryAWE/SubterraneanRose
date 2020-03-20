@@ -13,7 +13,7 @@
 
 namespace srose::wm
 {
-    void SetWindowSubTitle(SR_WM_display* disp, const char* subtitle)
+    void SetWindowSubTitle(Display* disp, const char* subtitle)
     {
         std::string title = !subtitle || subtitle[0] == '\0'?
             "Subterranean Rose":
@@ -23,7 +23,7 @@ namespace srose::wm
 
     static std::unique_ptr<gpu::Renderer> g_renderer;
 
-    gpu::Renderer* SRSCALL CreateRenderer(SR_WM_display* display)
+    gpu::Renderer* SRSCALL CreateRenderer(Display* display)
     {
         g_renderer = std::make_unique<gpu::opengl3::Renderer>(display);
 

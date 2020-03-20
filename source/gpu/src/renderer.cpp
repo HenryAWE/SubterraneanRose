@@ -10,7 +10,7 @@
 
 namespace srose::gpu
 {
-    Renderer::Renderer(SR_WM_display* disp)
+    Renderer::Renderer(Display* disp)
         : m_disp(disp)
     {
         assert(m_disp);

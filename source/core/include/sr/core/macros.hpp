@@ -1,5 +1,5 @@
 /**
- * @file macros.h
+ * @file macros.hpp
  * @author HenryAWE
  * @brief Macros
  */

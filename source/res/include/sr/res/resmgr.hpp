@@ -7,7 +7,7 @@
 #ifndef SROSE_RES_resmgr_hpp_
 #define SROSE_RES_resmgr_hpp_
 
-#include "config.h"
+#include "config.hpp"
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/gpu/image.hpp>
 

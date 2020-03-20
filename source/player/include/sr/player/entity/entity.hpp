@@ -16,7 +16,7 @@
 #include <cstdint>
 #include <boost/pool/pool_alloc.hpp>
 #include <sr/player/component/component.hpp>
-#include "../config.h"
+#include "../config.hpp"
 
 
 namespace srose::player::entity

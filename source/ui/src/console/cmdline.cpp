@@ -11,7 +11,6 @@
 namespace srose::ui::console
 {
 #if !defined SROSE_DISABLE_CUI // Controlled by the build flag SROSE_DISABLE_CUI
-    extern "C"
     const boost::program_options::variables_map& GetVariablesMapInternal() noexcept;
 
     std::string GetPreferredLanguage()

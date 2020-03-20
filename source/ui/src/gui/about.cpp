@@ -12,7 +12,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <sr/ui/gui/uimgr.hpp>
-#include <sr/util/open_in_browser.h>
+#include <sr/util/open_in_browser.hpp>
 
 
 namespace srose::ui
@@ -48,7 +48,7 @@ namespace srose::ui
         }
         if(ImGui::Button(m_str_website.c_str()))
         {
-            SR_UTIL_OpenInBrowser("https://github.com/HenryAWE/SubterraneanRose");
+            util::OpenInBrowser("https://github.com/HenryAWE/SubterraneanRose");
         }
     }
 

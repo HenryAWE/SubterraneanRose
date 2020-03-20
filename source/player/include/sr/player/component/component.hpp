@@ -9,7 +9,7 @@
 
 #include <cassert>
 #include <cstddef>
-#include "../config.h"
+#include "../config.hpp"
 
 
 namespace srose::player::component

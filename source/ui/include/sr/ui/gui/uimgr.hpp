@@ -12,7 +12,7 @@
 #include <optional>
 #include <imgui.h>
 #include <imguisr.h>
-#include <sr/core/macros.h>
+#include <sr/core/macros.hpp>
 #include <sr/filesystem/common.hpp>
 #include <sr/util/string_tree.hpp>
 #include "widget.hpp"

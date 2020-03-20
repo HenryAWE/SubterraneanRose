@@ -1,15 +1,18 @@
 /**
- * @file main.c
+ * @file main.cpp
  * @author HenryAWE
  * @brief Program entry
  */
 
-#include <sr/ui/entry.h>
+#include <sr/ui/entry.hpp>
 #include <SDL_main.h>
 #include <SDL_syswm.h>
 
 
 /*Program entry */
+#ifdef _MSC_VER
+#   pragma comment(linker, "/subsystem:windows")
+#endif
 int main(int argc, char* argv[])
 {
 #ifdef __WINDOWS__
@@ -25,7 +28,7 @@ int main(int argc, char* argv[])
             printf("[exec] SetConsoleCP(CP_UTF8) failed, some output may not be displayed correctly\n");
     }
 #endif
-    int exit_code = program_entry(argc, argv);
+    int exit_code = srose::ProgramEntry(argc, argv);
 
 #ifdef __WINDOWS__
     if(attached)

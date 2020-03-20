@@ -8,7 +8,7 @@
 #define SROSE_LOCALE_locale_hpp_
 
 #include <locale>
-#include <sr/core/macros.h>
+#include <sr/core/macros.hpp>
 #include "language.hpp"
 
 

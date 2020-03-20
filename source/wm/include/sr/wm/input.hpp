@@ -8,8 +8,8 @@
 #define SROSE_WM_input_hpp_
 
 #include <SDL_events.h>
-#include <sr/core/macros.h>
-#include <sr/wm/event.h>
+#include <sr/core/macros.hpp>
+#include <sr/wm/event.hpp>
 
 
 namespace srose::wm

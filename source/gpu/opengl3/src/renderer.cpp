@@ -36,7 +36,7 @@ void main(){
 
 namespace srose::gpu::opengl3
 {
-    Renderer::Renderer(SR_WM_display* disp)
+    Renderer::Renderer(Display* disp)
         : gpu::Renderer(disp)
     {
         SR_ASSERT_CTX();

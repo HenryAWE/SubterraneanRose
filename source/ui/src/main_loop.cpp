@@ -7,7 +7,7 @@
 #include "main_loop.hpp"
 #include <chrono>
 #include <thread>
-#include <sr/wm/event.h>
+#include <sr/wm/event.hpp>
 #include <sr/wm/winmgr.hpp>
 #include <sr/ui/gui/uimgr.hpp>
 #include <sr/wm/input.hpp>
@@ -26,22 +26,22 @@ void DoMainLoop()
     /*Event processing*/
     input.ProcessAllEvent();
     g_loop = static_cast<bool>(input);
-    SR_WM_NewFrame();
+    wm::NewFrame();
     try
     {
         gui.Update();
     }
     catch(...)
     {
-        SR_WM_EndFrame();
+        wm::EndFrame();
         throw;
     }
-    SR_WM_EndFrame();
+    wm::EndFrame();
 
     /*Rendering */
     renderer.ClearScreen();
     renderer.Render();
-    SR_WM_RenderFrame();
+    wm::RenderFrame();
     renderer.Present();
 }
 

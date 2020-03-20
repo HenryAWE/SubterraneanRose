@@ -9,14 +9,12 @@
 
 #include <memory>
 #include <sr/gpu/renderer.hpp>
-#include "display.h"
+#include "display.hpp"
 
 
 namespace srose::wm
 {
-    using ::SR_WM_display;
-
-    void SetWindowSubTitle(SR_WM_display* disp, const char* subtitle);
+    void SetWindowSubTitle(Display* disp, const char* subtitle);
 
     /**
      * @brief Create renderer
@@ -24,7 +22,7 @@ namespace srose::wm
      * @param display The instance of the display
      * @return gpu::Renderer* CreateRenderer The created renderer
      */
-    gpu::Renderer* SRSCALL CreateRenderer(SR_WM_display* display);
+    gpu::Renderer* SRSCALL CreateRenderer(Display* display);
     void SRSCALL DestroyRenderer() noexcept;
 
     [[nodiscard]]

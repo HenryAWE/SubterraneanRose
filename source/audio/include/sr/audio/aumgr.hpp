@@ -7,7 +7,7 @@
 #ifndef SROSE_AUDIO_aumgr_hpp_
 #define SROSE_AUDIO_aumgr_hpp_
 
-#include <sr/core/macros.h>
+#include <sr/core/macros.hpp>
 #include "audio.hpp"
 
 

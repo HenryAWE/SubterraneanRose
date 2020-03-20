@@ -9,7 +9,7 @@
 
 #include <utility>
 #include <iostream>
-#include <sr/core/macros.h>
+#include <sr/core/macros.hpp>
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/util/string_tree.hpp>
 

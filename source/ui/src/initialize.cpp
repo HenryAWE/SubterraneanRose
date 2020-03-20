@@ -44,7 +44,7 @@ namespace srose
         }
     }
 
-    void InitializeAllSystems(SR_WM_display* display)
+    void InitializeAllSystems(wm::Display* display)
     {
         wm::CreateRenderer(display);
         auto font_ready = std::async(std::launch::async, LoadFonts);

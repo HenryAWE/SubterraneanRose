@@ -8,7 +8,7 @@
 #define SROSE_UI_CONSOLE_cmdline_hpp_
 
 #include <string>
-#include "progopt.h"
+#include "progopt.hpp"
 
 
 namespace srose::ui::console
