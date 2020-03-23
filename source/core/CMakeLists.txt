@@ -16,14 +16,8 @@ target_link_libraries("srose-ext-sdl2_mixer" INTERFACE ${SDL2_MIXER_LIBRARY})
 aux_source_directory(./src core_src_list)
 # Generate GIT information in C source
 include(SRoseGitInfo)
-sr_gitinfo_avail(git_avail)
-message(STATUS "Git: ${git_avail} ${git_found}")
-if(${git_avail})
-    sr_abbr_commit_id(commit_id_abbr)
-else()
-    set(commit_id_abbr "(Git is unavailable)")
-endif()
-message(STATUS "Git commit id (abbr): ${commit_id_abbr}")
+
+sr_git_log(commit_id_abbr "%h")
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/git_info.c.in ${CMAKE_CURRENT_BINARY_DIR}/git_info.c
     @ONLY

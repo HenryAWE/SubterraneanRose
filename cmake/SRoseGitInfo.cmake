@@ -1,32 +1,22 @@
 include_guard(DIRECTORY)
 
 # Find the git executable
-find_program(git_found "git" DOC "The git executable path")
-mark_as_advanced(git_found)
+find_package(Git QUIET)
 
-function(sr_gitinfo_avail output)
-    if(NOT EXISTS ${git_found})
-        set(${output} FALSE PARENT_SCOPE)
-        return()
-    endif()
-    if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-        set(${output} TRUE PARENT_SCOPE)
-    else()
-        set(${output} FALSE PARENT_SCOPE)
-    endif()
-endfunction()
 
 # Get abbreviated commit id
-function(sr_abbr_commit_id output)
+function(sr_git_log output format)
+    if(${GIT_FOUND} AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
+        set(${output} TRUE PARENT_SCOPE)
     execute_process(
-        COMMAND ${git_found} log --pretty=format:"%h" -1
+        COMMAND ${GIT_EXECUTABLE} log --pretty=format:"${format}" -1
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE commit_id_str
+        OUTPUT_VARIABLE commit_id
     )
-
-    # Remove the quotes around the string
-    string(REPLACE "\"" "" commit_id ${commit_id_str})
-
     # Return value
     set(${output} ${commit_id} PARENT_SCOPE)
+
+    else()
+        set(${output} "\"\"" PARENT_SCOPE)
+    endif()
 endfunction()
