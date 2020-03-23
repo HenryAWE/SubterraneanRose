@@ -18,6 +18,8 @@ aux_source_directory(./src core_src_list)
 include(SRoseGitInfo)
 
 sr_git_log(commit_id_abbr "%h")
+sr_git_log(commit_id "%H")
+sr_git_log(commit_msg "%s")
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/git_info.c.in ${CMAKE_CURRENT_BINARY_DIR}/git_info.c
     @ONLY

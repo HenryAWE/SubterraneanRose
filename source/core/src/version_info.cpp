@@ -9,11 +9,15 @@
 
 
 extern "C"
-extern const char* sr_git_commit_id_short;
+{
+    extern const char* sr_git_commit_id_short;
+    extern const char* sr_git_commit_id;
+    extern const char* sr_git_commit_msg;
+}
 
 namespace srose::core
 {
-    const char* SRSCALL GetVersionString()
+    const char* SRSCALL GetVersionString() noexcept
     {
         static char buf[32];
         snprintf(
@@ -25,8 +29,16 @@ namespace srose::core
         return buf;
     }
 
-    const char* SRSCALL GitCommitShortID()
+    const char* SRSCALL GitCommitShortID() noexcept
     {
         return sr_git_commit_id_short;
+    }
+    const char* SRSCALL GitCommitID() noexcept
+    {
+        return sr_git_commit_id;
+    }
+    const char* SRSCALL GitCommitMsg() noexcept
+    {
+        return sr_git_commit_msg;
     }
 } // namespace srose::core
