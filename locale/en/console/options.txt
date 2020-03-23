@@ -3,6 +3,7 @@
 @srose.cui.generic = "Generic"
 @srose.cui.generic.help = "This message"
 @srose.cui.generic.version = "Version information"
+@srose.cui.generic.build = "Program build information"
 
 @srose.cui.lang = "Language"
 @srose.cui.lang.language = "Display language"

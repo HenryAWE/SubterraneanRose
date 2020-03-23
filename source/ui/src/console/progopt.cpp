@@ -41,7 +41,8 @@ namespace srose::ui::console
         po::options_description generic(_("srose.cui.generic"));
         generic.add_options()
             ("help", _("srose.cui.generic.help").c_str())
-            ("version", _("srose.cui.generic.version").c_str());
+            ("version", _("srose.cui.generic.version").c_str())
+            ("build-info", _("srose.cui.generic.build").c_str());
 
         po::options_description language(_("srose.cui.lang"));
         language.add_options()
@@ -71,6 +72,8 @@ namespace srose::ui::console
         {
             using namespace srose;
             namespace po = boost::program_options;
+
+            std::ostream& os = std::cout;
 
             if(!vm)
                 vm = std::make_unique<po::variables_map>();
@@ -102,6 +105,15 @@ namespace srose::ui::console
                     SR_VERSION_MAJOR, SR_VERSION_MINOR, SR_VERSION_PATCH,
                     core::GitCommitShortID()
                 );
+
+                return 1;
+            }
+            if(vm->count("build-info"))
+            {
+                os
+                    << "Subterranean Rose " << core::GetVersionString() << std::endl
+                    << core::GitCommitID() << " - "
+                    << core::GitCommitMsg() << std::endl;
 
                 return 1;
             }

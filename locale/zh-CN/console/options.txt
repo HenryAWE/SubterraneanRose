@@ -3,6 +3,7 @@
 @srose.cui.generic = "通用"
 @srose.cui.generic.help = "这条文本"
 @srose.cui.generic.version = "版本信息"
+@srose.cui.generic.build = "程序构建信息"
 
 @srose.cui.lang = "语言"
 @srose.cui.lang.language = "显示语言"
