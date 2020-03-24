@@ -1,27 +1,20 @@
 # SubterraneanRose Source
 find_package(SDL2 CONFIG REQUIRED)
 
-if(MSVC)
-    # Force UTF-8
-    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
-    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-    # Make sure macro "__cplusplus" is correctly defined
-    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>")
-endif()
+# Compile options
+# Force UTF-8
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+# Make sure macro "__cplusplus" is correctly defined
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>")
 
 
 # Build options
 option(SROSE_DISABLE_CUI "Disable console inferface" OFF)
 option(SROSE_DISABLE_DEMO "Disable demo codes" OFF)
 set(SROSE_RENDER_BACKEND "OpenGL3" CACHE STRING "Choose a render backend from: OpenGL3")
-
-
-# Definitions
-add_compile_definitions(SR_VERSION_MAJOR=${CMAKE_PROJECT_VERSION_MAJOR})
-add_compile_definitions(SR_VERSION_MINOR=${CMAKE_PROJECT_VERSION_MINOR})
-add_compile_definitions(SR_VERSION_PATCH=${CMAKE_PROJECT_VERSION_PATCH})
 
 
 # Dependencies
