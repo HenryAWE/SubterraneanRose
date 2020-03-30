@@ -14,6 +14,7 @@
 #include <sr/wm/input.hpp>
 #include <sr/ui/gui/uimgr.hpp>
 #include <sr/player/player.hpp>
+#include <sr/srose/app.hpp>
 
 
 namespace srose
@@ -46,6 +47,7 @@ namespace srose
 
     void InitializeAllSystems(wm::Display* display)
     {
+        GetApp().LoadUsers();
         wm::CreateRenderer(display);
         auto font_ready = std::async(std::launch::async, LoadFonts);
         audio::CreateAudioManager();
