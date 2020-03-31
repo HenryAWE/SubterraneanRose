@@ -55,6 +55,7 @@ BOOST_AUTO_TEST_CASE(test_string_tree)
     BOOST_TEST_REQUIRE(st.get_value() == 233);
     st.emplace(666);
     BOOST_TEST_REQUIRE(st.get_value() == 666);
+    BOOST_TEST_REQUIRE(st.size() == 0);
 
     // Test operators
     st.emplace_at("first/second", 12);
@@ -90,6 +91,14 @@ BOOST_AUTO_TEST_CASE(test_string_tree)
     string_tree<string> sts2;
     sts2.emplace_at("bs.ss" ,"not true");
     sts2.emplace_at("ss.ss", "true");
+    BOOST_TEST_REQUIRE(sts2.size() == 2);
+    auto sts_opt = sts2.get_child_optional("bs");
+    BOOST_TEST_REQUIRE(sts_opt->has_value("ss"));
+    BOOST_TEST_REQUIRE(sts_opt->get_value("ss") == "not true");
+    BOOST_TEST_REQUIRE(sts_opt->get_child_optional("ss")->get_value() == "not true");
+    BOOST_TEST_REQUIRE(sts2.get_child_optional("never").has_value() == false);
+    sts_opt->emplace_at("new", "new value");
+    BOOST_TEST_REQUIRE(sts2.has_value("bs.ss.new") == false);
 
     sts.merge(sts2);
     BOOST_TEST_REQUIRE(sts.get_value("ss.ss") == "true");

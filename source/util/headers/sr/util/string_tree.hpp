@@ -244,6 +244,22 @@ namespace srose::util
         }
 
         [[nodiscard]]
+        /**
+         * @brief Get a child node
+         * 
+         * @param pt Path
+         * @return std::optional<self_type> The new instance of the child node, or std::nullopt for empty node
+         */
+        std::optional<self_type> get_child_optional(string_view_type pt) noexcept
+        {
+            auto iter = walk_path(pt);
+            if(iter)
+                return std::optional<self_type>(*iter);
+            else
+                return std::nullopt;
+        }
+
+        [[nodiscard]]
         value_type get_value() const { return *m_data; }
         [[nodiscard]]
         value_type get_value(string_view_type pt) const
