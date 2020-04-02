@@ -121,7 +121,7 @@ namespace srose::audio
         ImGui::SameLine();
         if(ImGui::Button("Open"))
         {
-            if(m_music.Load(m_music_location_cache) == false)
+            if(m_music.Load(filesystem::u8path(m_music_location_cache)) == false)
             {
                 ImGui::OpenPopup("Load failed");
             }
