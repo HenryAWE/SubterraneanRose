@@ -8,6 +8,8 @@
 #define SROSE_WM_input_hpp_
 
 #include <SDL_events.h>
+#include <tuple>
+#include <vector>
 #include <sr/core/macros.hpp>
 #include <sr/wm/event.hpp>
 
@@ -18,6 +20,8 @@ namespace srose::wm
     {
         bool m_loop = true;
     public:
+        InputManager();
+
         void ProcessAllEvent();
 
         void HandleEvent(SDL_Event& e);
@@ -25,6 +29,20 @@ namespace srose::wm
         void NotifyImGui(SDL_Event& e);
 
         operator bool() const noexcept { return m_loop; }
+
+        enum class Keys
+        {
+            UP = 0,
+            DOWN,
+            LEFT,
+            RIGHT,
+            COUNT
+        };
+
+        bool KeyDown(Keys key);
+
+    private:
+        std::vector<std::tuple<std::int32_t, std::int32_t>> m_keys;
     };
 
     InputManager* SRSCALL CreateInputManager();

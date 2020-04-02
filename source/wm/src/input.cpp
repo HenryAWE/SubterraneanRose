@@ -13,6 +13,18 @@
 
 namespace srose::wm
 {
+    InputManager::InputManager()
+    {
+        m_keys.resize(static_cast<std::size_t>(Keys::COUNT));
+        #define MAPKEY(idx, k1, k2) \
+        do{ m_keys[static_cast<std::size_t>(idx)] = std::make_tuple(k1, k2); }while(0)
+
+        MAPKEY(Keys::UP, SDL_SCANCODE_UP, 0);
+        MAPKEY(Keys::DOWN, SDL_SCANCODE_DOWN, 0);
+        MAPKEY(Keys::LEFT, SDL_SCANCODE_LEFT, 0);
+        MAPKEY(Keys::RIGHT, SDL_SCANCODE_RIGHT, 0);
+    }
+
     void InputManager::ProcessAllEvent()
     {
         SDL_Event e{};
@@ -36,6 +48,14 @@ namespace srose::wm
     void InputManager::NotifyImGui(SDL_Event& e)
     {
         ImGui_ImplSDL2_ProcessEvent(&e);
+    }
+
+    bool InputManager::KeyDown(Keys key)
+    {
+        const std::size_t idx = static_cast<std::size_t>(key);
+        return
+            ImGui::IsKeyDown(std::get<0>(m_keys[idx])) ||
+            ImGui::IsKeyDown(std::get<1>(m_keys[idx]));
     }
 
     static std::unique_ptr<InputManager> g_input;
