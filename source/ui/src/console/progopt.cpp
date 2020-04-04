@@ -15,6 +15,7 @@
 #include <sr/core/version_info.hpp>
 #include <SDL.h>
 #include <sr/ui/console/cmdline.hpp>
+#include "mswin.hpp"
 #include "../i18n/i18n.hpp"
 
 #ifdef _
@@ -57,8 +58,17 @@ namespace srose::ui::console
         video.add_options()
             ("get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), _("srose.cui.get-display-mode").c_str());
 
+    #ifdef __WINDOWS__
+        po::options_description win32("Windows");
+        win32.add_options()
+            ("win-console", po::value<std::string>()->value_name("mode")->default_value("auto"), "Windows console");
+    #endif
+
         return po::options_description(_("srose.cui.total"))
             .add(generic)
+        #ifdef __WINDOWS__
+            .add(win32)
+        #endif
             .add(language)
             .add(display)
             .add(video);
@@ -86,6 +96,30 @@ namespace srose::ui::console
             std::string preferred = ui::console::GetPreferredLanguage();
             ui::SelectLanguage(preferred.empty() ? nullptr : preferred.c_str());
 
+        #ifdef __WINDOWS__
+            struct HelperWin32
+            {
+                bool release = false;
+                bool alloc = false;
+                HelperWin32() noexcept = default;
+                ~HelperWin32() noexcept
+                {
+                    if(release) ReleaseConsoleWin32();
+                }
+            };
+            static HelperWin32 helper_win32;
+
+            std::string conmode_win32 = (*vm)["win-console"].as<std::string>();
+            if(conmode_win32 == "new")
+                helper_win32.alloc = helper_win32.release = AllocConsoleWin32();
+            if(conmode_win32 != "ignore")
+                helper_win32.release = AttachConsoleWin32();
+
+            #define SR_PAUSE_IF_NECESSARY() do{ if(helper_win32.alloc) std::system("PAUSE"); }while(0)
+        #else
+            #define SR_PAUSE_IF_NECESSARY() do{}while(0)
+        #endif
+
             if(vm->count("help"))
             {
                 std::stringstream ss;
@@ -96,6 +130,7 @@ namespace srose::ui::console
 
                 std::printf(ss.str().c_str());
 
+                SR_PAUSE_IF_NECESSARY();
                 return 1;
             }
             if(vm->count("version"))
@@ -106,6 +141,7 @@ namespace srose::ui::console
                     core::GitCommitShortID()
                 );
 
+                SR_PAUSE_IF_NECESSARY();
                 return 1;
             }
             if(vm->count("build-info"))
@@ -115,6 +151,7 @@ namespace srose::ui::console
                     << core::GitCommitID() << " - "
                     << core::GitCommitMsg() << std::endl;
 
+                SR_PAUSE_IF_NECESSARY();
                 return 1;
             }
             if(vm->count("available-language"))
@@ -133,6 +170,7 @@ namespace srose::ui::console
 
                 std::printf(ss.str().c_str());
 
+                SR_PAUSE_IF_NECESSARY();
                 return 1;
             }
             if(vm->count("get-display-mode"))
@@ -143,12 +181,14 @@ namespace srose::ui::console
                         "Initialize SDL VIDEO subsystem failed: %s",
                         SDL_GetError()
                     );
+                    SR_PAUSE_IF_NECESSARY();
                     return 1;
                 }
 
                 GetDisplayMode();
 
                 SDL_QuitSubSystem(SDL_INIT_VIDEO);
+                SR_PAUSE_IF_NECESSARY();
                 return 1;
             }
 
