@@ -8,15 +8,14 @@
 
 #include <sr/ui/console/progopt.hpp>
 #include <boost/program_options.hpp>
+#include <boost/format.hpp>
 #include <memory>
-#include <sstream>
-#include <cstdio>
 #include <cassert>
 #include <sr/core/version_info.hpp>
 #include <SDL.h>
 #include <sr/ui/console/cmdline.hpp>
+#include <sr/ui/i18n/i18n.hpp>
 #include "mswin.hpp"
-#include "../i18n/i18n.hpp"
 
 #ifdef _
 #   undef _
@@ -32,6 +31,48 @@ namespace srose::ui::console
     {
         assert(vm&&"Call SR_UI_CONSOLE_ParseArg() first!!!");
         return *vm.get();
+    }
+
+#ifdef __WINDOWS__
+    struct HelperWin32
+    {
+        bool release = false;
+        bool alloc = false;
+        HelperWin32() noexcept = default;
+        ~HelperWin32() noexcept
+        {
+            if(release) ReleaseConsoleWin32();
+        }
+    };
+
+    static HelperWin32 helper_win32;
+#endif
+
+    static void SRSCALL RequestCommandLineOutput(boost::program_options::variables_map& vm, bool force = false)
+    {
+    #ifdef __WINDOWS__
+        if(helper_win32.release == false)
+        {
+            std::string conmode_win32;
+            try { conmode_win32 = vm["win-console"].as<std::string>(); }
+            catch(const boost::bad_any_cast&) { conmode_win32 = "auto"; }
+
+            if(conmode_win32 == "new")
+            {
+                helper_win32.alloc = helper_win32.release = AllocConsoleWin32();
+            }
+            else if(conmode_win32 == "attach")
+            {
+                helper_win32.release = AttachConsoleWin32();
+            }
+            else if(conmode_win32 == "auto")
+            {
+                helper_win32.release = AttachConsoleWin32();
+                if(!helper_win32.release && force)
+                    helper_win32.alloc = helper_win32.release = AllocConsoleWin32();
+            }
+        }
+    #endif
     }
 
     static boost::program_options::options_description SRSCALL BuildDescription()
@@ -74,16 +115,20 @@ namespace srose::ui::console
             .add(video);
     }
 
-    bool GetDisplayMode();
+    bool GetDisplayMode(std::ostream& os);
 
     int SRSCALL ParseArg(int argc, char* argv[]) noexcept
     {
+    #ifdef __WINDOWS__
+        #define SR_PAUSE_IF_NECESSARY() do{ if(helper_win32.alloc) std::system("PAUSE"); }while(0)
+    #else
+        #define SR_PAUSE_IF_NECESSARY() do{}while(0)
+    #endif
+        std::ostream& os = std::cout;
         try
         {
             using namespace srose;
             namespace po = boost::program_options;
-
-            std::ostream& os = std::cout;
 
             if(!vm)
                 vm = std::make_unique<po::variables_map>();
@@ -92,54 +137,27 @@ namespace srose::ui::console
             auto desc = BuildDescription();
             po::store(po::parse_command_line(argc, argv, desc), *vm);
             po::notify(*vm);
+            RequestCommandLineOutput(*vm);
 
             std::string preferred = ui::console::GetPreferredLanguage();
             ui::SelectLanguage(preferred.empty() ? nullptr : preferred.c_str());
 
-        #ifdef __WINDOWS__
-            struct HelperWin32
-            {
-                bool release = false;
-                bool alloc = false;
-                HelperWin32() noexcept = default;
-                ~HelperWin32() noexcept
-                {
-                    if(release) ReleaseConsoleWin32();
-                }
-            };
-            static HelperWin32 helper_win32;
-
-            std::string conmode_win32 = (*vm)["win-console"].as<std::string>();
-            if(conmode_win32 == "new")
-                helper_win32.alloc = helper_win32.release = AllocConsoleWin32();
-            if(conmode_win32 != "ignore")
-                helper_win32.release = AttachConsoleWin32();
-
-            #define SR_PAUSE_IF_NECESSARY() do{ if(helper_win32.alloc) std::system("PAUSE"); }while(0)
-        #else
-            #define SR_PAUSE_IF_NECESSARY() do{}while(0)
-        #endif
-
             if(vm->count("help"))
             {
-                std::stringstream ss;
                 if(preferred.empty())
-                    ss << desc;
+                    os << desc;
                 else
-                    ss << BuildDescription();
-
-                std::printf(ss.str().c_str());
+                    os << BuildDescription();
 
                 SR_PAUSE_IF_NECESSARY();
                 return 1;
             }
             if(vm->count("version"))
             {
-                std::printf(
-                    "%d.%d.%d - %s\n",
-                    SR_VERSION_MAJOR, SR_VERSION_MINOR, SR_VERSION_PATCH,
-                    core::GitCommitShortID()
-                );
+                os << boost::format("%d.%d.%d - %s")
+                        % SR_VERSION_MAJOR % SR_VERSION_MINOR % SR_VERSION_PATCH
+                        % core::GitCommitShortID()
+                    << std::endl;
 
                 SR_PAUSE_IF_NECESSARY();
                 return 1;
@@ -157,18 +175,16 @@ namespace srose::ui::console
             if(vm->count("available-language"))
             {
                 auto& lm = ui::GetLanguageMap();
-                std::stringstream ss;
-                ss << _("srose.cui.lang.available.msg") << std::endl;
+
+                os << _("srose.cui.lang.available.msg") << std::endl;
                 for(auto& i : lm)
                 {
-                    ss
+                    os
                         << i.second->iso()
                         << "\t: "
                         << i.second->name()
                         << std::endl;
                 }
-
-                std::printf(ss.str().c_str());
 
                 SR_PAUSE_IF_NECESSARY();
                 return 1;
@@ -177,17 +193,18 @@ namespace srose::ui::console
             {
                 if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
                 {
-                    std::printf(
-                        "Initialize SDL VIDEO subsystem failed: %s",
-                        SDL_GetError()
-                    );
+                    os
+                        << "Initialize SDL VIDEO subsystem failed: "
+                        << SDL_GetError()
+                        << std::endl;
+
                     SR_PAUSE_IF_NECESSARY();
                     return 1;
                 }
 
-                GetDisplayMode();
-
+                GetDisplayMode(os);
                 SDL_QuitSubSystem(SDL_INIT_VIDEO);
+
                 SR_PAUSE_IF_NECESSARY();
                 return 1;
             }
@@ -196,61 +213,71 @@ namespace srose::ui::console
         }
         catch(const std::exception& e)
         {
-            std::printf("%s\n", e.what());
+            RequestCommandLineOutput(*vm, true);
+            os << e.what() << std::endl;
+
+            SR_PAUSE_IF_NECESSARY();
             return 1;
         }
         catch(...)
-        { // Continue if caught an unknown exception
-            std::printf("An unknown exception is caught in SR_UI_CONSOLE_ParseArg()\n");
+        {
+            os << "An unknown exception is caught in SR_UI_CONSOLE_ParseArg()" << std::endl;
+
+            SR_PAUSE_IF_NECESSARY();
             return 1;
         }
     }
 
-    bool GetDisplayMode()
+    bool GetDisplayMode(std::ostream& os)
     {
         int disp_index = 0;
         try{ disp_index = (*vm)["get-display-mode"].as<int>(); }catch(...){}
         int dm_count = SDL_GetNumDisplayModes(disp_index);
         if(dm_count < 1)
         {
-            std::printf(
-                "Get number of the display modes of the display-%02d failed: %s\n",
-                disp_index,
-                SDL_GetError()
-            );
+            os
+                << boost::format("Get number of the display modes of the display-%02d failed: %s")
+                    % disp_index
+                    % SDL_GetError()
+                << std::endl;
+
             return false;
         }
 
         const char* disp_name = SDL_GetDisplayName(disp_index);
-        std::printf(_("srose.cui.get-display-mode.display-name").c_str(), disp_index, disp_name?disp_name:"(failed)");
-        std::printf("\n");
-        std::printf(_("srose.cui.get-display-mode.display-mode-count").c_str(), dm_count);
-        std::printf("\n");
-        std::printf(_("srose.cui.get-display-mode.format-desc").c_str());
-        std::printf("\n");
 
-        auto fmt = _("srose.cui.get-display-mode.format") + '\n';
+        os
+            << boost::format(_("srose.cui.get-display-mode.display-name"))
+                % disp_index
+                % (disp_name ? disp_name : "(failed)")
+            << std::endl
+            << boost::format(_("srose.cui.get-display-mode.display-mode-count")) % dm_count
+            << std::endl
+            << _("srose.cui.get-display-mode.format-desc")
+            << std::endl;
+
+        boost::format fmt(_("srose.cui.get-display-mode.format"));
         for(int i = 0; i < dm_count; ++i)
         {
             SDL_DisplayMode mode{};
             if(SDL_GetDisplayMode(disp_index, i, &mode) != 0)
             {
-                std::printf(
-                    "%03d:\tfailed - %s\n",
-                    i,
-                    SDL_GetError()
-                );
+                os
+                    << boost::format("%03d:\tfailed - %s\n")
+                        % i % SDL_GetError()
+                    << std::endl;
+
                 continue;
             }
 
-            std::printf(
-                fmt.c_str(),
-                i,
-                SDL_BITSPERPIXEL(mode.format),
-                SDL_GetPixelFormatName(mode.format) + sizeof("SDL_PIXELFORMAT"),
-                mode.w, mode.h,
-                mode.refresh_rate
-            );
+            os
+                << fmt
+                    % i
+                    % SDL_BITSPERPIXEL(mode.format)
+                    % (SDL_GetPixelFormatName(mode.format) + sizeof("SDL_PIXELFORMAT"))
+                    % mode.w % mode.h
+                    % mode.refresh_rate
+                << std::endl;
         }
 
         return true;
@@ -272,9 +299,12 @@ namespace srose::ui::console
 #else
 /*Dummy implementation for disabled CUI module */
 #pragma message("Use dummy implementation for CUI")
-#include <sr/ui/console/progopt.h>
-#include <cstdio>
-#include "../i18n/i18n.hpp"
+#include <sr/ui/console/progopt.hpp>
+#include <SDL_platform.h>
+#include <sr/ui/i18n/i18n.hpp>
+#ifdef __WINDOWS__
+#   include <Windows.h>
+#endif
 
 namespace srose::ui::console
 {
@@ -282,11 +312,20 @@ namespace srose::ui::console
     {
         if(argc > 1)
         {
-            std::printf(
+            std::string info = 
                 "The program was built with SROSE_DISABLE_CUI set to ON\n"
                 "If you want the functionality of the command line UI, "
-                "please re-build the program with SROSE_DISABLE_CUI set to OFF\n"
+                "please re-build the program with SROSE_DISABLE_CUI set to OFF";
+        #ifdef __WINDOWS__
+            ::MessageBox(
+                nullptr,
+                info.c_str(),
+                "The command line UI has been disabled",
+                MB_OK | MB_ICONINFORMATION
             );
+        #else
+            std::cout << info << std::endl;
+        #endif
         }
 
         srose::ui::SelectLanguage();

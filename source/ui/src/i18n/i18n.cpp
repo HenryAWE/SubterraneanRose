@@ -4,7 +4,7 @@
  * @brief i18n support for GUI
  */
 
-#include "i18n.hpp"
+#include <sr/ui/i18n/i18n.hpp>
 #include <map>
 #include <vector>
 #include <memory>

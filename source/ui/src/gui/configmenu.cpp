@@ -15,7 +15,7 @@
 #include <sr/ui/gui/uimgr.hpp>
 #include <sr/audio/aumgr.hpp>
 #include <sr/player/player.hpp>
-#include "../i18n/i18n.hpp"
+#include <sr/ui/i18n/i18n.hpp>
 #include "conwin.hpp"
 
 
