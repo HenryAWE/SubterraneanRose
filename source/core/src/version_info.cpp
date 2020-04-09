@@ -13,6 +13,7 @@ extern "C"
     extern const char* sr_git_commit_id_short;
     extern const char* sr_git_commit_id;
     extern const char* sr_git_commit_msg;
+    extern const char* sr_git_commit_body;
 }
 
 namespace srose::core
@@ -40,5 +41,9 @@ namespace srose::core
     const char* SRSCALL GitCommitMsg() noexcept
     {
         return sr_git_commit_msg;
+    }
+    const char* SRSCALL GitCommitBody() noexcept
+    {
+        return sr_git_commit_body;
     }
 } // namespace srose::core

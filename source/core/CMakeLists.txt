@@ -19,14 +19,15 @@ include(SRoseGitInfo)
 
 sr_git_log(commit_id_abbr "%h")
 sr_git_log(commit_id "%H")
-sr_git_log(commit_msg "%s")
+sr_git_log(commit_msg_raw "(%s)")
+sr_git_log(commit_body_raw "(%b)")
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/git_info.c.in ${CMAKE_CURRENT_BINARY_DIR}/git_info.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/git_info.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp
     @ONLY
     NEWLINE_STYLE LF
 )
 
-add_library("srose-core" STATIC ${core_src_list} ${CMAKE_CURRENT_BINARY_DIR}/git_info.c)
+add_library("srose-core" STATIC ${core_src_list} ${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp)
 target_include_directories("srose-core" PUBLIC ./include)
 target_link_libraries("srose-core" PUBLIC "srose-ext-glad")
 target_link_libraries("srose-core" PUBLIC SDL2::SDL2)

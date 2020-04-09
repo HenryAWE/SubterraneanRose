@@ -38,6 +38,12 @@ namespace srose::core
      * @return const char* The message of the last commit
      */
     const char* SRSCALL GitCommitMsg() noexcept;
+    /**
+     * @brief Get the commit body of current build
+     * 
+     * @return const char* The body of the last commit
+     */
+    const char* SRSCALL GitCommitBody() noexcept;
 } // namespace srose::core
 
 
