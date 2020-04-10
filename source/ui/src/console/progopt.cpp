@@ -16,6 +16,7 @@
 #include <sr/ui/console/cmdline.hpp>
 #include <sr/ui/i18n/i18n.hpp>
 #include "mswin.hpp"
+#include "buildinfo.hpp"
 
 #ifdef _
 #   undef _
@@ -144,16 +145,21 @@ namespace srose::ui::console
 
             if(vm->count("help"))
             {
-                if(preferred.empty())
-                    os << desc;
-                else
-                    os << BuildDescription();
+                RequestCommandLineOutput(*vm, true);
+                std::stringstream ss;
+                ss << (preferred.empty() ? desc : BuildDescription());
+
+                os
+                    << "Subterranean Rose CUI\n"
+                    << ss.str()
+                    << std::endl;
 
                 SR_PAUSE_IF_NECESSARY();
                 return 1;
             }
             if(vm->count("version"))
             {
+                RequestCommandLineOutput(*vm, true);
                 os << boost::format("%d.%d.%d - %s")
                         % SR_VERSION_MAJOR % SR_VERSION_MINOR % SR_VERSION_PATCH
                         % core::GitCommitShortID()
@@ -164,16 +170,35 @@ namespace srose::ui::console
             }
             if(vm->count("build-info"))
             {
+                RequestCommandLineOutput(*vm, true);
                 os
                     << "Subterranean Rose " << core::GetVersionString() << std::endl
-                    << core::GitCommitID() << " - "
-                    << core::GitCommitMsg() << std::endl;
+                    << core::GitCommitMsg() << " - "
+                    << core::GitCommitID() << std::endl;
+                const char* commit_body = core::GitCommitBody();
+                if(commit_body[0] != '\0')
+                {
+                    os << std::endl << commit_body << std::endl;
+                }
+                os << std::endl;
+
+                /* C++ Information */
+                os
+                    << "C++ Information" << std::endl
+                    << GenerateCppInfo()
+                    << std::endl;
+                /* Third Party Libraries */
+                os
+                    << "Third Party Libraries" << std::endl
+                    << GenerateLibInfo()
+                    << std::endl;
 
                 SR_PAUSE_IF_NECESSARY();
                 return 1;
             }
             if(vm->count("available-language"))
             {
+                RequestCommandLineOutput(*vm, true);
                 auto& lm = ui::GetLanguageMap();
 
                 os << _("srose.cui.lang.available.msg") << std::endl;
@@ -191,6 +216,7 @@ namespace srose::ui::console
             }
             if(vm->count("get-display-mode"))
             {
+                RequestCommandLineOutput(*vm, true);
                 if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
                 {
                     os
@@ -221,6 +247,7 @@ namespace srose::ui::console
         }
         catch(...)
         {
+            RequestCommandLineOutput(*vm, true);
             os << "An unknown exception is caught in SR_UI_CONSOLE_ParseArg()" << std::endl;
 
             SR_PAUSE_IF_NECESSARY();
