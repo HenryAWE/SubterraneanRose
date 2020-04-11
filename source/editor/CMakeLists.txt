@@ -1,4 +1,11 @@
 # SubterraneanRose Editor Module
 
-add_library("srose-editor" INTERFACE)
-target_include_directories("srose-editor" INTERFACE ./include)
+find_package(Boost REQUIRED QUIET COMPONENTS serialization)
+
+aux_source_directory(./src editor_src_list)
+
+add_library("srose-editor" STATIC ${editor_src_list})
+target_include_directories("srose-editor" PUBLIC ./include)
+target_link_libraries("srose-editor" PUBLIC Boost::serialization)
+
+add_subdirectory(./test)
