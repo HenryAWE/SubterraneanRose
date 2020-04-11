@@ -18,8 +18,11 @@ namespace srose::editor
     class Project
     {
         std::string m_name;
+        std::string m_description;
     public:
         Project();
+        Project(const Project& other);
+        Project(Project&& move);
 
         ~Project() noexcept;
 
@@ -31,6 +34,15 @@ namespace srose::editor
         void funcname(const decltype(varname)& var) { varname = var; }
 
         SR_PROJECT_PROP(name, m_name)
+        SR_PROJECT_PROP(description, m_description)
+
+        /**
+         * @brief Duplicate project
+         *
+         * @param inc Increasing number of the name if the lastest part of the original name is number
+         * @return Project New project instance
+         */
+        Project Duplicate(bool inc = true);
 
     private:
         friend class boost::serialization::access;
@@ -40,6 +52,7 @@ namespace srose::editor
         {
             using boost::serialization::make_nvp;
             ar & make_nvp("name", m_name);
+            ar & make_nvp("description", m_description);
         }
     };
 } // namespace srose::editor

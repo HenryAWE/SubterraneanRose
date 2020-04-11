@@ -41,3 +41,17 @@ BOOST_AUTO_TEST_CASE(test_project_properties)
     proj.name("test");
     BOOST_TEST_REQUIRE(proj.name() == "test");
 }
+
+BOOST_AUTO_TEST_CASE(test_project_function)
+{
+    using namespace srose;
+    editor::Project proj;
+    proj.name("original");
+    BOOST_TEST_REQUIRE(proj.Duplicate().name() == "original.1");
+    proj.name("original");
+    BOOST_TEST_REQUIRE(proj.Duplicate(false).name() == "original");
+    proj.name("original.2");
+    BOOST_TEST_REQUIRE(proj.Duplicate().name() == "original.3");
+    proj.name("original.4");
+    BOOST_TEST_REQUIRE(proj.Duplicate(false).name() == "original.4");
+}
