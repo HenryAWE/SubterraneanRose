@@ -29,15 +29,16 @@ class compiler:
     def push_var(self, strid, tr):
         items = self.data
         sepid = strid.split('.')
-        for id in sepid:
+        for idx in range(0, len(sepid)):
+            id = sepid[idx]
             if id not in items:
-                if id == sepid[-1]:
+                if idx == len(sepid)-1:
                     items[id] = [{}, tr]
                     break
                 else:
                     items[id] = [{}, None]
             else:
-                if id == sepid[-1]:
+                if idx == len(sepid)-1:
                     items[id][1] = tr
                     break
             items = items[id][0]
