@@ -1,6 +1,6 @@
 # Dependencies of Subterranean Rose
 # Find SDL2
-find_package(SDL2 CONFIG REQUIRED)
+find_package(SDL2 REQUIRED)
 
 
 # Compile stb libraries
@@ -24,7 +24,7 @@ aux_source_directory(./imgui imgui_src_list)
 add_library("srose-ext-imgui" STATIC ${imgui_src_list})
 target_include_directories("srose-ext-imgui" PUBLIC ./imgui)
 target_compile_definitions("srose-ext-imgui" PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD=1)
-target_link_libraries("srose-ext-imgui" PRIVATE SDL2::SDL2)
+target_link_libraries("srose-ext-imgui" PRIVATE SDL2::Core)
 target_link_libraries("srose-ext-imgui" PRIVATE "srose-ext-glad")
 
 

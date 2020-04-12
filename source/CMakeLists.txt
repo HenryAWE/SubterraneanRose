@@ -1,5 +1,5 @@
 # SubterraneanRose Source
-find_package(SDL2 CONFIG REQUIRED)
+find_package(SDL2 REQUIRED)
 
 # Compile options
 # Force UTF-8
@@ -39,7 +39,7 @@ add_subdirectory(./ui)
 # Executable
 add_executable("srose-exec" main.cpp initialize.cpp)
 
-target_link_libraries("srose-exec" PRIVATE SDL2::SDL2 SDL2::SDL2main)
+target_link_libraries("srose-exec" PRIVATE SDL2::Core SDL2::Entry)
 target_link_libraries("srose-exec" PRIVATE "srose-core")
 target_link_libraries("srose-exec" PRIVATE "srose-wm")
 target_link_libraries("srose-exec" PRIVATE "srose-player")
