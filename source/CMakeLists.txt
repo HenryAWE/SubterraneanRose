@@ -39,6 +39,9 @@ add_subdirectory(./ui)
 # Executable
 add_executable("srose-exec" main.cpp initialize.cpp)
 
+if(CMAKE_COMPILER_IS_GNUCXX)
+    target_link_libraries("srose-exec" PRIVATE pthread)
+endif()
 target_link_libraries("srose-exec" PRIVATE SDL2::Core SDL2::Entry)
 target_link_libraries("srose-exec" PRIVATE "srose-core")
 target_link_libraries("srose-exec" PRIVATE "srose-wm")

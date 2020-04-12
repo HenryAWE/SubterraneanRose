@@ -27,6 +27,8 @@ namespace srose::player
         });
     }
 
+    Stage::~Stage() = default;
+
     void Stage::Render()
     {
         m_scene->Render();

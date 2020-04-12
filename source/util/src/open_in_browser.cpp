@@ -45,7 +45,7 @@ namespace srose::util
 
     #elif defined __LINUX__
         size_t buflen = strlen(url) + 10;
-        char* buf = malloc(sizeof(char)*buflen);
+        char* buf = (char*)malloc(sizeof(char)*buflen);
         snprintf(buf, buflen, "xdg-open %s", url);
         system(buf);
 

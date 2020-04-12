@@ -34,7 +34,9 @@ namespace srose
         std::string data;
         data.resize(size);
         is.read(data.data(), size);
-        boost::property_tree::read_info(std::istringstream(data), m_data);
+        std::stringstream ss;
+        ss.str(data);
+        boost::property_tree::read_info(ss, m_data);
     }
     void UserProfile::Save(std::ostream& os)
     {

@@ -6,7 +6,7 @@
 
 #include "initialize.hpp"
 #include <future>
-#include <SDL_Log.h>
+#include <SDL.h>
 #include <imgui.h>
 #include <sr/wm/winmgr.hpp>
 #include <sr/audio/aumgr.hpp>

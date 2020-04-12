@@ -50,9 +50,8 @@ namespace srose::editor
         template <typename Archive>
         void serialize(Archive& ar, const unsigned int version)
         {
-            using boost::serialization::make_nvp;
-            ar & make_nvp("name", m_name);
-            ar & make_nvp("description", m_description);
+            ar & m_name;
+            ar & m_description;
         }
     };
 } // namespace srose::editor

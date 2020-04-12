@@ -26,6 +26,8 @@ namespace srose::gpu::opengl3
     public:
         Scene(glm::ivec2 size, Renderer* ren);
 
+        ~Scene();
+
         void Render(bool to_texture = true) override;
 
         [[nodiscard]]

@@ -17,6 +17,8 @@ namespace srose::gpu::opengl3
         Generate();
     }
 
+    Scene::~Scene() = default;
+
     void Scene::Render(bool to_texture)
     {
         if(to_texture)

@@ -29,6 +29,8 @@ namespace srose::player
     public:
         Stage(glm::ivec2 size, gpu::Renderer* ren);
 
+        ~Stage();
+
         [[nodiscard]]
         glm::ivec2 GetSize() const noexcept { return m_size; }
         [[nodiscard]]
