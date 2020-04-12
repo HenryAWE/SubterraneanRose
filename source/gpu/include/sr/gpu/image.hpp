@@ -101,7 +101,7 @@ namespace srose::gpu
          * @return true Succeeded
          * @return false Failed
          */
-        virtual bool LoadFromFileEx(const filesystem::path& file, const Description& desc = {}) = 0;
+        virtual bool LoadFromFileEx(const filesystem::path& file, const Description& desc) = 0;
     };
 } // namespace srose::gpu
 
