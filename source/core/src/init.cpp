@@ -50,7 +50,7 @@ namespace srose::core
             VERSION_NUMBER_2_ARG(sdl_version_linked)
         );
 
-        if(Mix_Init(MIX_INIT_FLAC | MIX_INIT_OGG) == 0)
+        if(Mix_Init(MIX_INIT_MP3) == 0)
         {
             SDL_LogError(
                 SDL_LOG_CATEGORY_APPLICATION,

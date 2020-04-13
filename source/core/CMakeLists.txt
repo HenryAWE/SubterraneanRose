@@ -9,9 +9,14 @@ find_library(
     PATH_SUFFIXES lib
 )
 mark_as_advanced(SDL2_MIXER_INCLUDE_DIR SDL2_MIXER_LIBRARY)
+find_library(
+    MPG123_LIBRARY libmpg123 mpg123
+    PATH_SUFFIXES lib
+)
+mark_as_advanced(MPG123_LIBRARY)
 add_library("srose-ext-sdl2_mixer" INTERFACE)
 target_include_directories("srose-ext-sdl2_mixer" INTERFACE ${SDL2_MIXER_INCLUDE_DIR})
-target_link_libraries("srose-ext-sdl2_mixer" INTERFACE ${SDL2_MIXER_LIBRARY})
+target_link_libraries("srose-ext-sdl2_mixer" INTERFACE ${SDL2_MIXER_LIBRARY} ${MPG123_LIBRARY})
 
 aux_source_directory(./src core_src_list)
 # Generate GIT information in C source
