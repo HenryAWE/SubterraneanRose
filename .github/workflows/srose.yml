@@ -1,0 +1,31 @@
+name: Subterranean Rose CI
+
+on:
+  push: {}
+  pull_request: {}
+
+jobs:
+  Linux:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++-8 cmake python3 libsdl2-dev libsdl2-mixer-dev libboost-all-dev libmpg123-dev
+
+
+    - name: Build
+      run: |
+        export CC=gcc-8
+        export CXX=g++-8
+        mkdir build&&cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake --build .
+
+    - name: Test
+      run: |
+        cd build
+        ctest -V
