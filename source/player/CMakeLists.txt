@@ -22,4 +22,4 @@ if(${SROSE_DISABLE_DEMO})
 endif()
 
 # Tests
-add_subdirectory(./test)
+add_subdirectory(./test/ecs_test)
