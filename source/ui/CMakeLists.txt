@@ -36,5 +36,8 @@ endif()
 if(${SROSE_DISABLE_DEMO})
     target_compile_definitions("srose-ui" PUBLIC SROSE_DISABLE_DEMO=1)
 endif()
+if(CMAKE_COMPILER_IS_GNUCXX)
+    target_compile_options("srose-ui" PRIVATE "-Wno-format-security")
+endif()
 
 add_subdirectory(./test)
