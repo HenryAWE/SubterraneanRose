@@ -169,3 +169,6 @@ if(SDL2_FOUND)
         endif()
     endif()
 endif()
+
+mark_as_advanced(SDL2_INCLUDE_DIR)
+mark_as_advanced(SDL2main_LIBRARY_RELEASE SDL2main_LIBRARY_DEBUG)
