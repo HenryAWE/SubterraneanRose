@@ -146,6 +146,8 @@ namespace srose::wm
 
             SDL_DestroyWindow(display->win);
             free(display);
+
+            return nullptr;
         }
         if(core::InitGL() != 0)
         { // Failed
