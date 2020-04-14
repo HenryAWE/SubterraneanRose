@@ -20,15 +20,22 @@ extern std::stringstream GetEmbeddedEnglishLang();
 
 namespace srose::ui
 {
+    
     class LocaleNotFound : public std::runtime_error
     {
     public:
         LocaleNotFound() : runtime_error("Locale not found") {}
     };
 
+    static std::shared_ptr<locale::Language> CreateBuiltinLang()
+    {
+        auto ss = GetEmbeddedEnglishLang();
+        return std::make_shared<locale::Language>(ss);
+    }
+
     static std::map<std::string, std::shared_ptr<locale::Language>> g_lang_map;
     static std::shared_ptr<locale::Language> g_default_lang;
-    static std::shared_ptr<locale::Language> g_built_in_lang = std::make_shared<locale::Language>(GetEmbeddedEnglishLang());
+    static std::shared_ptr<locale::Language> g_built_in_lang = CreateBuiltinLang();
 
     std::shared_ptr<locale::Language> GetDefaultLanguage() noexcept
     {
