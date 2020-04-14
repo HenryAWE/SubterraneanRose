@@ -26,6 +26,10 @@ namespace srose::locale
             throw std::runtime_error("[locale] Load " + file.u8string() + " failed");
         Load(ifs);
     }
+    Language::Language(std::istream& is)
+    {
+        Load(is);
+    }
 
     std::string Language::gettext(std::string_view path)
     {

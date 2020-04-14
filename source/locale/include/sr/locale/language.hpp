@@ -33,6 +33,7 @@ namespace srose::locale
             m_default(std::move(move.m_default)),
             m_fallback(std::move(move.m_fallback)) {}
         explicit Language(const filesystem::path& file);
+        explicit Language(std::istream& is);
 
         [[nodiscard]]
         std::string gettext(std::string_view path);
