@@ -37,7 +37,15 @@ add_subdirectory(./ui)
 
 
 # Executable
-add_executable("srose-exec" main.cpp initialize.cpp)
+set(sr_exec_src_list main.cpp initialize.cpp)
+if(MSVC)
+    include(SRoseGitInfo)
+    sr_git_log(commit_id_abbr_str "%h")
+    string(REPLACE "\"" "" commit_id_abbr ${commit_id_abbr_str})
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/verinfo.rc.in" "verinfo.rc")
+    list(APPEND sr_exec_src_list "${CMAKE_CURRENT_BINARY_DIR}/verinfo.rc")
+endif()
+add_executable("srose-exec" ${sr_exec_src_list})
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries("srose-exec" PRIVATE pthread)
