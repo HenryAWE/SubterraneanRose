@@ -20,15 +20,26 @@ namespace srose::locale
     {
     public:
         Language();
+        Language(const Language& other)
+            : m_tr(other.m_tr),
+            m_name(other.m_name),
+            m_iso(other.m_iso),
+            m_default(other.m_default),
+            m_fallback(other.m_fallback) {}
         Language(Language&& move) noexcept
             : m_tr(std::move(move.m_tr)),
             m_name(std::move(move.m_name)),
             m_iso(std::move(move.m_iso)),
-            m_default(std::move(move.m_default)) {}
+            m_default(std::move(move.m_default)),
+            m_fallback(std::move(move.m_fallback)) {}
         explicit Language(const filesystem::path& file);
 
         [[nodiscard]]
         std::string gettext(std::string_view path);
+        struct use_fallback_t {};
+        static constexpr use_fallback_t use_fallback{};
+        [[nodiscard]]
+        std::string gettext(std::string_view path, use_fallback_t);
         [[nodiscard]]
         std::string gettext(std::string_view path, std::string_view alternate);
 
@@ -39,10 +50,16 @@ namespace srose::locale
         [[nodiscard]]
         const std::optional<std::string>& default_str() const noexcept { return m_default; }
 
+        void fallback(std::shared_ptr<Language> value) noexcept { m_fallback.swap(value); }
+        [[nodiscard]]
+        const std::shared_ptr<Language>& fallback() const noexcept { return m_fallback; }
+
     private:
         util::string_tree<std::string> m_tr;
         std::string m_name, m_iso;
         std::optional<std::string> m_default;
+
+        std::shared_ptr<Language> m_fallback;
 
         void Load(std::istream& is);
         void LoadSpecStrings();

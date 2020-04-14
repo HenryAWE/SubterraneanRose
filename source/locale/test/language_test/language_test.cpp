@@ -46,13 +46,19 @@ BOOST_AUTO_TEST_CASE(test1)
     BOOST_TEST_REQUIRE(bool(*zh_CN.default_str() == "（加载失败）"));
     try
     {
-        // Testing fallback
+        // Testing default string
         BOOST_TEST_REQUIRE(zh_CN.gettext("@not.found") == "（加载失败）");
     }
     catch(const string_tree_base::path_not_found&)
     {
         BOOST_FAIL("Should not reach this line");
     }
+
+    // Testing fallback
+    zh_CN.fallback(std::make_shared<locale::Language>(en));
+    BOOST_TEST_REQUIRE(en.gettext("only.exist.in.English") == "This will only appear in English");
+    BOOST_TEST_REQUIRE(zh_CN.gettext("only.exist.in.English", zh_CN.use_fallback) == "This will only appear in English");
+    BOOST_TEST_REQUIRE(zh_CN.gettext("@not.found", zh_CN.use_fallback) == *zh_CN.default_str());
 
     test_stream_operator(std::make_shared<locale::Language>(std::move(zh_CN)));
 }

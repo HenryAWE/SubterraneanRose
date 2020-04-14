@@ -40,6 +40,23 @@ namespace srose::locale
             return m_tr.get_value(path);
         }
     }
+    std::string Language::gettext(std::string_view path, use_fallback_t)
+    {
+        auto opt = m_tr.get_value_optional(path);
+        if(opt.has_value())
+            return std::move(*opt);
+
+        if(m_fallback)
+        {
+            opt = m_fallback->m_tr.get_value_optional(path);
+            if(opt.has_value())
+                return std::move(*opt);
+        }
+
+        if(!m_default.has_value())
+            throw util::string_tree_base::path_not_found("path not found");
+        return *m_default;
+    }
     std::string Language::gettext(std::string_view path, std::string_view alternate)
     {
         auto opt = m_tr.get_value_optional(path);
