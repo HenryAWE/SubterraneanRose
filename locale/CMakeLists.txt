@@ -19,7 +19,11 @@ macro(test_lang lang)
 endmacro()
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/locale)
-compile_lang(en)
 compile_lang(zh-CN)
 test_lang(en)
 test_lang(zh-CN)
+
+include(SRf2c)
+file(GLOB_RECURSE en_files "en/*.txt")
+compile_lc("${CMAKE_BINARY_DIR}/embedded_en.srlc" ${en_files})
+file2cstr("${CMAKE_BINARY_DIR}/embedded_en.srlc" "${CMAKE_BINARY_DIR}/embedded_en.inl")

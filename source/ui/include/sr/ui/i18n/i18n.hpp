@@ -40,6 +40,13 @@ namespace srose::ui
      */
     std::shared_ptr<locale::Language> GetDefaultLanguage() noexcept;
     /**
+     * @brief Get the built-in language
+     * 
+     * @return std::shared_ptr<locale::Language> The pointer to the built-in language (never null)
+     * @remark Pointer will be available until program quit
+     */
+    std::shared_ptr<locale::Language> GetBuiltinLanguage() noexcept;
+    /**
      * @brief Get the nearest language based on the specific locale name
      * @remark Only recognize language_COUNTRY format, like zh_CN or en_US
      * 

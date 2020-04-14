@@ -16,6 +16,8 @@
 #include <sr/ui/console/cmdline.hpp>
 
 
+extern std::stringstream GetEmbeddedEnglishLang();
+
 namespace srose::ui
 {
     class LocaleNotFound : public std::runtime_error
@@ -26,17 +28,24 @@ namespace srose::ui
 
     static std::map<std::string, std::shared_ptr<locale::Language>> g_lang_map;
     static std::shared_ptr<locale::Language> g_default_lang;
+    static std::shared_ptr<locale::Language> g_built_in_lang = std::make_shared<locale::Language>(GetEmbeddedEnglishLang());
 
     std::shared_ptr<locale::Language> GetDefaultLanguage() noexcept
     {
-        return g_default_lang;
+        return g_default_lang ? g_default_lang : g_built_in_lang;
+    }
+    std::shared_ptr<locale::Language> GetBuiltinLanguage() noexcept
+    {
+        return g_built_in_lang;
     }
 
     void LoadAllLanguage(const std::filesystem::path& lcres)
     {
+        g_lang_map[g_built_in_lang->gettext("srose.language.iso")] = g_built_in_lang;
+
         namespace fs = filesystem;
         if(!fs::exists(lcres))
-            throw LocaleNotFound();
+            return;
 
         // Iterate through the locale directory
         for(auto dt : fs::directory_iterator(lcres))
@@ -46,9 +55,6 @@ namespace srose::ui
 
             g_lang_map[lang->gettext("srose.language.iso")] = std::move(lang);
         }
-
-        if(g_lang_map.size() == 0) // Nothing was loaded
-            throw LocaleNotFound();
     }
     void SelectLanguage(const char* preferred)
     {
@@ -65,11 +71,7 @@ namespace srose::ui
             g_default_lang = GetNearestLanguage(lc_info.name());;
         }
         if(!g_default_lang)
-        { // Use English(United States) as a back-up
-            g_default_lang = GetNearestLanguage("en_US");
-        }
-        if(!g_default_lang)
-            throw LocaleNotFound();
+            g_default_lang = g_built_in_lang;
         std::locale::global(locale::CreateTranslation(sys_lc, g_default_lang));
     }
     void SelectLanguage(std::shared_ptr<locale::Language> lang)

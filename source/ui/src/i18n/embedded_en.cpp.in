@@ -1,0 +1,18 @@
+/**
+ * @file embedded_en.cpp
+ * @author HenryAWE
+ * @brief Embedding English locale into the program
+ */
+
+#include <sstream>
+
+const char embedded_en_locale[@embedded_en_len@ + 1] =
+#include "embedded_en.inl"
+;
+
+std::stringstream GetEmbeddedEnglishLang()
+{
+    std::stringstream ss;
+    ss.write(embedded_en_locale, @embedded_en_len@);
+    return ss;
+}

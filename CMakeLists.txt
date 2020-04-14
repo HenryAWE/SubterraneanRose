@@ -18,6 +18,9 @@ project(
 )
 
 enable_testing()
+# WRANING: Don't change the order of the add_subdirectory(...)
+# The compilation of locale scripts require python scripts in the ./tools directory
+# The the embedded English locale file, which is generated from the locale script, is required by the UI module
 add_subdirectory(./tools)
-add_subdirectory(./source)
 add_subdirectory(./locale)
+add_subdirectory(./source)
