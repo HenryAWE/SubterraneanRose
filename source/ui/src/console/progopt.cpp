@@ -199,11 +199,20 @@ namespace srose::ui::console
             if(vm->count("available-language"))
             {
                 RequestCommandLineOutput(*vm, true);
-                auto& lm = ui::GetLanguageMap();
+                auto builtin = ui::GetBuiltinLanguage();
+                os << _("srose.cui.lang.available.built-in") << std::endl;
+                os
+                    << builtin->iso()
+                    << "\t: "
+                    << builtin->name()
+                    << std::endl;
 
-                os << _("srose.cui.lang.available.msg") << std::endl;
+                auto& lm = ui::GetLanguageMap();
+                os << _("srose.cui.lang.available.installed") << std::endl;
                 for(auto& i : lm)
                 {
+                    if(i.second == builtin)
+                        continue;
                     os
                         << i.second->iso()
                         << "\t: "

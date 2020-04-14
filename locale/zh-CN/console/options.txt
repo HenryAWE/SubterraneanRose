@@ -8,7 +8,8 @@
 @srose.cui.lang = "语言"
 @srose.cui.lang.language = "显示语言"
 @srose.cui.lang.available = "可用语言"
-@srose.cui.lang.available.msg = "可用的语言（位于 ./locale/ 目录中）"
+@srose.cui.lang.available.built-in = "内建"
+@srose.cui.lang.available.installed = "已安装的语言（位于 locale 文件夹中）"
 
 @srose.cui.display = "显示"
 @srose.cui.display.fullscreen = "全屏"

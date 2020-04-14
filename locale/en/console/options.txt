@@ -8,7 +8,8 @@
 @srose.cui.lang = "Language"
 @srose.cui.lang.language = "Display language"
 @srose.cui.lang.available = "Available language"
-@srose.cui.lang.available.msg = "Available languages (At location ./locale/ )"
+@srose.cui.lang.available.built-in = "Built-in"
+@srose.cui.lang.available.installed = "Installed languages (located in \"locale\" folder)"
 
 @srose.cui.display = "Display"
 @srose.cui.display.fullscreen = "Fullscreen"
