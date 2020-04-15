@@ -29,3 +29,13 @@ jobs:
       run: |
         cd build
         ctest -V
+
+    - name: Packaging
+      run: |
+        cd build
+        cpack -G TGZ
+        mv *.tar.gz SubterraneanRose-Linux.tar.gz
+    - uses: actions/upload-artifact@v1
+      with:
+          name: SubterraneanRose-Linux
+          path: build/SubterraneanRose-Linux.tar.gz
