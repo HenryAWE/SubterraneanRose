@@ -28,6 +28,7 @@ target_include_directories("srose-ui" PUBLIC ./include)
 
 target_link_libraries("srose-ui" PUBLIC "srose-core")
 target_link_libraries("srose-ui" PUBLIC "srose-util")
+target_link_libraries("srose-ui" PUBLIC "srose-fs")
 target_link_libraries("srose-ui" PUBLIC "srose-wm")
 target_link_libraries("srose-ui" PUBLIC "srose-gpu")
 target_link_libraries("srose-ui" PUBLIC "srose-locale")

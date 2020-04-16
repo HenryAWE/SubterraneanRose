@@ -2,3 +2,6 @@
 
 @srose.ui.mainmenu.config = "设置"
 @srose.ui.mainmenu.exit = "退出"
+
+@srose.ui.crash-report.title = "崩溃报告"
+@srose.ui.crash-report.info = "程序上次运行时非正常退出，您可以前往 GitHub 向开发者报告错误"

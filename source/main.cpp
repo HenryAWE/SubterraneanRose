@@ -9,6 +9,7 @@
 #include "initialize.hpp"
 #include <sr/ui/i18n/i18n.hpp>
 #include <sr/core/init.hpp>
+#include <sr/trace/trace.hpp>
 #include <sr/ui/console/cmdline.hpp>
 
 /*Program entry */
@@ -18,6 +19,8 @@
 int main(int argc, char* argv[])
 {
     using namespace srose;
+
+    trace::RegisterSignalHandler();
 
     SetWorkingDirectory(argv[0]);
     ui::LoadAllLanguage(filesystem::GetLocaleFolder());

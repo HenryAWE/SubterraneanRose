@@ -2,3 +2,6 @@
 
 @srose.ui.mainmenu.config = "Configuration"
 @srose.ui.mainmenu.exit = "Exit"
+
+@srose.ui.crash-report.title = "Crash Report"
+@srose.ui.crash-report.info = "The program exited abnormally the last time it ran, you can go to GitHub to report the error to the developer"
