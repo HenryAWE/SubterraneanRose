@@ -5,10 +5,8 @@
  */
 
 #include <sr/wm/display.hpp>
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+#include <cassert>
+#include <memory>
 #include <sr/core/version_info.hpp>
 #include <sr/core/init.hpp>
 #include <sr/wm/event.hpp>
@@ -90,8 +88,7 @@ namespace srose::wm
         const char* title,
         int additional_flags
     ) {
-        Display* display = (Display*)malloc(sizeof(Display));
-        SDL_zerop(display);
+        std::unique_ptr<Display> display(new Display());
 
         /* Set the OpenGL attributes for window&context creation*/
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -129,8 +126,7 @@ namespace srose::wm
                 SDL_GetError()
             );
 
-            free(display);
-            return NULL;
+            return nullptr;
         }
         SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "[WM] SDL_CreateWindow() succeeded");
         
@@ -145,33 +141,30 @@ namespace srose::wm
             );
 
             SDL_DestroyWindow(display->win);
-            free(display);
 
             return nullptr;
         }
         if(core::InitGL() != 0)
         { // Failed
-            SDL_GL_MakeCurrent(display->win, NULL);
+            SDL_GL_MakeCurrent(display->win, nullptr);
             SDL_GL_DeleteContext(display->glctx);
             SDL_DestroyWindow(display->win);
-            free(display);
 
-            return NULL;
+            return nullptr;
         }
 
         /* Initialize ImGui */
-        if(InitEventSystem(display) != 0)
+        if(InitEventSystem(display.get()) != 0)
         {
-            SDL_GL_MakeCurrent(display->win, NULL);
+            SDL_GL_MakeCurrent(display->win, nullptr);
             SDL_GL_DeleteContext(display->glctx);
             SDL_DestroyWindow(display->win);
-            free(display);
 
-            return NULL;
+            return nullptr;
         }
 
         /* Return the result */
-        return display;
+        return display.release();
     }
 
     void SRSCALL DestroyDisplay(
@@ -181,11 +174,11 @@ namespace srose::wm
         QuitEventSystem();
         if(display->glctx)
         {
-            SDL_GL_MakeCurrent(display->win, NULL);
+            SDL_GL_MakeCurrent(display->win, nullptr);
             SDL_GL_DeleteContext(display->glctx);
         }
         if (display->win) SDL_DestroyWindow(display->win);
-        free(display);
+        delete display;
     }
     /*End Display Creation*/
 } // namespace srose::wm

@@ -5,15 +5,15 @@
  */
 
 #include <sr/core/args.hpp>
-#include <stddef.h>
-#include <assert.h>
+#include <cstddef>
+#include <cassert>
 
 
 namespace srose::core
 {
     // Global variables make it easy to access the console argument
     int sr_argc = 0;
-    char** sr_argv = NULL;
+    char** sr_argv = nullptr;
 
     int SRSCALL GetArgc() noexcept
     {
@@ -22,7 +22,7 @@ namespace srose::core
     }
     char** SRSCALL GetArgv() noexcept
     {
-        assert(sr_argv != NULL);
+        assert(sr_argv != nullptr);
         return sr_argv;
     }
 } // namespace srose::core

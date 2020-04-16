@@ -75,7 +75,7 @@ namespace srose::ui
         if(!g_default_lang)
         { // Operating system's setting
             auto& lc_info = std::use_facet<boost::locale::info>(sys_lc);
-            g_default_lang = GetNearestLanguage(lc_info.name());;
+            g_default_lang = GetNearestLanguage(lc_info.name());
         }
         if(!g_default_lang)
             g_default_lang = g_built_in_lang;

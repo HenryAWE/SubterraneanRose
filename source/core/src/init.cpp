@@ -30,7 +30,7 @@ namespace srose::core
                     SDL_MESSAGEBOX_ERROR,
                     "SDL_Init() failed",
                     SDL_GetError(),
-                    NULL
+                    nullptr
                 );
             }
 
@@ -63,7 +63,7 @@ namespace srose::core
                     SDL_MESSAGEBOX_ERROR,
                     "Mix_Init() failed",
                     SDL_GetError(),
-                    NULL
+                    nullptr
                 );
             }
 
@@ -97,7 +97,7 @@ namespace srose::core
                     SDL_MESSAGEBOX_ERROR,
                     "Mix_OpenAudio() failed",
                     SDL_GetError(),
-                    NULL
+                    nullptr
                 );
             }
 

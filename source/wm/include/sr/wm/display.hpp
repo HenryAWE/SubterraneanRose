@@ -15,8 +15,8 @@ namespace srose::wm
 {
     struct Display
     {
-        SDL_Window* win; // Window
-        SDL_GLContext glctx; // OpenGL context (if we're using OpenGL render backend)
+        SDL_Window* win = nullptr; // Window
+        SDL_GLContext glctx = nullptr; // OpenGL context (if we're using OpenGL render backend)
     };
 
     /**
@@ -24,7 +24,7 @@ namespace srose::wm
      * 
      * @param title Title string in UTF-8 encoding
      * @param additional_flags Addtional flags passed to SDL_CreateWindow
-     * @return Display* The created display, or NULL if failed 
+     * @return Display* The created display, or nullptr if failed 
      */
     Display* SRSCALL CreateDisplay(
         const char* title,

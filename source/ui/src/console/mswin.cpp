@@ -20,7 +20,7 @@ namespace srose::ui::console
 
     static void RedirectIOWin32() noexcept
     {
-        FILE* dummy = NULL;
+        FILE* dummy = nullptr;
         freopen_s(&dummy, "conin$", "r+t", stdin);
         freopen_s(&dummy, "conout$", "w+t", stdout);
         freopen_s(&dummy, "conout$", "w+t", stderr);

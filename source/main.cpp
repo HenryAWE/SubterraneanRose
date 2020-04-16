@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
             SDL_MESSAGEBOX_ERROR,
             "SR_WM_CreateDisplay() failed",
             "See log for detailed information",
-            NULL
+            nullptr
         );
 
         core::Quit();

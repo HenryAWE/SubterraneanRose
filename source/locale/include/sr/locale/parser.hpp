@@ -21,7 +21,6 @@ namespace srose::locale
         util::string_tree<std::string> Decode_SRStrTree(std::istream& is);
     } // namespace detail
 
-    util::string_tree<std::string> parse_stream(std::istream& is);
     util::string_tree<std::string> ParseTranslation(std::istream& is);
 } // namespace srose::locale
 
