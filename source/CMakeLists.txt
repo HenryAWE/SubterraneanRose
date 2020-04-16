@@ -22,6 +22,7 @@ add_subdirectory(./ext)
 
 
 # Libraries
+add_subdirectory(./trace)
 add_subdirectory(./core)
 add_subdirectory(./util)
 add_subdirectory(./fs)
