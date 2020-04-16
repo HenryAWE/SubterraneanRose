@@ -6,6 +6,7 @@
 
 #include <sr/trace/trace.hpp>
 #include <fstream>
+#include <sstream>
 #include <cstdlib>
 #include <csignal>
 #include <SDL.h>
@@ -18,7 +19,13 @@ namespace srose::trace
         std::signal(sig, SIG_DFL);
         try
         {
-            auto rec = to_string(boost::stacktrace::stacktrace());
+            std::string rec;
+            {
+                auto trace = boost::stacktrace::stacktrace();
+                std::stringstream ss;
+                ss << trace;
+                rec = ss.str();
+            }
             const char* signame = "Unknown signal";
             switch(sig)
             {
