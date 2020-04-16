@@ -16,7 +16,6 @@ endif()
 aux_source_directory(./src/console ui_console_src_list)
 list(APPEND ui_src_list ${ui_console_src_list})
 
-file(SIZE "${CMAKE_BINARY_DIR}/embedded_en.srlc" embedded_en_len)
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/i18n/embedded_en.cpp.in ${CMAKE_BINARY_DIR}/embedded_en.cpp
     @ONLY
