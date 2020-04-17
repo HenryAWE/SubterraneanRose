@@ -1,3 +1,5 @@
 # 编辑器
 
 @srose.ui.editor = "编辑器"
+
+@srose.ui.srlc-editor = "翻译编辑器"

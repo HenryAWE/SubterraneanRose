@@ -14,6 +14,7 @@
 namespace srose::ui::editor
 {
     EditorWindow::EditorWindow()
+        : m_srlc_editor(std::make_shared<SrlcEditor>())
     {
         LoadAll();
     }
@@ -44,16 +45,24 @@ namespace srose::ui::editor
         }
 
         UpdateMenuBar();
+        if(m_show_srlc_editor)
+        {
+            m_srlc_editor->open = true;
+            m_srlc_editor->Update();
+            m_show_srlc_editor = m_srlc_editor->open;
+        }
     }
 
     void EditorWindow::LoadAll()
     {
         m_title = gettext("srose.ui.editor");
+        m_chkbox_srlc_editor = gettext("srose.ui.srlc-editor") + "##srlc-editor";
         m_button_return = gettext("srose.ui.common.return") + "##return";
     }
     void EditorWindow::OnImbue()
     {
         LoadAll();
+        m_srlc_editor->imbue(getloc());
     }
 
     void EditorWindow::UpdateMenuBar()
@@ -66,6 +75,7 @@ namespace srose::ui::editor
             return;
         ImGui::Text(m_title.c_str());
         ImGui::Separator();
+        ImGui::Checkbox(m_chkbox_srlc_editor.c_str(), &m_show_srlc_editor);
     }
 
     void EditorWindow::Button_Return()

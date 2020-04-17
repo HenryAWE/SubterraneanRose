@@ -1,3 +1,5 @@
 # Editor
 
 @srose.ui.editor = "Editor"
+
+@srose.ui.srlc-editor = "Translation Editor"
