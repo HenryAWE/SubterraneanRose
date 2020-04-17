@@ -35,7 +35,8 @@ namespace srose::locale
 
             std::string subid = Decode_CxxStr(is);
             std::string data = Decode_CxxStr(is);
-            ret.emplace_at(subid, std::move(data));
+            if(!data.empty())
+                ret.emplace_at(subid, std::move(data));
             auto& subtree = ret.child(subid);
             std::uint32_t children_count = Decode_U32LE(is);
             for(std::uint32_t i = 0; i < children_count; ++i)
