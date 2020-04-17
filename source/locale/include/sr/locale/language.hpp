@@ -55,6 +55,9 @@ namespace srose::locale
         [[nodiscard]]
         const std::shared_ptr<Language>& fallback() const noexcept { return m_fallback; }
 
+        [[nodiscard]]
+        constexpr const util::string_tree<std::string>& GetStringTree() const noexcept { return m_tr; }
+
     private:
         util::string_tree<std::string> m_tr;
         std::string m_name, m_iso;
