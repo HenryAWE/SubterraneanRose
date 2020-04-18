@@ -1,22 +1,6 @@
 # SubterraneanRose Core Module
 find_package(SDL2 REQUIRED)
-find_path(
-    SDL2_MIXER_INCLUDE_DIR SDL_mixer.h
-    PATH_SUFFIXES SDL2
-)
-find_library(
-    SDL2_MIXER_LIBRARY SDL2_mixer
-    PATH_SUFFIXES lib
-)
-mark_as_advanced(SDL2_MIXER_INCLUDE_DIR SDL2_MIXER_LIBRARY)
-find_library(
-    MPG123_LIBRARY libmpg123 mpg123
-    PATH_SUFFIXES lib
-)
-mark_as_advanced(MPG123_LIBRARY)
-add_library("srose-ext-sdl2_mixer" INTERFACE)
-target_include_directories("srose-ext-sdl2_mixer" INTERFACE ${SDL2_MIXER_INCLUDE_DIR})
-target_link_libraries("srose-ext-sdl2_mixer" INTERFACE ${SDL2_MIXER_LIBRARY} ${MPG123_LIBRARY})
+find_package(SDL2_mixer REQUIRED)
 
 aux_source_directory(./src core_src_list)
 # Generate GIT information in C source
@@ -36,7 +20,7 @@ add_library("srose-core" STATIC ${core_src_list} ${CMAKE_CURRENT_BINARY_DIR}/git
 target_include_directories("srose-core" PUBLIC ./include)
 target_link_libraries("srose-core" PUBLIC "srose-ext-glad")
 target_link_libraries("srose-core" PUBLIC SDL2::Core)
-target_link_libraries("srose-core" PUBLIC "srose-ext-sdl2_mixer")
+target_link_libraries("srose-core" PUBLIC SDL2::Mixer)
 target_compile_definitions("srose-core" PUBLIC SR_VERSION_MAJOR=${CMAKE_PROJECT_VERSION_MAJOR})
 target_compile_definitions("srose-core" PUBLIC SR_VERSION_MINOR=${CMAKE_PROJECT_VERSION_MINOR})
 target_compile_definitions("srose-core" PUBLIC SR_VERSION_PATCH=${CMAKE_PROJECT_VERSION_PATCH})
