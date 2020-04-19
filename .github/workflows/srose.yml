@@ -5,6 +5,65 @@ on:
   pull_request: {}
 
 jobs:
+  Windows:
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+
+    - name: Install Dependencies
+      shell: powershell
+      run: |
+          mkdir deps
+          cd deps
+          Invoke-WebRequest -Uri "http://www.libsdl.org/release/SDL2-devel-2.0.12-VC.zip" -OutFile SDL2-devel-2.0.12-VC.zip
+          Invoke-WebRequest -Uri "https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-VC.zip" -OutFile SDL2_mixer-devel-2.0.4-VC.zip
+          Expand-Archive -Path SDL2-devel-2.0.12-VC.zip .
+          Expand-Archive -Path SDL2_mixer-devel-2.0.4-VC.zip .
+
+    - name: Build
+      shell: cmd
+      run: |
+        mkdir build
+        cd build
+        cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release ^
+          -DSDL2_PATH=%GITHUB_WORKSPACE%/deps/SDL2-2.0.12 ^
+          -DSDL2_MIXER_PATH=%GITHUB_WORKSPACE%/deps/SDL2_mixer-2.0.4 ^
+          -DBOOST_ROOT=%BOOST_ROOT_1_72_0% ^
+          -DCMAKE_TOOLCHAIN_FILE=%VCPKG_INSTALLATION_ROOT%/scripts/buildsystems/vcpkg.cmake ^
+          ..
+        cmake --build . --config Release
+
+    - name: Copy Dependencies
+      shell: powershell
+      run: |
+          Copy-Item deps/SDL2-2.0.12/lib/x64/*.dll build/bin
+          Copy-Item deps/SDL2_mixer-2.0.4/lib/x64/*.dll build/bin
+
+    - name: Test
+      run: |
+        cd build
+        ctest -V -C Release
+
+    # See: https://github.com/actions/virtual-environments/issues/649
+    - name: Fix Collision
+      shell: cmd
+      run: del /F /Q %ChocolateyInstall%\bin\cpack.exe
+
+    - name: Packaging
+      shell: powershell
+      run: |
+        cd build
+        cpack.exe -G WIX -C Release
+        mv *.msi SubterraneanRose-Win64.msi
+    - uses: actions/upload-artifact@v1
+      with:
+          name: SubterraneanRose-Win64
+          path: build/SubterraneanRose-Win64.msi
+
+
+
   Linux:
     runs-on: ubuntu-18.04
     steps:
