@@ -6,7 +6,7 @@
 
 #include <sr/locale/parser.hpp>
 #include <cstddef>
-#include <boost/endian/arithmetic.hpp>
+#include <boost/endian/conversion.hpp>
 
 
 namespace srose::locale
