@@ -30,7 +30,7 @@ namespace srose::ui::editor
         if(!window)
             return;
 
-        IterateTree(*m_tree);
+        IterateTree(m_tree);
     }
 
     void SrlcEditor::Load()
@@ -38,7 +38,7 @@ namespace srose::ui::editor
         m_title = gettext("srose.ui.srlc-editor") + "###srlc-editor";
 
         auto& facet = std::use_facet<locale::TranslationFacet>(getloc());
-        m_tree.swap(std::make_unique<util::string_tree<std::string>>(facet.get().GetStringTree()));
+        m_tree = facet.get().GetStringTree();
     }
     void SrlcEditor::OnImbue()
     {

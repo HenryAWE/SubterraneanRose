@@ -31,7 +31,7 @@ namespace srose::ui::editor
         void Load();
         void OnImbue() override;
 
-        std::unique_ptr<util::string_tree<std::string>> m_tree;
+        util::string_tree<std::string> m_tree;
         void IterateTree(util::string_tree<std::string>& tr);
     };
 } // namespace srose::ui::editor
