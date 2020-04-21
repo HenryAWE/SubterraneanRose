@@ -68,6 +68,9 @@ BOOST_AUTO_TEST_CASE(test_string_tree)
     BOOST_TEST_REQUIRE(*st == 4);
     st.modify([](int& v){ v=6; });
     BOOST_TEST_REQUIRE((*const_cast<const string_tree<int, '/'>&>(st) == 6));
+    st.access([](const int& v){ BOOST_TEST_REQUIRE(v == 6); });
+    st.access("first/second", [](int v){ BOOST_TEST_REQUIRE(v == 12); });
+    st.access("not/found", [](int){ BOOST_FAIL("Shouldn't be called"); });
 
     // Test assignment
     std::string tm = "move";
@@ -120,3 +123,29 @@ BOOST_AUTO_TEST_CASE(test_string_tree)
     catch (const string_tree_base::path_not_found&) {}
 }
 
+BOOST_AUTO_TEST_CASE(test_assignment)
+{
+    using namespace srose::util;
+
+    string_tree<int> origin;
+    origin.emplace(2);
+    origin["sub"] = 3;
+    BOOST_TEST_REQUIRE(origin.get_value() == 2);
+    string_tree<int> duplication;
+    duplication["will.be.erased"] = 10;
+    BOOST_TEST_REQUIRE(duplication.get_value("will.be.erased") == 10);
+
+    duplication = origin;
+    BOOST_TEST_REQUIRE(duplication.has_value("will.be.erased") == false);
+    BOOST_TEST_REQUIRE(duplication.has_value());
+    BOOST_TEST_REQUIRE(*duplication == 2);
+    BOOST_TEST_REQUIRE(duplication["sub"] == 3);
+
+    string_tree<int> move;
+    move = std::move(duplication);
+    BOOST_TEST_REQUIRE(duplication.has_value() == true);
+    BOOST_TEST_REQUIRE(duplication.has_value("sub") == false);
+    BOOST_TEST_REQUIRE(move.has_value("will.be.erased") == false);
+    BOOST_TEST_REQUIRE(*move == 2);
+    BOOST_TEST_REQUIRE(move["sub"] == 3);
+}

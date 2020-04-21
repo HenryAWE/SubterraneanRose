@@ -165,6 +165,23 @@ namespace srose::util
         basic_string_tree(const value_type& rhs)
             : m_children(), m_data(rhs) {}
 
+        void swap(self_type& other) noexcept
+        {
+            m_data.swap(other.m_data);
+            m_children.swap(other.m_children);
+        }
+
+        self_type& operator=(const self_type& rhs)
+        {
+            self_type(rhs).swap(*this);
+            return *this;
+        }
+        self_type& operator=(self_type&& move) noexcept
+        {
+            self_type(std::move(move)).swap(*this);
+            return *this;
+        }
+
         template <typename... Args>
         value_type& emplace(Args&&... args)
         {
@@ -307,6 +324,31 @@ namespace srose::util
             auto iter = walk_path(pt);
             if(iter)
                 const_cast<self_type*>(iter)->modify(std::move(func));
+        }
+        /**
+         * @brief Access data of current node
+         * 
+         * @param func Unary function object
+         */
+        template <typename UnaryFunction>
+        void access(UnaryFunction func) const
+        {
+            if(m_data.has_value())
+                func(*m_data);
+        }
+        /**
+         * @brief Access the specific node
+         * @remark Nothing will happen if the path cannot be found
+         * 
+         * @param pt Path
+         * @param func Unary function object
+         */
+        template <typename UnaryFunction>
+        void access(string_view_type pt, UnaryFunction func) const
+        {
+            auto iter = walk_path(pt);
+            if(iter)
+                iter->access(std::move(func));
         }
 
         /* Iterators */
