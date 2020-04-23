@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <assert.h>
 #include "string_tree_fwd.hpp"
+#include "string_comparator.hpp"
 
 
 namespace srose::util
@@ -121,28 +122,7 @@ namespace srose::util
         typedef std::basic_string<CharT> string_type;
         typedef std::basic_string_view<CharT> string_view_type;
         typedef basic_string_path<CharT, Separator> path_type;
-        struct comp
-        {
-            // Enable comparing across different type without constructing new instance
-            typedef void is_transparent;
-
-            bool operator()(const string_view_type& lhs, const string_view_type& rhs) const noexcept
-            {
-                return lhs < rhs;
-            }
-            bool operator()(const string_type& lhs, const string_view_type& rhs) const noexcept
-            {
-                return string_view_type(lhs) < rhs;
-            }
-            bool operator()(const string_view_type& lhs, const string_type& rhs) const noexcept
-            {
-                return lhs < string_view_type(rhs);
-            }
-            bool operator()(const string_type& lhs, const string_type& rhs) const noexcept
-            {
-                return lhs < rhs;
-            }
-        };
+        typedef string_comparator<CharT> comp;
         typedef std::map<string_type, self_type, comp> internal_data_type;
         typedef std::size_t size_type;
         typedef typename internal_data_type::iterator iterator;
