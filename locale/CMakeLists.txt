@@ -14,7 +14,7 @@ macro(test_lang lang)
     file(GLOB_RECURSE files "${lang}/*.txt")
     add_test(
 	    NAME "TestLocale_${lang}"
-	    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_SOURCE_DIR}/tools/lccl.py" "--action=error-checking" "-i" ${files}
+	    COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_SOURCE_DIR}/tools/lccl.py" "--action=check" "-i" ${files}
     )
 endmacro()
 

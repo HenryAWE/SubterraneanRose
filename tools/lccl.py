@@ -8,38 +8,35 @@
 
 import sys, argparse, os
 import srlc.compiler
+from enum import IntEnum
+
+class option(IntEnum):
+    CHECK = 1
+    COMPILE = 2
 
 parser = argparse.ArgumentParser(description="Compiler Options")
-parser.add_argument("--verbose", "-v", action="count", default=0)
+parser.add_argument("--verbosity", "-v", action="count", default=0)
 parser.add_argument("--input", "-i", help="Input file(s)", nargs='+', required=True)
 parser.add_argument("--output", "-o", help="Output")
-parser.add_argument("--stop-on-error", help="Stop on error", action="store_true")
-parser.add_argument("--action", choices=["error-checking", "display","compile"], default="error-checking")
+parser.add_argument("--action", choices=["check", "compile"], default="compile")
 if len(sys.argv)<=1:
     parser.print_help()
     sys.exit(0)
 args = parser.parse_args()
 
-cl = srlc.compiler.compiler()
-cl.stop_on_err = args.stop_on_error
-cl.verbose = args.verbose
-if args.action == "error-checking":
-    if cl.verbose >= 1:
-        print("[lccl] Error-checking")
-    cl.stop_on_err = True
-    cl.mode = srlc.compiler.option.ERROR_CHECKING
-    for file in args.input:
-        cl.load(file)
-elif args.action == "display":
-    if cl.verbose >= 1:
-        print("[lccl] Display")
-    cl.mode = srlc.compiler.option.DISPLAY
-    for file in args.input:
-        cl.load(file)
-elif args.action == "compile":
-    if cl.verbose >=1:
+mode = option.COMPILE
+if args.action == "check":
+    if args.verbosity >= 1:
+        print("[lccl] Check")
+    mode = option.CHECK
+if args.action == "compile":
+    if args.verbosity >=1:
         print("[lccl] Compile")
-    cl.mode = srlc.compiler.option.COMPILE
-    for file in args.input:
-        cl.load(file)
-    cl.compile(args.output)
+    mode = option.COMPILE
+
+cl = srlc.compiler.srlc_compiler(args.verbosity)
+compile = mode == option.COMPILE
+display = mode == option.CHECK or args.verbosity >= 2
+cl.load_txt(args.input, compile, display, mode == option.CHECK)
+if compile:
+    cl.output(args.output)
