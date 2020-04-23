@@ -40,13 +40,13 @@ namespace srose::ui
         auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>("##about", nullptr, background_flags);
         assert(background);
 
-        if(ImGui::Button(m_str_return.c_str()))
+        if(ImGui::Button(GetString("return").c_str()))
         {
             auto& uimgr = *GetUIManager();
             if(&*uimgr.widget_stack.top() == this)
                 uimgr.widget_stack.pop();
         }
-        if(ImGui::Button(m_str_website.c_str()))
+        if(ImGui::Button(GetString("website").c_str()))
         {
             util::OpenInBrowser("https://github.com/HenryAWE/SubterraneanRose");
         }
@@ -54,11 +54,7 @@ namespace srose::ui
 
     void About::Load()
     {
-        m_str_return = gettext("srose.ui.common.return");
-        m_str_website = gettext("srose.ui.about.website");
-    }
-    void About::OnImbue()
-    {
-        Load();
+        AddString("return", "srose.ui.common.return");
+        AddString("website", "srose.ui.about.website");
     }
 } // namespace srose::ui

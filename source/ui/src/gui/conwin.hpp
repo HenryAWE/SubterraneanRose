@@ -28,10 +28,7 @@ namespace srose::ui
         bool verbose = false;
 
     private:
-        std::string m_title;
-        std::string m_logviewer;
         void Load();
-        void OnImbue() override;
 
         void UpdateLogViewerTabItem();
 

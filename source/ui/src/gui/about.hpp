@@ -20,11 +20,7 @@ namespace srose::ui
         void Update() override;
 
     private:
-        std::string m_str_return;
-        std::string m_str_website;
-
         void Load();
-        void OnImbue() override;
     };
 } // namespace srose::ui
 

@@ -43,7 +43,7 @@ namespace srose::ui
         ImGui::SetNextWindowPosCenter(ImGuiCond_Appearing);
         ImGui::SetNextWindowSize(io.DisplaySize*0.8f, ImGuiCond_Appearing);
         auto conwin = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(
-            m_title.c_str(),
+            GetString("title").c_str(),
             &open,
             conwin_flags
         );
@@ -60,17 +60,13 @@ namespace srose::ui
 
     void ConsoleWindow::Load()
     {
-        m_title = gettext("srose.ui.conwin") + "###conwin";
-        m_logviewer = gettext("srose.ui.conwin.log");
-    }
-    void ConsoleWindow::OnImbue()
-    {
-        Load();
+        AddString("title", "srose.ui.conwin", "", "###conwin");
+        AddString("logviewer", "srose.ui.conwin.log");
     }
 
     void ConsoleWindow::UpdateLogViewerTabItem()
     {
-        auto tabitem = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabItem>(m_logviewer.c_str());
+        auto tabitem = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_TabItem>(GetString("logviewer").c_str());
         if(!tabitem)
             return;
 

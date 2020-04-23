@@ -99,8 +99,8 @@ namespace srose::ui
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.developer") + "###developer", &ConfigPanel::Button_Developer));
         m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
 
-        m_str_windowed = gettext("srose.ui.configpanel.video.windowed");
-        m_str_show_conwin = gettext("srose.ui.configpanel.developer.show-conwin");
+        AddString("windowed", "srose.ui.configpanel.video.windowed");
+        AddString("show-conwin", "srose.ui.configpanel.developer.show-conwin");
     }
     void ConfigPanel::ResetStates()
     {
@@ -109,13 +109,12 @@ namespace srose::ui
 
     void ConfigPanel::OnImbue()
     {
+        Widget::OnImbue();
+
         m_buttons[0].first = gettext("srose.ui.configpanel.video") + "###video";
         m_buttons[1].first = gettext("srose.ui.configpanel.lang") + "###lang";
         m_buttons[2].first = gettext("srose.ui.configpanel.developer") + "###developer";
         m_buttons[3].first = gettext("srose.ui.configpanel.return") + "###return";
-
-        m_str_windowed = gettext("srose.ui.configpanel.video.windowed");
-        m_str_show_conwin = gettext("srose.ui.configpanel.developer.show-conwin");
     }
 
     void ConfigPanel::Button_Video()
@@ -160,7 +159,7 @@ namespace srose::ui
     {
         SDL_Window* win = wm::GetRenderer()->GetDisplay()->win;
         bool windowed = !(SDL_GetWindowFlags(win)&SDL_WINDOW_FULLSCREEN);
-        ImGui::Checkbox(m_str_windowed.c_str(), &windowed);
+        ImGui::Checkbox(GetString("windowed").c_str(), &windowed);
     }
     void ConfigPanel::Content_Language()
     {
@@ -188,7 +187,7 @@ namespace srose::ui
     }
     void ConfigPanel::Content_Developer()
     {
-        ImGui::Checkbox(m_str_show_conwin.c_str(), &m_show_conwin);
+        ImGui::Checkbox(GetString("show-conwin").c_str(), &m_show_conwin);
 #ifndef SROSE_DISABLE_DEMO
         ImGui::Separator();
         ImGui::Checkbox("Player test", &m_show_player_demo);
