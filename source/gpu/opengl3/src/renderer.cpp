@@ -175,9 +175,11 @@ namespace srose::gpu::opengl3
     {
         return new Texture;
     }
-    Scene* Renderer::NewScene(glm::ivec2 size)
+    ScreenTexture* Renderer::NewScreenTexture(glm::ivec2 size)
     {
-        return new Scene(size, this);
+        std::unique_ptr<ScreenTexture> guard(new ScreenTexture);
+        guard->Generate(size);
+        return guard.release();
     }
 
     void Renderer::InitSpriteRenderer()
@@ -206,6 +208,7 @@ namespace srose::gpu::opengl3
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4*sizeof(float), (void*)(2*sizeof(float)));
         glEnableVertexAttribArray(1);
 
+        // Set attribute location of the transform matrix by four vec4
         SR_ASSERT_GL();
         m_sprite_vbo[1].Generate();
         glBindBuffer(GL_ARRAY_BUFFER, m_sprite_vbo[1]);

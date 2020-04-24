@@ -143,7 +143,7 @@ namespace srose::gpu::opengl3
         glBindTexture(GL_TEXTURE_2D, 0);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_handle, 0);
 
-        m_size = framesize;
+        m_size = {framesize.first, framesize.second};
 
         return true;
     }
@@ -188,5 +188,44 @@ namespace srose::gpu::opengl3
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TranslateDesc(desc.mag, false));
         if(wrap_s == GL_CLAMP_TO_BORDER || wrap_t == GL_CLAMP_TO_BORDER)
             glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &desc.border_color[0]);
+    }
+
+
+    void ScreenTexture::Generate(glm::ivec2 size)
+    {
+        m_fbo.Generate();
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+        if(!handle())
+            base::Generate();
+        Description desc;
+        desc.s = Texture::Wrapping::CLAMP_TO_EDGE;
+        desc.t = Texture::Wrapping::CLAMP_TO_EDGE;
+
+        glBindTexture(GL_TEXTURE_2D, m_handle);
+        ApplyDesc(desc, false);
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RGB,
+            size.x,
+            size.y,
+            0,
+            GL_RGB,
+            GL_UNSIGNED_BYTE,
+            nullptr
+        );
+        m_size = size;
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_handle, 0);
+
+        m_rbo.Generate();
+        glBindRenderbuffer(GL_RENDERBUFFER, m_rbo);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, size.x, size.y);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_rbo);
+        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        {
+            throw std::runtime_error("[OpenGL3] Incomplete framebuffer");
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 } // namespace srose::gpu::opengl3

@@ -10,6 +10,7 @@
 #include <utility>
 #include <imgui.h>
 #include <sr/filesystem/filesystem.hpp>
+#include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
 
@@ -37,9 +38,9 @@ namespace srose::gpu
         /**
          * @brief Get the texture size in pixels
          * 
-         * @return std::pair<int, int> Texture size
+         * @return glm::ivec2 Texture size
          */
-        virtual std::pair<int, int> size() const noexcept = 0;
+        virtual glm::ivec2 size() const noexcept = 0;
 
         [[nodiscard]]
         /**

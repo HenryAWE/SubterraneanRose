@@ -14,7 +14,6 @@
 #include <sr/util/string_tree.hpp>
 #include "image.hpp"
 #include "sprite.hpp"
-#include "scene.hpp"
 #include <sr/player/system/system.hpp>
 
 
@@ -49,7 +48,7 @@ namespace srose::gpu
         util::string_tree<std::shared_ptr<Texture>, '/'> textures;
 
         std::unique_ptr<Texture> CreateTexture() { return std::unique_ptr<Texture>(NewTexture()); }
-        std::unique_ptr<Scene> CreateScene(glm::ivec2 size) { return std::unique_ptr<Scene>(NewScene(size)); }
+        std::unique_ptr<Texture> CreateScreenTexture(glm::ivec2 size) { return std::unique_ptr<Texture>(NewScreenTexture(size)); }
 
         bool LoadTextureFromFile(std::string_view as, const filesystem::path& file);
 
@@ -74,7 +73,7 @@ namespace srose::gpu
 
     protected:
         virtual Texture* NewTexture() = 0;
-        virtual Scene* NewScene(glm::ivec2 size) = 0;
+        virtual Texture* NewScreenTexture(glm::ivec2 size) = 0;
     };
 } // namespace srose::gpu
 

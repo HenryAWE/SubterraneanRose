@@ -13,8 +13,8 @@ namespace srose::gpu
     {
         auto sz = size();
         return ImVec2(
-            static_cast<float>(sz.first),
-            static_cast<float>(sz.second)
+            static_cast<float>(sz.x),
+            static_cast<float>(sz.y)
         );
     }
 } // namespace srose::gpu

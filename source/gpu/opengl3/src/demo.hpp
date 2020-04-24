@@ -45,9 +45,7 @@ namespace srose::gpu::opengl3
         void UpdateTabBar();
 
         bool m_integrate_demo = true; // Open by default
-        Framebuffer m_integrate_fbo;
-        Texture m_integrate_frametex;
-        Renderbuffer m_integrate_rbo;
+        ScreenTexture m_integrate_frametex;
         void IntegrateDemoTabItem();
 
         bool m_triangle_demo = false;

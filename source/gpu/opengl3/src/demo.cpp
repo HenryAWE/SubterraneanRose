@@ -66,23 +66,7 @@ namespace srose::gpu::opengl3
     void OpenGL3DemoWindow::InitializeGL()
     {
         /* Integrate Demo */
-        m_integrate_fbo.Generate();
-        glBindFramebuffer(GL_FRAMEBUFFER, m_integrate_fbo);
-        m_integrate_frametex.Generate();
-        const std::pair<int, int> framesize = {960, 720};
-        Texture::Description frametex_desc{};
-        frametex_desc.s = Texture::Wrapping::CLAMP_TO_EDGE;
-        frametex_desc.t = Texture::Wrapping::CLAMP_TO_EDGE;
-        m_integrate_frametex.LoadFromCurrentFramebuffer(framesize, frametex_desc);
-        m_integrate_rbo.Generate();
-        glBindRenderbuffer(GL_RENDERBUFFER, m_integrate_rbo);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, framesize.first, framesize.second);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_integrate_rbo);
-        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        {
-            throw std::runtime_error("[OpenGL3] Incomplete framebuffer");
-        }
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        m_integrate_frametex.Generate({960, 720});
 
         /* Triangle demo */
         m_triangle_vao.Generate();
@@ -195,9 +179,9 @@ namespace srose::gpu::opengl3
 
     void OpenGL3DemoWindow::Render()
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, m_integrate_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_integrate_frametex.framebuffer());
         auto view = m_integrate_frametex.size();
-        glViewport(0, 0, view.first, view.second);
+        glViewport(0, 0, view.x, view.y);
         glClearColor(1, 1, 1, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         auto ren = static_cast<opengl3::Renderer*>(wm::GetRenderer());
@@ -298,8 +282,8 @@ namespace srose::gpu::opengl3
         if(!tabitem)
             return;
         
-        std::pair<int, int> framesize = m_integrate_frametex.size();
-        ImGui::Text("Frame size: %dx%d", framesize.first, framesize.second);
+        auto framesize = m_integrate_frametex.size();
+        ImGui::Text("Frame size: %dx%d", framesize.x, framesize.y);
         if(ImGui::BeginChild("##frametex"))
         {
             ImGui::Image(
