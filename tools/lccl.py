@@ -36,7 +36,7 @@ if args.action == "compile":
 
 cl = srlc.compiler.srlc_compiler(args.verbosity)
 compile = mode == option.COMPILE
-display = mode == option.CHECK or args.verbosity >= 2
+display = mode == args.verbosity >= 2
 cl.load_txt(args.input, compile, display, mode == option.CHECK)
 if compile:
     cl.output(args.output)
