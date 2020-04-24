@@ -5,7 +5,7 @@ add_executable(
     funcqueue_test.cpp
 )
 target_link_libraries(funcqueue_test PRIVATE "srose-test")
-target_link_libraries(funcqueue_test PRIVATE "srose-util-headers")
+target_link_libraries(funcqueue_test PRIVATE "srose-headers")
 
 add_test(
     NAME "TestFuncQueue"
