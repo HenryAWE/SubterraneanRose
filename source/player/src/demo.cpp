@@ -41,7 +41,7 @@ namespace srose::player
     };
 
     PlayerDemoWindow::PlayerDemoWindow()
-        : m_stage({350, 430}, wm::GetRenderer())
+        : m_stage({350, 430})
     {
         auto& emgr = m_stage.world.GetEntityManager();
         auto id = emgr.CreateEntity().GetId();
@@ -82,23 +82,11 @@ namespace srose::player
         );
         if(!background)
             return;
-
-        auto& screen = m_stage.GetScene().GetScreenTexture();
-        if(ImGui::BeginChild("##screen"))
-        {
-            ImGui::Image(
-                screen.GetNativeHandle(),
-                screen.GetSizeImVec2(),
-                ImVec2(0, 1),
-                ImVec2(1, 0)
-            );
-        }
-        ImGui::EndChild();
     }
 
     void PlayerDemoWindow::Render()
     {
-        m_stage.Render();
+        // m_stage.Render();
     }
 } // namespace srose::player
 
