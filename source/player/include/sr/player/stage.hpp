@@ -5,7 +5,7 @@
  */
 
 #ifndef SROSE_PLAYER_stage_hpp_
-#define SROSE_PlAYER_stage_hpp_
+#define SROSE_PLAYER_stage_hpp_
 
 #include <memory>
 #include <list>
