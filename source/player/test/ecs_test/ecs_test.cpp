@@ -159,7 +159,33 @@ BOOST_AUTO_TEST_CASE(test_system)
     BOOST_TEST(c->value == 4);
 
     mgr.Remove<TestSystem>();
-    BOOST_TEST(mgr.Has<TestSystem>() == false);}
+    BOOST_TEST(mgr.Has<TestSystem>() == false);
+}
+
+/* Test global component storage */
+#include <sr/player/world.hpp>
+
+
+BOOST_AUTO_TEST_CASE(test_global_component)
+{
+    using namespace srose::player;
+
+    struct GlobalCom : public component::Component<GlobalCom>
+    {
+        int data;
+        GlobalCom(int data_) noexcept : data(data_) {}
+    };
+
+    World world;
+    BOOST_TEST_REQUIRE(world.HasGlobalComponent<GlobalCom>() == false);
+    world.AddGlobalComponent<GlobalCom>(0);
+    BOOST_TEST_REQUIRE(world.HasGlobalComponent<GlobalCom>() == true);
+    BOOST_TEST_REQUIRE(world.GetGlobalComponent<GlobalCom>()->data == 0);
+    world.GetGlobalComponent<GlobalCom>()->data = 1;
+    BOOST_TEST_REQUIRE(world.GetGlobalComponent<GlobalCom>()->data == 1);
+    world.RemoveGlobalComponent<GlobalCom>();
+    BOOST_TEST_REQUIRE(world.HasGlobalComponent<GlobalCom>() == false);
+}
 
 BOOST_AUTO_TEST_CASE(test_ecs)
 {
