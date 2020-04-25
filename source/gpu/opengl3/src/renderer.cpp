@@ -155,6 +155,26 @@ namespace srose::gpu::opengl3
             i.second.clear();
     }
 
+    void Renderer::AddRenderData(player::Stage& stage)
+    {
+        stage.world.AddGlobalComponent<StageRenderData>(
+            CreateScreenTexture(stage.GetSize())
+        );
+        AddRenderSystem(stage.world.GetSystemManager(stage.world.RENDER));
+    }
+    void Renderer::RenderStage(player::Stage& stage)
+    {
+        auto& data = *stage.world.GetGlobalComponent<StageRenderData>();
+        auto& screen = static_cast<ScreenTexture&>(*data.screen_texture.get());
+        glBindFramebuffer(GL_FRAMEBUFFER, screen.framebuffer());
+        glViewport(0, 0, stage.GetSize().x, stage.GetSize().y);
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        stage.world.Render();
+        RenderSprite(stage.GetSize());
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
     void Renderer::AddRenderSystem(player::system::SystemManager& smgr)
     {
         using Components = std::tuple<

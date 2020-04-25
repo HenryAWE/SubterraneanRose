@@ -63,6 +63,8 @@ namespace srose::player
 
             emgr.AssignComponent<component::Transform>(id, position, glm::vec2(8.5f));
         }
+
+        wm::GetRenderer()->AddRenderData(m_stage);
     }
 
     void PlayerDemoWindow::Update()
@@ -82,11 +84,23 @@ namespace srose::player
         );
         if(!background)
             return;
+
+        auto& screen = *m_stage.world.GetGlobalComponent<gpu::StageRenderData>()->screen_texture;
+        if(ImGui::BeginChild("##screen"))
+        {
+            ImGui::Image(
+                screen.GetNativeHandle(),
+                screen.GetSizeImVec2(),
+                ImVec2(0, 1),
+                ImVec2(1, 0)
+            );
+        }
+        ImGui::EndChild();
     }
 
     void PlayerDemoWindow::Render()
     {
-        // m_stage.Render();
+        wm::GetRenderer()->RenderStage(m_stage);
     }
 } // namespace srose::player
 

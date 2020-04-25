@@ -14,7 +14,8 @@
 #include <sr/util/string_tree.hpp>
 #include "image.hpp"
 #include "sprite.hpp"
-#include <sr/player/system/system.hpp>
+#include <sr/player/stage.hpp>
+#include "stage_data.hpp"
 
 
 namespace srose::gpu
@@ -55,6 +56,9 @@ namespace srose::gpu
         virtual void AddSprite(const Sprite& sp) = 0;
         virtual void RenderSprite(glm::vec2 viewport, bool clear = true) = 0;
         virtual void ClearSprite() = 0;
+
+        virtual void AddRenderData(player::Stage& stage) = 0;
+        virtual void RenderStage(player::Stage& stage) = 0;
 
         virtual void AddRenderSystem(player::system::SystemManager& smgr) = 0;
 

@@ -45,6 +45,9 @@ namespace srose::gpu::opengl3
         void RenderSprite(glm::vec2 viewport, bool clear = true) override;
         void ClearSprite() override;
 
+        void AddRenderData(player::Stage& stage) override;
+        void RenderStage(player::Stage& stage) override;
+
         void AddRenderSystem(player::system::SystemManager& smgr) override;
 
     protected:
