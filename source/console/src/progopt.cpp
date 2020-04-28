@@ -6,14 +6,14 @@
 
 #if !defined SROSE_DISABLE_CUI // Controlled by the build flag SROSE_DISABLE_CUI
 
-#include <sr/ui/console/progopt.hpp>
+#include <sr/console/progopt.hpp>
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 #include <memory>
 #include <cassert>
 #include <sr/core/version_info.hpp>
 #include <SDL.h>
-#include <sr/ui/console/cmdline.hpp>
+#include <sr/console/cmdline.hpp>
 #include <sr/ui/i18n/i18n.hpp>
 #include "mswin.hpp"
 #include "buildinfo.hpp"
@@ -23,7 +23,7 @@
 #endif
 #define _(path) (SRTR(path).str())
 
-namespace srose::ui::console
+namespace srose::console
 {
     /*Global variables map */
     static std::unique_ptr<boost::program_options::variables_map> vm;
@@ -140,7 +140,7 @@ namespace srose::ui::console
             po::notify(*vm);
             RequestCommandLineOutput(*vm);
 
-            std::string preferred = ui::console::GetPreferredLanguage();
+            std::string preferred = console::GetPreferredLanguage();
             ui::SelectLanguage(preferred.empty() ? nullptr : preferred.c_str());
 
             if(vm->count("help"))
@@ -330,7 +330,7 @@ namespace srose::ui::console
         assert(vm&&"Call ParseArg() first!!!");
         return (bool)vm->count("draw-debug-overlay");
     }
-} // namespace srose::ui::console
+} // namespace srose::console
 
 #else
 /*Dummy implementation for disabled CUI module */
@@ -342,7 +342,7 @@ namespace srose::ui::console
 #   include <Windows.h>
 #endif
 
-namespace srose::ui::console
+namespace srose::console
 {
     int SRSCALL ParseArg(int argc, char* argv[]) noexcept
     {
@@ -370,6 +370,6 @@ namespace srose::ui::console
 
     int SRSCALL FullscreenRequired() noexcept { return false; }
     int SRSCALL DrawDebugOverlay() noexcept { return false; }
-} // namespace srose::ui::console
+} // namespace srose::console
 
 #endif

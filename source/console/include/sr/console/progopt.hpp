@@ -4,13 +4,13 @@
  * @brief Program options
  */
 
-#ifndef SROSE_UI_CONSOLE_progopt_hpp_
-#define SROSE_UI_CONSOLE_progopt_hpp_
+#ifndef SROSE_CONSOLE_progopt_hpp_
+#define SROSE_CONSOLE_progopt_hpp_
 
 #include <sr/core/macros.hpp>
 
 
-namespace srose::ui::console
+namespace srose::console
 {
     /**
      * @brief Parse console commands
@@ -33,7 +33,7 @@ namespace srose::ui::console
      * @return int 1 means debug UI is required
      */
     int SRSCALL DrawDebugOverlay() noexcept;
-} // namespace srose::ui::console
+} // namespace srose::console
 
 
 #endif

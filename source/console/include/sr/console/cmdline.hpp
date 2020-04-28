@@ -11,10 +11,10 @@
 #include "progopt.hpp"
 
 
-namespace srose::ui::console
+namespace srose::console
 {
     std::string GetPreferredLanguage();
-} // namespace srose::ui::console
+} // namespace srose::console
 
 
 #endif

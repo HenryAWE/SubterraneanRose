@@ -10,7 +10,7 @@
 #include <sr/ui/i18n/i18n.hpp>
 #include <sr/core/init.hpp>
 #include <sr/trace/trace.hpp>
-#include <sr/ui/console/cmdline.hpp>
+#include <sr/console/cmdline.hpp>
 
 /*Program entry */
 #ifdef _MSC_VER
@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     SetWorkingDirectory(argv[0]);
     ui::LoadAllLanguage(filesystem::GetLocaleFolder());
 
-    if(ui::console::ParseArg(argc, argv) == 1)
+    if(console::ParseArg(argc, argv) == 1)
     {
         return EXIT_SUCCESS;
     }
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     }
 
     int window_flags = 0;
-    window_flags |= ui::console::FullscreenRequired()?SDL_WINDOW_FULLSCREEN:0;
+    window_flags |= console::FullscreenRequired()?SDL_WINDOW_FULLSCREEN:0;
     wm::Display* display = wm::CreateDisplay(
         "Subterranean Rose",
         window_flags

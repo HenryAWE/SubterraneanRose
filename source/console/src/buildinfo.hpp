@@ -4,17 +4,17 @@
  * @brief Outputting build information to command line
  */
 
-#ifndef SROSE_UI_CONSOLE_buildinfo_hpp_
-#define SROSE_UI_CONSOLE_buildinfo_hpp_
+#ifndef SROSE_CONSOLE_buildinfo_hpp_
+#define SROSE_CONSOLE_buildinfo_hpp_
 
 #include <string>
 
 
-namespace srose::ui::console
+namespace srose::console
 {
     std::string GenerateCppInfo();
     std::string GenerateLibInfo();
-} // namespace srose::ui::console
+} // namespace srose::console
 
 
 #endif

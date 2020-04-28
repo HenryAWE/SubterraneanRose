@@ -13,7 +13,7 @@
 #include <imgui.h>
 
 
-namespace srose::ui::console
+namespace srose::console
 {
     std::string GenerateCppInfo()
     {
@@ -44,6 +44,6 @@ namespace srose::ui::console
 
         return ss.str();
     }
-} // namespace srose::ui::console
+} // namespace srose::console
 
 #endif

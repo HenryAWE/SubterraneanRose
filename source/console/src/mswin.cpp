@@ -14,7 +14,7 @@
 
 #if defined(__WINDOWS__) && !defined(SROSE_DISABLE_CUI)
 
-namespace srose::ui::console
+namespace srose::console
 {
     ::BOOL g_attached = FALSE;
 
@@ -64,6 +64,6 @@ namespace srose::ui::console
         ReleaseIOWin32();
         g_attached = FALSE;
     }
-} // namespace srose::ui::console
+} // namespace srose::console
 
 #endif

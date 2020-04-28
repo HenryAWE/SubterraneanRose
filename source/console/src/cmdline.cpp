@@ -4,11 +4,11 @@
  * @brief Functions for parsed command line arguments
  */
 
-#include <sr/ui/console/cmdline.hpp>
+#include <sr/console/cmdline.hpp>
 #include <boost/program_options.hpp>
 
 
-namespace srose::ui::console
+namespace srose::console
 {
 #if !defined SROSE_DISABLE_CUI // Controlled by the build flag SROSE_DISABLE_CUI
     const boost::program_options::variables_map& GetVariablesMapInternal() noexcept;
@@ -31,4 +31,4 @@ namespace srose::ui::console
         return std::string();
     }
 #endif
-} // namespace srose::ui::console
+} // namespace srose::console

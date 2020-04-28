@@ -13,7 +13,7 @@
 #include <regex>
 #include <sr/locale/locale.hpp>
 #include <boost/locale.hpp>
-#include <sr/ui/console/cmdline.hpp>
+#include <sr/console/cmdline.hpp>
 
 
 extern std::stringstream GetEmbeddedEnglishLang();
