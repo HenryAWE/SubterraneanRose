@@ -1,30 +1,22 @@
 # SubterraneanRose User Interface Module
 
 aux_source_directory(./src ui_src_list)
-aux_source_directory(./src/i18n ui_i18n_src_list)
-list(APPEND ui_src_list ${ui_i18n_src_list})
 aux_source_directory(./src/gui ui_gui_src_list)
 list(APPEND ui_src_list ${ui_gui_src_list})
 aux_source_directory(./src/gui/editor ui_gui_editor_src_list)
 list(APPEND ui_src_list ${ui_gui_editor_src_list})
 
 
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/i18n/embedded_en.cpp.in ${CMAKE_BINARY_DIR}/embedded_en.cpp
-    @ONLY
-    NEWLINE_STYLE LF
-)
-
 add_library("srose-ui" STATIC ${ui_src_list} ${CMAKE_BINARY_DIR}/embedded_en.cpp)
 target_include_directories("srose-ui" PUBLIC ./include)
 
 target_link_libraries("srose-ui" PUBLIC "srose-core")
 target_link_libraries("srose-ui" PUBLIC "srose-console")
+target_link_libraries("srose-ui" PUBLIC "srose-i18n")
 target_link_libraries("srose-ui" PUBLIC "srose-util")
 target_link_libraries("srose-ui" PUBLIC "srose-fs")
 target_link_libraries("srose-ui" PUBLIC "srose-wm")
 target_link_libraries("srose-ui" PUBLIC "srose-gpu")
-target_link_libraries("srose-ui" PUBLIC "srose-locale")
 target_link_libraries("srose-ui" PUBLIC "srose-audio")
 target_link_libraries("srose-ui" PUBLIC "srose-res")
 target_link_libraries("srose-ui" PUBLIC "srose-player")

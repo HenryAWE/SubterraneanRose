@@ -4,7 +4,7 @@
  * @brief i18n support for GUI
  */
 
-#include <sr/ui/i18n/i18n.hpp>
+#include <sr/i18n/i18n.hpp>
 #include <map>
 #include <vector>
 #include <memory>
@@ -13,12 +13,11 @@
 #include <regex>
 #include <sr/locale/locale.hpp>
 #include <boost/locale.hpp>
-#include <sr/console/cmdline.hpp>
 
 
 extern std::stringstream GetEmbeddedEnglishLang();
 
-namespace srose::ui
+namespace srose::i18n
 {
     
     class LocaleNotFound : public std::runtime_error
@@ -142,4 +141,4 @@ namespace srose::ui
     {
         return g_lang_map;
     }
-} // namespace srose::ui
+} // namespace srose::i18n

@@ -4,14 +4,14 @@
  * @brief i18n support for GUI
  */
 
-#ifndef SROSE_UI_I18N_i18n_hpp_
-#define SROSE_UI_I18N_i18n_hpp_
+#ifndef SROSE_I18N_i18n_hpp_
+#define SROSE_I18N_i18n_hpp_
 
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/locale/language.hpp>
 
 
-namespace srose::ui
+namespace srose::i18n
 {
     /**
      * @brief Load all language resources from the locale resource folder
@@ -61,7 +61,7 @@ namespace srose::ui
      * @return const std::map<std::string, std::shared_ptr<locale::Language>>& Reference of the map
      */
     const std::map<std::string, std::shared_ptr<locale::Language>>& GetLanguageMap() noexcept;
-} // namespace srose::ui
+} // namespace srose::i18n
 
 
 #endif

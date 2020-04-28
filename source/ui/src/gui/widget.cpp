@@ -5,7 +5,7 @@
  */
 
 #include <sr/ui/gui/widget.hpp>
-#include <sr/ui/i18n/i18n.hpp>
+#include <sr/i18n/i18n.hpp>
 #include <sr/wm/winmgr.hpp>
 
 

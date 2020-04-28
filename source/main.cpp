@@ -7,7 +7,7 @@
 #include <sr/ui/entry.hpp>
 #include <SDL_main.h>
 #include "initialize.hpp"
-#include <sr/ui/i18n/i18n.hpp>
+#include <sr/i18n/i18n.hpp>
 #include <sr/core/init.hpp>
 #include <sr/trace/trace.hpp>
 #include <sr/console/cmdline.hpp>
@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     trace::RegisterSignalHandler();
 
     SetWorkingDirectory(argv[0]);
-    ui::LoadAllLanguage(filesystem::GetLocaleFolder());
+    i18n::LoadAllLanguage(filesystem::GetLocaleFolder());
 
     if(console::ParseArg(argc, argv) == 1)
     {

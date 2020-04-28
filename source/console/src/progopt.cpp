@@ -14,7 +14,7 @@
 #include <sr/core/version_info.hpp>
 #include <SDL.h>
 #include <sr/console/cmdline.hpp>
-#include <sr/ui/i18n/i18n.hpp>
+#include <sr/i18n/i18n.hpp>
 #include "mswin.hpp"
 #include "buildinfo.hpp"
 
@@ -134,14 +134,14 @@ namespace srose::console
             if(!vm)
                 vm = std::make_unique<po::variables_map>();
 
-            ui::SelectLanguage();
+            i18n::SelectLanguage();
             auto desc = BuildDescription();
             po::store(po::parse_command_line(argc, argv, desc), *vm);
             po::notify(*vm);
             RequestCommandLineOutput(*vm);
 
             std::string preferred = console::GetPreferredLanguage();
-            ui::SelectLanguage(preferred.empty() ? nullptr : preferred.c_str());
+            i18n::SelectLanguage(preferred.empty() ? nullptr : preferred.c_str());
 
             if(vm->count("help"))
             {
@@ -199,7 +199,7 @@ namespace srose::console
             if(vm->count("available-language"))
             {
                 RequestCommandLineOutput(*vm, true);
-                auto builtin = ui::GetBuiltinLanguage();
+                auto builtin = i18n::GetBuiltinLanguage();
                 os << _("srose.cui.lang.available.built-in") << std::endl;
                 os
                     << builtin->iso()
@@ -207,7 +207,7 @@ namespace srose::console
                     << builtin->name()
                     << std::endl;
 
-                auto& lm = ui::GetLanguageMap();
+                auto& lm = i18n::GetLanguageMap();
                 os << _("srose.cui.lang.available.installed") << std::endl;
                 for(auto& i : lm)
                 {

@@ -15,7 +15,7 @@
 #include <sr/ui/gui/uimgr.hpp>
 #include <sr/audio/aumgr.hpp>
 #include <sr/player/player.hpp>
-#include <sr/ui/i18n/i18n.hpp>
+#include <sr/i18n/i18n.hpp>
 #include "conwin.hpp"
 
 
@@ -163,7 +163,7 @@ namespace srose::ui
     }
     void ConfigPanel::Content_Language()
     {
-        auto langs = GetLanguageMap();
+        auto& langs = i18n::GetLanguageMap();
         bool first = true;
         for(auto&[id, lang] : langs)
         {
@@ -174,16 +174,16 @@ namespace srose::ui
                 first = false;
             if(ImGui::Button(lang->name().c_str()))
             {
-                SelectLanguage(lang);
+                i18n::SelectLanguage(lang);
                 GetUIManager()->imbue(std::locale());
             }
 
             ImGui::PopID();
         }
         ImGui::Separator();
-        ImGui::Text(GetDefaultLanguage()->name().c_str());
+        ImGui::Text(i18n::GetDefaultLanguage()->name().c_str());
         ImGui::SameLine();
-        ImGui::TextDisabled("(%s)", GetDefaultLanguage()->iso().c_str());
+        ImGui::TextDisabled("(%s)", i18n::GetDefaultLanguage()->iso().c_str());
     }
     void ConfigPanel::Content_Developer()
     {
