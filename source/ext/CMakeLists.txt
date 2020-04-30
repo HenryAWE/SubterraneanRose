@@ -9,23 +9,26 @@ target_include_directories("srose-ext-stb" PUBLIC ./stb)
 
 
 # Warp GLAD
-add_library("srose-ext-glad" STATIC ./glad/glad.c)
-target_include_directories("srose-ext-glad" PUBLIC ./glad)
+add_library(glad STATIC ./glad/glad.c)
+add_library(glad::glad ALIAS glad)
+target_include_directories(glad PUBLIC ./glad)
 
 
 # Wrap GLM
 # GLM is header-only
-add_library("srose-ext-glm" INTERFACE)
-target_include_directories("srose-ext-glm" INTERFACE ./glm)
+add_library(glm INTERFACE)
+add_library(glm::glm ALIAS glm)
+target_include_directories(glm INTERFACE ./glm)
 
 
 # Wrap imgui
 aux_source_directory(./imgui imgui_src_list)
-add_library("srose-ext-imgui" STATIC ${imgui_src_list})
-target_include_directories("srose-ext-imgui" PUBLIC ./imgui)
-target_compile_definitions("srose-ext-imgui" PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD=1)
-target_link_libraries("srose-ext-imgui" PRIVATE SDL2::Core)
-target_link_libraries("srose-ext-imgui" PRIVATE "srose-ext-glad")
+add_library(imgui STATIC ${imgui_src_list})
+add_library(imgui::imgui ALIAS imgui)
+target_include_directories(imgui PUBLIC ./imgui)
+target_compile_definitions(imgui PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD=1)
+target_link_libraries(imgui PRIVATE SDL2::Core)
+target_link_libraries(imgui PRIVATE glad::glad)
 
 
 find_package(Boost REQUIRED QUIET COMPONENTS unit_test_framework)

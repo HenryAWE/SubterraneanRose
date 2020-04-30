@@ -18,7 +18,7 @@ configure_file(
 
 add_library("srose-core" STATIC ${core_src_list} ${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp)
 target_include_directories("srose-core" PUBLIC ./include)
-target_link_libraries("srose-core" PUBLIC "srose-ext-glad")
+target_link_libraries("srose-core" PUBLIC glad::glad)
 target_link_libraries("srose-core" PUBLIC SDL2::Core)
 target_link_libraries("srose-core" PUBLIC SDL2::Mixer)
 target_compile_definitions("srose-core" PUBLIC SR_VERSION_MAJOR=${CMAKE_PROJECT_VERSION_MAJOR})
