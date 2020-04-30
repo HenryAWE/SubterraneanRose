@@ -12,7 +12,7 @@
 #include <sr/audio/aumgr.hpp>
 #include <sr/res/resmgr.hpp>
 #include <sr/wm/input.hpp>
-#include <sr/ui/gui/uimgr.hpp>
+#include <sr/ui/uimgr.hpp>
 #include <sr/player/player.hpp>
 #include <sr/srose/app.hpp>
 

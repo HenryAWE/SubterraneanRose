@@ -11,7 +11,7 @@
 #include <utility>
 #include <imgui.h>
 #include <imguisr.h>
-#include <sr/ui/gui/widget.hpp>
+#include <sr/ui/widget.hpp>
 
 
 namespace srose::ui

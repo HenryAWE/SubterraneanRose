@@ -7,7 +7,7 @@
 #ifndef SROSE_UI_GUI_about_hpp_
 #define SROSE_UI_GUI_about_hpp_
 
-#include <sr/ui/gui/widget.hpp>
+#include <sr/ui/widget.hpp>
 
 
 namespace srose::ui

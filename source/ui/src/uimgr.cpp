@@ -4,14 +4,14 @@
  * @brief UI Manager
  */
 
-#include <sr/ui/gui/uimgr.hpp>
+#include <sr/ui/uimgr.hpp>
 #include <SDL_events.h>
 #include <memory>
-#include "mainmenu.hpp"
-#include "editor/editor_window.hpp"
-#include "configmenu.hpp"
-#include "about.hpp"
-#include "conwin.hpp"
+#include "gui/mainmenu.hpp"
+#include "gui/editor/editor_window.hpp"
+#include "gui/configmenu.hpp"
+#include "gui/about.hpp"
+#include "gui/conwin.hpp"
 
 
 namespace srose::ui

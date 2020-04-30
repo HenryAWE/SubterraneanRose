@@ -6,7 +6,7 @@
 
 #include <sr/audio/aumgr.hpp>
 #include <memory>
-#include <sr/ui/gui/uimgr.hpp>
+#include <sr/ui/uimgr.hpp>
 #include "demo.hpp"
 
 

@@ -6,7 +6,7 @@
 
 #include <sr/player/player.hpp>
 #ifndef SROSE_DISABLE_DEMO
-#   include <sr/ui/gui/uimgr.hpp>
+#   include <sr/ui/uimgr.hpp>
 #   include "demo.hpp"
 #endif
 

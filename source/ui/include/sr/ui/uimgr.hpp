@@ -4,8 +4,8 @@
  * @brief UI Manager
  */
 
-#ifndef SROSE_UI_GUI_uimgr_hpp_
-#define SROSE_UI_GUI_uimgr_hpp_
+#ifndef SROSE_UI_uimgr_hpp_
+#define SROSE_UI_uimgr_hpp_
 
 #include <stack>
 #include <functional>

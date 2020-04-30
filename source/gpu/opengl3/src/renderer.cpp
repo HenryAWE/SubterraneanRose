@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 #include <SDL.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <sr/ui/gui/uimgr.hpp>
+#include <sr/ui/uimgr.hpp>
 #include "gl_assert.h"
 #include "demo.hpp"
 #include "render_system.hpp"

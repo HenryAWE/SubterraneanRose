@@ -9,7 +9,7 @@
 #include <thread>
 #include <sr/wm/event.hpp>
 #include <sr/wm/winmgr.hpp>
-#include <sr/ui/gui/uimgr.hpp>
+#include <sr/ui/uimgr.hpp>
 #include <sr/wm/input.hpp>
 
 

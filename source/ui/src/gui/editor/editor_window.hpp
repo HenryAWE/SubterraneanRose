@@ -9,7 +9,7 @@
 
 #include <sr/ui/property.hpp>
 #include <imguisr.h>
-#include <sr/ui/gui/widget.hpp>
+#include <sr/ui/widget.hpp>
 #include "srlc_editor.hpp"
 
 

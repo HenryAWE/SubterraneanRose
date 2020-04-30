@@ -9,7 +9,7 @@
 
 #include <vector>
 #include <utility>
-#include <sr/ui/gui/widget.hpp>
+#include <sr/ui/widget.hpp>
 
 
 namespace srose::ui

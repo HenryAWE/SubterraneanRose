@@ -4,8 +4,8 @@
  * @brief Widget base
  */
 
-#ifndef SROSE_UI_GUI_widget_hpp_
-#define SROSE_UI_GUI_widget_hpp_
+#ifndef SROSE_UI_widget_hpp_
+#define SROSE_UI_widget_hpp_
 
 #include <utility>
 #include <memory>
