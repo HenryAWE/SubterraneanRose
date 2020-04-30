@@ -16,8 +16,6 @@ namespace srose::wm
 {
     #define SR_WM_SafeAssign(ptr, val) do{ if((ptr)) *ptr=val; }while(0)
 
-    /*Begin Display Creation */
-
     /**
      * @brief [Internal] Get the window size that suit the framework
      * 
@@ -180,5 +178,4 @@ namespace srose::wm
         if (display->win) SDL_DestroyWindow(display->win);
         delete display;
     }
-    /*End Display Creation*/
 } // namespace srose::wm

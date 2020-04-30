@@ -22,13 +22,6 @@ namespace srose::wm
     int SRSCALL InitEventSystem(Display* display);
 
     /**
-     * @brief Get the instance of display
-     * 
-     * @return Display* The instance of the main display
-     */
-    Display* SRSCALL GetDisplay();
-
-    /**
      * @brief Quit the event system and release the data
      */
     void SRSCALL QuitEventSystem();

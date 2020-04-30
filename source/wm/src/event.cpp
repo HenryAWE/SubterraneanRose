@@ -41,11 +41,6 @@ namespace srose::wm
         return 0;
     }
 
-    Display* SRSCALL GetDisplay()
-    {
-        return g_display;
-    }
-
     void SRSCALL QuitEventSystem()
     {
         assert(g_imctx);
