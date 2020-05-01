@@ -10,11 +10,8 @@
 
 namespace srose::gpu
 {
-    Renderer::Renderer(Display* disp)
-        : m_disp(disp)
-    {
-        assert(m_disp);
-    }
+    Renderer::Renderer(wm::Window& window)
+        : m_window(&window) {}
 
     Renderer::~Renderer() noexcept = default;
 

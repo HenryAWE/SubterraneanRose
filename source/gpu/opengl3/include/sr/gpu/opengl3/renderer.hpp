@@ -11,7 +11,6 @@
 #include <string>
 #include <map>
 #include <glm/glm.hpp>
-#include <sr/wm/display.hpp>
 #include <sr/gpu/renderer.hpp>
 #include "texture.hpp"
 #include "buffer.hpp"
@@ -23,7 +22,7 @@ namespace srose::gpu::opengl3
     class Renderer : public gpu::Renderer
     {
     public:
-        Renderer(Display* disp);
+        Renderer(wm::Window& window);
 
         void ClearScreen(const glm::vec4& color) noexcept;
 

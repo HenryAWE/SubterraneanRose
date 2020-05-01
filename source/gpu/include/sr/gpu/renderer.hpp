@@ -9,7 +9,7 @@
 
 #include <glm/glm.hpp>
 #include <stack>
-#include <sr/wm/display.hpp>
+#include <sr/wm/window.hpp>
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/util/string_tree.hpp>
 #include "image.hpp"
@@ -20,23 +20,23 @@
 
 namespace srose::gpu
 {
-    using wm::Display;
-
     /**
      * @brief Renderer base
      */
     class Renderer
     {
-        Display* m_disp = nullptr;
+        wm::Window* m_window = nullptr;
         std::stack<glm::vec4> m_color_stack;
     protected:
-        Renderer(Display* disp);
+        Renderer(wm::Window& window);
 
     public:
         virtual ~Renderer() noexcept;
 
         [[nodiscard]]
-        constexpr Display* GetDisplay() const noexcept { return m_disp; }
+        constexpr wm::Window& GetWindow() noexcept { return *m_window; }
+        [[nodiscard]]
+        constexpr const wm::Window& GetWindow() const noexcept { return *m_window; }
 
         void PushColor(const glm::vec4& color);
         void PopColor() noexcept;

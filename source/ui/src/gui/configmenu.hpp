@@ -10,14 +10,16 @@
 #include <vector>
 #include <utility>
 #include <sr/ui/widget.hpp>
+#include <sr/wm/window.hpp>
 
 
 namespace srose::ui
 {
     class ConfigPanel : public Widget
     {
+        wm::Window* m_window;
     public:
-        ConfigPanel();
+        ConfigPanel(wm::Window& window);
 
         void Update() override;
 

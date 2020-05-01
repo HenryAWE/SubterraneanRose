@@ -8,18 +8,18 @@
 #include <chrono>
 #include <thread>
 #include <sr/wm/event.hpp>
-#include <sr/wm/winmgr.hpp>
 #include <sr/ui/uimgr.hpp>
 #include <sr/wm/input.hpp>
+#include <sr/gpu/renderer.hpp>
 
 
 static bool g_loop = true;
 
-void DoMainLoop()
+void DoMainLoop(srose::wm::Window& window)
 {
     using namespace srose;
     using namespace srose::ui;
-    auto& renderer =  *wm::GetRenderer();
+    auto& renderer =  window.GetRenderer();
     auto& gui = *ui::GetUIManager();
     auto& input = *wm::GetInputManager();
     
@@ -45,7 +45,7 @@ void DoMainLoop()
     renderer.Present();
 }
 
-int SRSCALL BeginMainLoop(int fps)
+int SRSCALL BeginMainLoop(srose::wm::Window& window, int fps)
 { // Prepare for future Emscripten porting
     using namespace std;
 
@@ -55,7 +55,7 @@ int SRSCALL BeginMainLoop(int fps)
     while(g_loop)
     {
         auto time_begin = chrono::high_resolution_clock::now();
-        DoMainLoop();
+        DoMainLoop(window);
 
         this_thread::sleep_until(time_begin + frame_sec);
     }

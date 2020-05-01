@@ -11,8 +11,8 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imguisr.h>
-#include <sr/wm/winmgr.hpp>
 #include <sr/ui/uimgr.hpp>
+#include <sr/gpu/renderer.hpp>
 #include <sr/audio/aumgr.hpp>
 #include <sr/player/player.hpp>
 #include <sr/i18n/i18n.hpp>
@@ -21,7 +21,8 @@
 
 namespace srose::ui
 {
-    ConfigPanel::ConfigPanel()
+    ConfigPanel::ConfigPanel(wm::Window& window)
+        : m_window(&window)
     {
         LoadButtons();
     }
@@ -78,9 +79,9 @@ namespace srose::ui
         }
 #ifndef SROSE_DISABLE_DEMO
         if(m_show_player_demo)
-            player::ShowDemoWindow(&m_show_player_demo);
+            player::ShowDemoWindow(*m_window, &m_show_player_demo);
         if(m_show_render_demo)
-            wm::GetRenderer()->ShowDemoWindow(&m_show_render_demo);
+            m_window->GetRenderer().ShowDemoWindow(&m_show_render_demo);
         if(m_show_audio_demo)
             audio::GetAudioManager()->ShowDemoWindow(&m_show_audio_demo);
 
@@ -157,7 +158,7 @@ namespace srose::ui
 
     void ConfigPanel::Content_Video()
     {
-        SDL_Window* win = wm::GetRenderer()->GetDisplay()->win;
+        SDL_Window* win = m_window->handle();
         bool windowed = !(SDL_GetWindowFlags(win)&SDL_WINDOW_FULLSCREEN);
         ImGui::Checkbox(GetString("windowed").c_str(), &windowed);
     }

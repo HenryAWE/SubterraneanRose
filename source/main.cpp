@@ -42,16 +42,22 @@ int main(int argc, char* argv[])
 
     int window_flags = 0;
     window_flags |= console::FullscreenRequired()?SDL_WINDOW_FULLSCREEN:0;
-    wm::Display* display = wm::CreateDisplay(
-        "Subterranean Rose",
-        window_flags
-    );
-    if(!display)
+    wm::Window window;
+    try
+    {
+        window.Create(
+            {1280, 960},
+            "Subterranean Rose",
+            0,
+            window_flags
+        );
+    }
+    catch(const std::runtime_error& e)
     { // Create display failed
         SDL_ShowSimpleMessageBox(
             SDL_MESSAGEBOX_ERROR,
-            "SR_WM_CreateDisplay() failed",
-            "See log for detailed information",
+            "Failed to create window",
+            (std::string(e.what()) + "\nSee log for detailed information").c_str(),
             nullptr
         );
 
@@ -59,12 +65,12 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    InitializeAllSystems(display);
+    InitializeAllSystems(window);
 
-    int exit_code = srose::ProgramEntry(argc, argv);
+    int exit_code = srose::ProgramEntry(window);
 
-    DeinitializeAllSystems();
-    wm::DestroyDisplay(display);
+    DeinitializeAllSystems(window);
+    window.Destroy();
     core::Quit();
     return exit_code;
 }

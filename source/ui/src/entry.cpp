@@ -14,14 +14,14 @@
 
 namespace srose
 {
-    int SRSCALL ProgramEntry(int argc, char* argv[]) noexcept
+    int SRSCALL ProgramEntry(wm::Window& window) noexcept
     {
         using namespace srose;
 
         int exit_code = EXIT_SUCCESS;
         try
         {
-            exit_code = BeginMainLoop();
+            exit_code = BeginMainLoop(window);
         }
         catch(std::exception& ex)
         {

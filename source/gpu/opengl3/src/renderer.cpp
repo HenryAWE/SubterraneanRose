@@ -36,8 +36,8 @@ void main(){
 
 namespace srose::gpu::opengl3
 {
-    Renderer::Renderer(Display* disp)
-        : gpu::Renderer(disp)
+    Renderer::Renderer(wm::Window& window)
+        : gpu::Renderer(window)
     {
         SR_ASSERT_CTX();
 
@@ -61,7 +61,7 @@ namespace srose::gpu::opengl3
     void Renderer::Present()
     {
         SR_ASSERT_CTX();
-        SDL_GL_SwapWindow(GetDisplay()->win);
+        SDL_GL_SwapWindow(GetWindow().handle());
     }
     void Renderer::Render()
     {
@@ -100,7 +100,7 @@ namespace srose::gpu::opengl3
         {
             uimgr.widget_tree.emplace_at(
                 "srose.opengl3.demo",
-                std::make_shared<OpenGL3DemoWindow>(true)
+                std::make_shared<OpenGL3DemoWindow>(*this, true)
             );
             m_demo_initialized = true;
         }

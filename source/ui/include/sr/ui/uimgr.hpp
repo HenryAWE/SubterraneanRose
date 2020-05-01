@@ -13,6 +13,7 @@
 #include <imgui.h>
 #include <imguisr.h>
 #include <sr/core/macros.hpp>
+#include <sr/wm/window.hpp>
 #include <sr/filesystem/common.hpp>
 #include <sr/util/string_tree.hpp>
 #include "widget.hpp"
@@ -22,7 +23,10 @@ namespace srose::ui
 {
     class UIManager
     {
+        wm::Window* m_window = nullptr;
     public:
+        UIManager(wm::Window& window);
+
         void Update();
 
         /**
@@ -43,7 +47,7 @@ namespace srose::ui
         void imbue(const std::locale& loc);
     };
 
-    UIManager* SRSCALL CreateUIManager();
+    UIManager* SRSCALL CreateUIManager(wm::Window& window);
     void SRSCALL DestroyUIManager() noexcept;
     [[nodiscard]]
     UIManager* SRSCALL GetUIManager() noexcept;

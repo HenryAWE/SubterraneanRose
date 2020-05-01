@@ -16,20 +16,20 @@
 namespace srose::wm
 {
     static ImGuiContext* g_imctx = nullptr;
-    static Display* g_display = nullptr;
+    static wm::Window* g_window = nullptr;
 
-    int SRSCALL InitEventSystem(Display* display)
+    int SRSCALL InitEventSystem(wm::Window& window)
     {
         assert(!g_imctx);
-        assert(display->win);
-        g_display = display;
+        assert(window.handle());
+        g_window = &window;
         g_imctx = ImGui::CreateContext();
         if(!g_imctx)
         {
             return -1;
         }
 
-        if(!ImGui_ImplSDL2_InitForOpenGL(display->win, display->glctx))
+        if(!ImGui_ImplSDL2_InitForOpenGL(window.handle(), window.glctx()))
         {
             return -1;
         }
@@ -49,13 +49,13 @@ namespace srose::wm
         ImGui_ImplSDL2_Shutdown();
         ImGui::DestroyContext(g_imctx);
         g_imctx = nullptr;
-        g_display = nullptr;
+        g_window = nullptr;
     }
 
     void SRSCALL NewFrame()
     {
         ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplSDL2_NewFrame(g_display->win);
+        ImGui_ImplSDL2_NewFrame(g_window->handle());
         ImGui::NewFrame();
     }
 

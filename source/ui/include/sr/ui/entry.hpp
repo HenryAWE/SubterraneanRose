@@ -8,6 +8,7 @@
 #define SROSE_UI_entry_hpp_
 
 #include <sr/core/macros.hpp>
+#include <sr/wm/window.hpp>
 
 
 namespace srose
@@ -15,7 +16,7 @@ namespace srose
     /**
      * @brief Program entry
      */
-    int SRSCALL ProgramEntry(int argc, char* argv[]) noexcept;
+    int SRSCALL ProgramEntry(wm::Window& window) noexcept;
 } // namespace srose::ui
 
 

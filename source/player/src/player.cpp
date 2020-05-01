@@ -16,7 +16,7 @@ namespace srose::player
 #ifndef SROSE_DISABLE_DEMO
     static bool g_demo_initialized = false;
 
-    void ShowDemoWindow(bool* p_open)
+    void ShowDemoWindow(wm::Window& window, bool* p_open)
     {
         auto& uimgr = *ui::GetUIManager();
 
@@ -24,7 +24,7 @@ namespace srose::player
         {
             uimgr.widget_tree.emplace_at(
                 "srose.player.demo",
-                std::make_shared<PlayerDemoWindow>()
+                std::make_shared<PlayerDemoWindow>(window.GetRenderer())
             );
             g_demo_initialized = true;
         }

@@ -35,8 +35,6 @@ namespace srose::ui::editor
 
         std::string m_button_return;
         void Button_Return();
-
-        void OnSetWindowSubtitle() override { DoSetWindowSubtitle(m_title.c_str()); }
     };
 } // namespace srose::ui
 

@@ -8,7 +8,7 @@
 #define SROSE_WM_event_hpp_
 
 #include <sr/core/macros.hpp>
-#include <sr/wm/display.hpp>
+#include <sr/wm/window.hpp>
 
 
 namespace srose::wm
@@ -16,10 +16,10 @@ namespace srose::wm
     /**
      * @brief Initialize event handler
      * 
-     * @param display The instance of previously created display by SR_WM_CreateDisplay()
+     * @param window The reference of the previously created window
      * @return int SR_WM_InitEventSystem -1 means an error occurred, 0 means succeeded
      */
-    int SRSCALL InitEventSystem(Display* display);
+    int SRSCALL InitEventSystem(wm::Window& window);
 
     /**
      * @brief Quit the event system and release the data

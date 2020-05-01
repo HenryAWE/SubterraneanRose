@@ -6,7 +6,6 @@
 
 #include <sr/ui/widget.hpp>
 #include <sr/i18n/i18n.hpp>
-#include <sr/wm/winmgr.hpp>
 
 
 namespace srose::ui
@@ -32,16 +31,6 @@ namespace srose::ui
         auto& tree = std::use_facet<locale::TranslationFacet>(m_loc).get().GetStringTree();
         for(auto& i : m_string_data)
             i.second.Load(tree);
-    }
-
-    void Widget::OnSetWindowSubtitle()
-    {
-        DoSetWindowSubtitle(nullptr);
-    }
-
-    void Widget::DoSetWindowSubtitle(const char* subtitle)
-    {
-        wm::SetWindowSubTitle(wm::GetRenderer()->GetDisplay(), subtitle);
     }
 
     void Widget::StringData::Load(const util::string_tree<std::string>& tree)

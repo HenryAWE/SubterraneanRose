@@ -13,7 +13,6 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imguisr.h>
-#include <sr/wm/winmgr.hpp>
 #include <sr/gpu/opengl3/renderer.hpp>
 #include <sr/gpu/sprite.hpp>
 
@@ -53,7 +52,8 @@ namespace srose::gpu::opengl3
         }
     } // namespace detail
 
-    OpenGL3DemoWindow::OpenGL3DemoWindow(bool initgl)
+    OpenGL3DemoWindow::OpenGL3DemoWindow(Renderer& ren, bool initgl)
+        : m_ren(&ren)
     {
         if(initgl)
             InitializeGL();
@@ -184,7 +184,6 @@ namespace srose::gpu::opengl3
         glViewport(0, 0, view.x, view.y);
         glClearColor(1, 1, 1, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-        auto ren = static_cast<opengl3::Renderer*>(wm::GetRenderer());
         static float t = 0.0f;
         for(int i = 0; i < 80; ++i)
         {
@@ -193,16 +192,16 @@ namespace srose::gpu::opengl3
             sp.position({i * 10.0f, std::pow(i - 40, 2) * 0.5f + 10.0f});
             sp.scale({10, 10});
             sp.rotation(t += ImGui::GetIO().DeltaTime);
-            ren->AddSprite(sp);
+            m_ren->AddSprite(sp);
         }
 
         Sprite sp2;
         sp2.SetTexture(nullptr); // Should use the default texture
         sp2.position(glm::vec2(960/2, 720/2) + 50.0f*glm::vec2(cos(t/50.0f), sin(t/50.0f)));
         sp2.scale({25, 25});
-        ren->AddSprite(sp2);
+        m_ren->AddSprite(sp2);
 
-        ren->RenderSprite({960, 720});
+        m_ren->RenderSprite({960, 720});
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 

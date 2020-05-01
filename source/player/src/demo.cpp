@@ -11,7 +11,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imguisr.h>
-#include <sr/wm/winmgr.hpp>
+#include <sr/gpu/renderer.hpp>
 #include <sr/player/component/transform.hpp>
 #include <sr/player/component/move.hpp>
 #include <sr/player/component/image.hpp>
@@ -40,8 +40,8 @@ namespace srose::player
         }
     };
 
-    PlayerDemoWindow::PlayerDemoWindow()
-        : m_stage({350, 430})
+    PlayerDemoWindow::PlayerDemoWindow(gpu::Renderer& ren)
+        : m_ren(&ren), m_stage({350, 430})
     {
         auto& emgr = m_stage.world.GetEntityManager();
         auto id = emgr.CreateEntity().GetId();
@@ -64,7 +64,7 @@ namespace srose::player
             emgr.AssignComponent<component::Transform>(id, position, glm::vec2(8.5f));
         }
 
-        wm::GetRenderer()->AddRenderData(m_stage);
+        m_ren->AddRenderData(m_stage);
     }
 
     void PlayerDemoWindow::Update()
@@ -100,7 +100,7 @@ namespace srose::player
 
     void PlayerDemoWindow::Render()
     {
-        wm::GetRenderer()->RenderStage(m_stage);
+        m_ren->RenderStage(m_stage);
     }
 } // namespace srose::player
 

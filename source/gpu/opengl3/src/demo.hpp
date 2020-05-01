@@ -10,6 +10,7 @@
 #include <glad/glad.h>
 #include <vector>
 #include <sr/ui/widget.hpp>
+#include <sr/gpu/opengl3/renderer.hpp>
 #include <sr/gpu/opengl3/buffer.hpp>
 #include <sr/gpu/opengl3/shader.hpp>
 #include <sr/gpu/opengl3/texture.hpp>
@@ -22,8 +23,9 @@ namespace srose::gpu::opengl3
 {
     class OpenGL3DemoWindow : public ui::Widget
     {
+        Renderer* m_ren;
     public:
-        OpenGL3DemoWindow(bool initgl = true);
+        OpenGL3DemoWindow(Renderer& ren, bool initgl = true);
 
         ~OpenGL3DemoWindow();
 

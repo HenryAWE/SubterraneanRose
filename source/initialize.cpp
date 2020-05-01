@@ -8,13 +8,14 @@
 #include <future>
 #include <SDL.h>
 #include <imgui.h>
-#include <sr/wm/winmgr.hpp>
 #include <sr/audio/aumgr.hpp>
 #include <sr/res/resmgr.hpp>
 #include <sr/wm/input.hpp>
 #include <sr/ui/uimgr.hpp>
 #include <sr/player/player.hpp>
 #include <sr/srose/app.hpp>
+#include <sr/wm/event.hpp>
+#include <sr/gpu/renderer.hpp>
 
 
 namespace srose
@@ -45,25 +46,24 @@ namespace srose
         }
     }
 
-    void InitializeAllSystems(wm::Display* display)
+    void InitializeAllSystems(wm::Window& window)
     {
+        wm::InitEventSystem(window);
         GetApp().LoadUsers();
-        wm::CreateRenderer(display);
         auto font_ready = std::async(std::launch::async, LoadFonts);
         audio::CreateAudioManager();
         res::CreateResourceManager();
         wm::CreateInputManager();
         font_ready.get();
-        ui::CreateUIManager()->InitializeWidgets();
+        ui::CreateUIManager(window)->InitializeWidgets();
     }
-    void DeinitializeAllSystems() noexcept
+    void DeinitializeAllSystems(wm::Window& window) noexcept
     {
         player::ReleaseUIData();
-        wm::GetRenderer()->ReleaseUIData();
+        window.GetRenderer().ReleaseUIData();
         ui::DestroyUIManager();
         res::DestroyResourceManager();
         audio::DestroyAudioManager();
         wm::DestroyInputManager();
-        wm::DestroyRenderer();
     }
 } // namespace srose

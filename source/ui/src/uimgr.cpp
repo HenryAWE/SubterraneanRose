@@ -16,6 +16,9 @@
 
 namespace srose::ui
 {
+    UIManager::UIManager(wm::Window& window)
+        : m_window(&window) {}
+
     void UIManager::Update()
     {
         if(!widget_stack.empty())
@@ -36,7 +39,7 @@ namespace srose::ui
         widget_stack.push(std::make_shared<MainMenu>());
         widget_tree.emplace_at("mainmenu", widget_stack.top());
         widget_tree.emplace_at("editor.window", std::make_shared<editor::EditorWindow>());
-        widget_tree.emplace_at("configpanel", std::make_shared<ConfigPanel>());
+        widget_tree.emplace_at("configpanel", std::make_shared<ConfigPanel>(*m_window));
         widget_tree.emplace_at("about", std::make_shared<About>());
         widget_tree.emplace_at("conwin", std::make_shared<ConsoleWindow>());
     }
@@ -59,9 +62,9 @@ namespace srose::ui
 
     static std::unique_ptr<UIManager> g_uimgr;
 
-    UIManager* SRSCALL CreateUIManager()
+    UIManager* SRSCALL CreateUIManager(wm::Window& window)
     {
-        g_uimgr = std::make_unique<UIManager>();
+        g_uimgr = std::make_unique<UIManager>(window);
         return g_uimgr.get();
     }
     void SRSCALL DestroyUIManager() noexcept
