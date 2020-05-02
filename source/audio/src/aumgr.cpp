@@ -24,7 +24,7 @@ namespace srose::audio
 
     void AudioManager::ShowDemoWindow(bool* p_open)
     {
-        auto& uimgr = *ui::GetUIManager();
+        auto& uimgr = ui::UIManager::GetInstance();
 #ifndef SROSE_DISABLE_DEMO
         if(!m_demo_initialized)
         {

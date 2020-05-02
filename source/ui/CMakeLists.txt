@@ -11,6 +11,7 @@ add_library("srose-ui" STATIC ${ui_src_list} ${CMAKE_BINARY_DIR}/embedded_en.cpp
 target_include_directories("srose-ui" PUBLIC ./include)
 
 target_link_libraries("srose-ui" PUBLIC "srose-core")
+target_link_libraries("srose-ui" PRIVATE "srose-main")
 target_link_libraries("srose-ui" PUBLIC "srose-console")
 target_link_libraries("srose-ui" PUBLIC "srose-i18n")
 target_link_libraries("srose-ui" PUBLIC "srose-util")

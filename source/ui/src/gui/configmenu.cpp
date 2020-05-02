@@ -72,7 +72,7 @@ namespace srose::ui
 
         if(m_show_conwin)
         {
-            auto conwin = GetUIManager()->widget_tree["conwin"].get();
+            auto conwin = UIManager::GetInstance().widget_tree["conwin"].get();
             static_cast<ConsoleWindow*>(conwin)->open = true;
             conwin->Update();
             m_show_conwin = static_cast<ConsoleWindow*>(conwin)->open;
@@ -151,7 +151,7 @@ namespace srose::ui
         m_show_render_demo = false;
         m_show_audio_demo = false;
 #endif
-        auto& uimgr = *GetUIManager();
+        auto& uimgr = UIManager::GetInstance();
         if(&*uimgr.widget_stack.top() == this)
             uimgr.widget_stack.pop();
     }
@@ -176,7 +176,7 @@ namespace srose::ui
             if(ImGui::Button(lang->name().c_str()))
             {
                 i18n::SelectLanguage(lang);
-                GetUIManager()->imbue(std::locale());
+                UIManager::GetInstance().imbue(std::locale());
             }
 
             ImGui::PopID();

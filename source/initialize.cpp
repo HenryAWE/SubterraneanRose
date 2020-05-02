@@ -55,13 +55,13 @@ namespace srose
         res::CreateResourceManager();
         wm::CreateInputManager();
         font_ready.get();
-        ui::CreateUIManager(window)->InitializeWidgets();
+        ui::UIManager::GetInstance().Initialize(window);
     }
     void DeinitializeAllSystems(wm::Window& window) noexcept
     {
         player::ReleaseUIData();
         window.GetRenderer().ReleaseUIData();
-        ui::DestroyUIManager();
+        ui::UIManager::GetInstance().Deinitialize();
         res::DestroyResourceManager();
         audio::DestroyAudioManager();
         wm::DestroyInputManager();

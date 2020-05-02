@@ -20,7 +20,7 @@ void DoMainLoop(srose::wm::Window& window)
     using namespace srose;
     using namespace srose::ui;
     auto& renderer =  window.GetRenderer();
-    auto& gui = *ui::GetUIManager();
+    auto& gui = UIManager::GetInstance();
     auto& input = *wm::GetInputManager();
     
     /*Event processing*/

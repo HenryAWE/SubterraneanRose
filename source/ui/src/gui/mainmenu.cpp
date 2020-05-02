@@ -130,21 +130,21 @@ namespace srose::ui
 
     void MainMenu::Button_Editor()
     {
-        auto& uimgr = *GetUIManager();
+        auto& uimgr = UIManager::GetInstance();
         uimgr.widget_stack.push(uimgr.widget_tree["editor.window"]);
     }
     void MainMenu::Button_Config()
     {
-        auto& uimgr = *GetUIManager();
+        auto& uimgr = UIManager::GetInstance();
         uimgr.widget_stack.push(uimgr.widget_tree["configpanel"]);
     }
     void MainMenu::Button_About()
     {
-        auto& uimgr = *GetUIManager();
+        auto& uimgr = UIManager::GetInstance();
         uimgr.widget_stack.push(uimgr.widget_tree["about"]);
     }
     void MainMenu::Button_Exit()
     {
-        GetUIManager()->Quit();
+        UIManager::GetInstance().Quit();
     }
 } // namespace srose::ui

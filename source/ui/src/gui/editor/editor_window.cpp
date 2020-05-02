@@ -79,7 +79,7 @@ namespace srose::ui::editor
 
     void EditorWindow::Button_Return()
     {
-        auto& uimgr = *GetUIManager();
+        auto& uimgr = UIManager::GetInstance();
         if(&*uimgr.widget_stack.top() == this)
         {
             uimgr.widget_stack.pop();

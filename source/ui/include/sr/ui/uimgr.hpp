@@ -25,7 +25,12 @@ namespace srose::ui
     {
         wm::Window* m_window = nullptr;
     public:
-        UIManager(wm::Window& window);
+        UIManager();
+
+        ~UIManager();
+
+        [[nodiscard]]
+        static UIManager& GetInstance();
 
         void Update();
 
@@ -34,7 +39,10 @@ namespace srose::ui
          */
         void Quit() noexcept;
 
-        void InitializeWidgets();
+        void Initialize(wm::Window& window);
+        void Deinitialize() noexcept;
+
+        wm::Window& GetWindow() noexcept;
 
         util::string_tree<std::shared_ptr<Widget>> widget_tree;
         std::stack<std::shared_ptr<Widget>> widget_stack;
@@ -46,11 +54,6 @@ namespace srose::ui
          */
         void imbue(const std::locale& loc);
     };
-
-    UIManager* SRSCALL CreateUIManager(wm::Window& window);
-    void SRSCALL DestroyUIManager() noexcept;
-    [[nodiscard]]
-    UIManager* SRSCALL GetUIManager() noexcept;
 } // namespace srose::ui
 
 

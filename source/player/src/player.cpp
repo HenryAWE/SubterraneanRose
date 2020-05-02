@@ -18,7 +18,7 @@ namespace srose::player
 
     void ShowDemoWindow(wm::Window& window, bool* p_open)
     {
-        auto& uimgr = *ui::GetUIManager();
+        auto& uimgr = ui::UIManager::GetInstance();
 
         if(!g_demo_initialized)
         {
@@ -40,7 +40,7 @@ namespace srose::player
         if(!g_demo_initialized)
             return;
 
-        auto& uimgr = *ui::GetUIManager();
+        auto& uimgr = ui::UIManager::GetInstance();
         auto ptr = uimgr.widget_tree["srose.player.demo"].get();
         if(static_cast<PlayerDemoWindow*>(ptr)->open)
             static_cast<PlayerDemoWindow*>(ptr)->Render();
@@ -53,7 +53,7 @@ namespace srose::player
         if(g_demo_initialized)
         {
             g_demo_initialized = false;
-            ui::GetUIManager()->widget_tree.erase_at("srose.player.demo");
+            ui::UIManager::GetInstance().widget_tree.erase_at("srose.player.demo");
         }
 #endif
     }

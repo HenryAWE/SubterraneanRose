@@ -16,8 +16,15 @@
 
 namespace srose::ui
 {
-    UIManager::UIManager(wm::Window& window)
-        : m_window(&window) {}
+    UIManager::UIManager() = default;
+
+    UIManager::~UIManager() = default;
+
+    UIManager& UIManager::GetInstance()
+    {
+        static UIManager instance;
+        return instance;
+    }
 
     void UIManager::Update()
     {
@@ -34,14 +41,26 @@ namespace srose::ui
         SDL_PushEvent(&quit_event);
     }
 
-    void UIManager::InitializeWidgets()
+    void UIManager::Initialize(wm::Window& window)
     {
+        m_window = &window;
+
         widget_stack.push(std::make_shared<MainMenu>());
         widget_tree.emplace_at("mainmenu", widget_stack.top());
         widget_tree.emplace_at("editor.window", std::make_shared<editor::EditorWindow>());
         widget_tree.emplace_at("configpanel", std::make_shared<ConfigPanel>(*m_window));
         widget_tree.emplace_at("about", std::make_shared<About>());
         widget_tree.emplace_at("conwin", std::make_shared<ConsoleWindow>());
+    }
+    void UIManager::Deinitialize() noexcept
+    {
+        m_window = nullptr;
+    }
+
+    wm::Window& UIManager::GetWindow() noexcept
+    {
+        assert(m_window);
+        return *m_window;
     }
 
     void imbue_impl(
@@ -58,22 +77,5 @@ namespace srose::ui
     void UIManager::imbue(const std::locale& loc)
     {
         imbue_impl(widget_tree, loc);
-    }
-
-    static std::unique_ptr<UIManager> g_uimgr;
-
-    UIManager* SRSCALL CreateUIManager(wm::Window& window)
-    {
-        g_uimgr = std::make_unique<UIManager>(window);
-        return g_uimgr.get();
-    }
-    void SRSCALL DestroyUIManager() noexcept
-    {
-        g_uimgr.reset();
-    }
-
-    UIManager* SRSCALL GetUIManager() noexcept
-    {
-        return g_uimgr.get();
     }
 } // namespace srose::ui
