@@ -9,6 +9,10 @@
 #include <cstdlib>
 #include <SDL.h>
 #include <typeinfo>
+#include <boost/locale.hpp>
+#ifdef __WINDOWS__
+#   include <SDL_syswm.h>
+#endif
 #include "main_loop.hpp"
 
 
@@ -23,6 +27,30 @@ namespace srose
         {
             exit_code = BeginMainLoop(window);
         }
+        #ifdef __WINDOWS__
+        catch(std::system_error& ex)
+        {
+            CPINFOEXA info;
+            ::GetCPInfoExA(CP_OEMCP, 0, &info);
+
+            std::string what = boost::locale::conv::to_utf<char>(
+                ex.what(),
+                "cp" + std::to_string(info.CodePage)
+            );
+            SDL_LogError(
+                SDL_LOG_CATEGORY_APPLICATION,
+                "[UI] System error \"%s\": %s",
+                typeid(ex).name(),
+                what.c_str()
+            );
+            SDL_ShowSimpleMessageBox(
+                SDL_MESSAGEBOX_ERROR,
+                typeid(ex).name(),
+                what.c_str(),
+                nullptr
+            );
+        }
+        #endif
         catch(std::exception& ex)
         {
             exit_code = EXIT_FAILURE;
