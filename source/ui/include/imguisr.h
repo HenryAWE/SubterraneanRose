@@ -10,6 +10,7 @@
 #include <functional>
 #include <utility>
 #include <optional>
+#include <memory>
 #include <imgui.h>
 #include <sr/filesystem/filesystem.hpp>
 
@@ -86,6 +87,32 @@ namespace ImGuiSR
     IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_Menu, ImGui::BeginMenu, ImGui::EndMenu);
     IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_TabBar, ImGui::BeginTabBar, ImGui::EndTabBar);
     IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_TabItem, ImGui::BeginTabItem, ImGui::EndTabItem);
+
+    class FileBrowserBase : public std::enable_shared_from_this<FileBrowserBase>
+    {
+    public:
+        virtual ~FileBrowserBase();
+
+        virtual void Show() = 0;
+        virtual void Update() = 0;
+
+        virtual bool visible() const = 0;
+
+        virtual std::optional<srose::filesystem::path> GetResult() = 0;
+
+    protected:
+        FileBrowserBase();
+    };
+
+    class IFileBrowser : public FileBrowserBase
+    {
+    public:
+        IFileBrowser();
+
+        ~IFileBrowser();
+    };
+
+    std::shared_ptr<IFileBrowser> CreateIFileBrowser(bool native = true);
 } // namespace ImGuiSR
 
 
