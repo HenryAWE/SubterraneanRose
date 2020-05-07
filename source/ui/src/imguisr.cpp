@@ -11,6 +11,7 @@
 #include <imgui_internal.h>
 #include <SDL.h>
 #include <boost/locale.hpp>
+#include <boost/tokenizer.hpp>
 #ifdef __WINDOWS__
 #   include <comdef.h>
 #   include <atlcomcli.h>
@@ -58,6 +59,29 @@ namespace ImGuiSR
 
         std::optional<srose::filesystem::path> m_result;
 
+        struct FilterSpecWin32
+        {
+            std::wstring name;
+            std::wstring pattern;
+
+            FilterSpecWin32(const FilterSpec& filter)
+                : name(L(filter.name))
+            {
+                using namespace boost;
+                char_separator<char> sep(";");
+                tokenizer<char_separator<char>> tok(filter.exts, sep);
+                std::string u8pattern;
+                for(auto& i : tok)
+                {
+                    u8pattern += "*." + i + ';';
+                }
+                if(!u8pattern.empty())
+                    u8pattern = u8pattern.substr(0, u8pattern.length() - 1);
+                pattern = L(u8pattern);
+            }
+        };
+
+        std::vector<FilterSpecWin32> m_filters;
     public:
         INativeFileBrowser()
         {
@@ -99,6 +123,66 @@ namespace ImGuiSR
         void Update() override {}
 
         bool visible() const override { return false; }
+
+        void SetTitle(const std::string& title) override
+        {
+            if(::HRESULT hr =  m_dialog->SetTitle(L(title).c_str()); FAILED(hr))
+                _com_raise_error(hr);
+        }
+        void SetFolder(const srose::filesystem::path& folder) override
+        {
+            if(!is_directory(folder))
+                return;
+
+            CComPtr<IShellItem> item;
+            ::HRESULT hr = ::SHCreateItemFromParsingName(
+                absolute(folder).wstring().c_str(),
+                nullptr,
+                IID_PPV_ARGS(&item)
+            );
+            if(FAILED(hr))
+                _com_raise_error(hr);
+
+            hr = m_dialog->SetFolder(item);
+            if(FAILED(hr))
+                _com_raise_error(hr);
+        }
+
+        void SetFilter(const std::vector<FilterSpec>& filters) override
+        {
+            using namespace std;
+
+            vector<FilterSpecWin32> tmp;
+            tmp.reserve(filters.size());
+
+            copy(filters.begin(), filters.end(), back_inserter(tmp));
+            tmp.swap(m_filters);
+
+            vector<COMDLG_FILTERSPEC> specs;
+            specs.reserve(filters.size() + 1);
+            transform(
+                m_filters.begin(), m_filters.end(),
+                back_inserter(specs),
+                [](const FilterSpecWin32& in)->COMDLG_FILTERSPEC
+                {
+                    COMDLG_FILTERSPEC out{};
+                    out.pszName = in.name.c_str();
+                    out.pszSpec = in.pattern.c_str();
+                    return out;
+                }
+            );
+            COMDLG_FILTERSPEC all;
+            all.pszName = L"All";
+            all.pszSpec = L"*.*";
+            specs.push_back(all);
+
+            ::HRESULT hr = m_dialog->SetFileTypes(
+                static_cast<UINT>(specs.size()),
+                specs.data()
+            );
+            if(FAILED(hr))
+                _com_raise_error(hr);
+        }
 
         std::optional<srose::filesystem::path> GetResult() override
         {
