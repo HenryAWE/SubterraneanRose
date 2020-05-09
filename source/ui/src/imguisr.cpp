@@ -187,7 +187,7 @@ namespace ImGuiSR
                 static_cast<UINT>(specs.size()),
                 specs.data()
             );
-            if(FAILED(hr))
+            if(FAILED(hr) && hr != E_UNEXPECTED)
                 _com_raise_error(hr);
         }
         void SetPickFolder(bool value) override
