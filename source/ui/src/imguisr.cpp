@@ -33,6 +33,13 @@ namespace ImGuiSR
     IFileBrowser::~IFileBrowser() = default;
 
 
+    class IImGuiFileBrowser : public IFileBrowser
+    {
+    public:
+        
+    };
+
+
 #ifdef __WINDOWS__
     class INativeFileBrowser : public IFileBrowser
     {
@@ -180,6 +187,22 @@ namespace ImGuiSR
                 static_cast<UINT>(specs.size()),
                 specs.data()
             );
+            if(FAILED(hr))
+                _com_raise_error(hr);
+        }
+        void SetPickFolder(bool value) override
+        {
+            ::FILEOPENDIALOGOPTIONS options;
+            ::HRESULT hr = m_dialog->GetOptions(&options);
+            if(FAILED(hr))
+                _com_raise_error(hr);
+
+            if(value)
+                options |= FOS_PICKFOLDERS;
+            else
+                options &= ~FOS_PICKFOLDERS;
+
+            hr = m_dialog->SetOptions(options);
             if(FAILED(hr))
                 _com_raise_error(hr);
         }

@@ -112,6 +112,7 @@ namespace ImGuiSR
             FilterSpec(FilterSpec&&) = default;
         };
         virtual void SetFilter(const std::vector<FilterSpec>& filters) = 0;
+        virtual void SetPickFolder(bool value = true) = 0;
 
         virtual std::optional<srose::filesystem::path> GetResult() = 0;
 
