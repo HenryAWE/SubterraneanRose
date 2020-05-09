@@ -148,4 +148,8 @@ BOOST_AUTO_TEST_CASE(test_assignment)
     BOOST_TEST_REQUIRE(move.has_value("will.be.erased") == false);
     BOOST_TEST_REQUIRE(*move == 2);
     BOOST_TEST_REQUIRE(move["sub"] == 3);
+
+    move.clear();
+    BOOST_TEST_REQUIRE(move.has_value("sub") == false);
+    BOOST_TEST_REQUIRE(move.has_value() == false);
 }
