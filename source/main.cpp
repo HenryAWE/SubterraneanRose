@@ -9,6 +9,7 @@
 #include "initialize.hpp"
 #include <sr/i18n/i18n.hpp>
 #include <sr/core/init.hpp>
+#include <sr/trace/log.hpp>
 #include <sr/trace/trace.hpp>
 #include <sr/console/cmdline.hpp>
 
@@ -23,6 +24,7 @@ int main(int argc, char* argv[])
     trace::RegisterSignalHandler();
 
     SetWorkingDirectory(argv[0]);
+    trace::InitializeLogger();
     i18n::LoadAllLanguage(filesystem::GetLocaleFolder());
 
     if(console::ParseArg(argc, argv) == 1)
