@@ -10,6 +10,7 @@
 #include <functional>
 #include <utility>
 #include <optional>
+#include <memory>
 #include <imgui.h>
 #include <sr/filesystem/filesystem.hpp>
 
@@ -86,6 +87,48 @@ namespace ImGuiSR
     IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_Menu, ImGui::BeginMenu, ImGui::EndMenu);
     IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_TabBar, ImGui::BeginTabBar, ImGui::EndTabBar);
     IMGUISR_PUSHGUARD_TEMPLATE(ImGuiSR_TabItem, ImGui::BeginTabItem, ImGui::EndTabItem);
+
+    class FileBrowserBase : public std::enable_shared_from_this<FileBrowserBase>
+    {
+    public:
+        virtual ~FileBrowserBase();
+
+        virtual void Show() = 0;
+        virtual void Update() = 0;
+
+        virtual bool visible() const = 0;
+
+        virtual void SetTitle(const std::string& title) = 0;
+        virtual void SetFolder(const srose::filesystem::path& folder) = 0;
+
+        struct FilterSpec
+        {
+            std::string name;
+            std::string exts; // Separated by semicolon ';', e.g. "jpg;jpeg"
+
+            FilterSpec(std::string_view name_, std::string_view exts_)
+                : name(name_), exts(exts_) {}
+            FilterSpec(const FilterSpec&) = default;
+            FilterSpec(FilterSpec&&) = default;
+        };
+        virtual void SetFilter(const std::vector<FilterSpec>& filters) = 0;
+        virtual void SetPickFolder(bool value = true) = 0;
+
+        virtual std::optional<srose::filesystem::path> GetResult() = 0;
+
+    protected:
+        FileBrowserBase();
+    };
+
+    class IFileBrowser : public FileBrowserBase
+    {
+    public:
+        IFileBrowser();
+
+        ~IFileBrowser();
+    };
+
+    std::shared_ptr<IFileBrowser> CreateIFileBrowser(bool native = true);
 } // namespace ImGuiSR
 
 

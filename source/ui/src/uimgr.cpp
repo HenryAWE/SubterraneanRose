@@ -54,6 +54,9 @@ namespace srose::ui
     }
     void UIManager::Deinitialize() noexcept
     {
+        while(!widget_stack.empty())
+            widget_stack.pop();
+        widget_tree.clear();
         m_window = nullptr;
     }
 

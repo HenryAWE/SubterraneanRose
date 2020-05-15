@@ -209,7 +209,16 @@ namespace srose::util
             if(!m_data.has_value())
                 m_data = std::move(other.m_data);
         }
-        
+
+        /**
+         * @brief Clear data and child nodes
+         */
+        void clear() noexcept
+        {
+            m_data.reset();
+            m_children.clear();
+        }
+
         [[nodiscard]]
         /**
          * @brief Get the count of child nodes

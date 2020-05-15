@@ -5,6 +5,7 @@
  */
 
 #include "initialize.hpp"
+#include <stdexcept>
 #include <future>
 #include <SDL.h>
 #include <imgui.h>
@@ -16,6 +17,10 @@
 #include <sr/srose/app.hpp>
 #include <sr/wm/event.hpp>
 #include <sr/gpu/renderer.hpp>
+#ifdef __WINDOWS__
+#   include <comdef.h>
+#   include <combaseapi.h>
+#endif
 
 
 namespace srose
@@ -48,6 +53,10 @@ namespace srose
 
     void InitializeAllSystems(wm::Window& window)
     {
+    #ifdef __WINDOWS__
+        if(::HRESULT hr = ::CoInitialize(nullptr); FAILED(hr))
+            _com_raise_error(hr);
+    #endif
         wm::InitEventSystem(window);
         GetApp().LoadUsers();
         auto font_ready = std::async(std::launch::async, LoadFonts);
@@ -65,5 +74,8 @@ namespace srose
         res::DestroyResourceManager();
         audio::DestroyAudioManager();
         wm::DestroyInputManager();
+    #ifdef __WINDOWS__
+        ::CoUninitialize();
+    #endif
     }
 } // namespace srose
