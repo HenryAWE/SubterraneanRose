@@ -27,10 +27,10 @@ namespace srose::trace
         );
 
         log::add_file_log(
-            kw::file_name = "log/sr-log-%3N.log",
+            kw::file_name = "log/%Y-%m-%d.log",
+            kw::open_mode = std::ios_base::out | std::ios_base::app,
             kw::rotation_size = 1 * 1024 *1024, // 1MB
             kw::max_size = 20 * 1024 * 1024, // 20MB
-            kw::time_based_rotation = log::sinks::file::rotation_at_time_point(0, 0, 0),
             kw::format = fmt,
             kw::auto_flush = true,
             kw::filter = log::trivial::severity >= log::trivial::warning
