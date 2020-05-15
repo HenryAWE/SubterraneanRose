@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
 
     SetWorkingDirectory(argv[0]);
     trace::InitializeLogger();
+    trace::RedirectSDLOutput();
     i18n::LoadAllLanguage(filesystem::GetLocaleFolder());
 
     if(console::ParseArg(argc, argv) == 1)

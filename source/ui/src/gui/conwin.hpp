@@ -34,8 +34,6 @@ namespace srose::ui
 
         std::deque<std::tuple<SDL_LogPriority, std::string>> m_logbuf;
         bool m_logchanged = false;
-        void RedirectSdlOutput();
-        void SdlLogCallback(int category, SDL_LogPriority priority, const char* message);
     };
 } // namespace srose::ui
 

@@ -13,6 +13,7 @@
 namespace srose::trace
 {
     void InitializeLogger();
+    void RedirectSDLOutput(bool redirect = true);
 } // namespace srose::trace
 
 
