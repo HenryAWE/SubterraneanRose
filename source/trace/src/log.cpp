@@ -40,7 +40,7 @@ namespace srose::trace
         log::add_common_attributes();
     }
 
-    const char* to_chars(SDL_LogCategory category)
+    const char* to_chars(int category)
     {
         switch(category)
         {
@@ -87,7 +87,7 @@ namespace srose::trace
             [](void*, int category, SDL_LogPriority priority, const char* message)
             {
                 #define SR_TRACE_DO_LOG(lvl) BOOST_LOG_TRIVIAL(lvl)\
-                    << "[SDL2_Log : " << to_chars((SDL_LogCategory)category) << "]\n"\
+                    << "[SDL2_Log : " << to_chars(category) << "]\n"\
                     << message
 
                 switch(priority)
