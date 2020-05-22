@@ -10,7 +10,7 @@
 #include <set>
 #include <memory>
 #include <string>
-#include <boost/tokenizer.hpp>
+#include <vector>
 #include <ios>
 #include <sr/filesystem/filesystem.hpp>
 
@@ -21,45 +21,23 @@ namespace srose::vfs
 
     class Path
     {
-        static boost::char_separator<char> sep;
-
         std::string m_underlying;
-        boost::tokenizer<boost::char_separator<char>> m_tok;
+        std::vector<std::string> m_cache; // Caching parsed data
+
+        void AssignFromString(std::string value);
 
     public:
-        class Iterator
-        {
-            friend Path;
+        typedef decltype(m_cache)::const_iterator iterator;
+        typedef decltype(m_cache)::const_iterator const_iterator;
 
-            typedef boost::tokenizer<boost::char_separator<char>>::iterator underlying_type;
-            underlying_type m_iter;
-            const Path* m_pt;
-
-            Iterator(const Path* pt, underlying_type iter);
-
-        public:
-            Iterator(const Iterator&) = default;
-
-            Iterator& operator++();
-            bool operator==(const Iterator& rhs) const noexcept { return m_iter == rhs.m_iter; }
-            bool operator!=(const Iterator& rhs) const noexcept { return m_iter != rhs.m_iter; }
-            const std::string& operator*() const { return *m_iter; }
-        };
-
-        typedef Iterator iterator;
-        typedef Iterator const_iterator;
-
-        Path(const Path& other)
-            : m_underlying(other.m_underlying), m_tok(m_underlying, sep) {}
-        Path(Path&& move)
-            : m_underlying(std::move(move.m_underlying)), m_tok(m_underlying, sep) {}
-        Path(std::string pt)
-            : m_underlying(std::move(pt)), m_tok(m_underlying, sep) {}
+        Path(const Path& other) = default;
+        Path(Path&& move) = default;
+        Path(std::string pt) { AssignFromString(std::move(pt)); }
         Path(const char* pt)
             : Path(std::string(pt)) {}
 
-        Iterator begin() const { return Iterator(this, m_tok.begin()); }
-        Iterator end() const { return Iterator(this, m_tok.end()); }
+        iterator begin() const { return m_cache.cbegin(); }
+        iterator end() const { return m_cache.cend(); }
 
         Path Parent() const;
         std::string Filename() const;

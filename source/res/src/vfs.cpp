@@ -7,33 +7,34 @@
 #include <sr/res/vfs.hpp>
 #include <cassert>
 #include <fstream>
+#include <boost/tokenizer.hpp>
 
 
 namespace srose::vfs
 {
-    boost::char_separator<char> Path::sep("/");
-
-    Path::Iterator::Iterator(const Path* pt, underlying_type iter)
-        : m_pt(pt), m_iter(std::move(iter)) {}
-    Path::Iterator& Path::Iterator::operator++()
+    void Path::AssignFromString(std::string value)
     {
-        ++m_iter;
-        return *this;
+        m_underlying = std::move(value);
+
+        boost::char_separator<char> sep("/");
+        boost::tokenizer tok(m_underlying, sep);
+
+        m_cache.clear();
+        std::copy(
+            tok.begin(), tok.end(),
+            std::back_inserter(m_cache)
+        );
     }
 
     Path Path::Parent() const
     {
-        if(m_underlying.empty())
+        if(m_cache.empty())
             return *this;
-        auto index = m_underlying.rfind('/');
-        return m_underlying.substr(0, index == 0 ? 1 : index);
+        return m_cache.size() == 1 ? "/" : m_cache[m_cache.size() - 2];
     }
     std::string Path::Filename() const
     {
-        auto index = m_underlying.rfind('/');
-        if(index == m_underlying.npos || index + 1 > m_underlying.size())
-            return std::string();
-        return m_underlying.substr(index + 1);
+        return m_cache.back();
     }
 
     void VirtualFilesystem::CheckRegularFile(const filesystem::path& pt)
