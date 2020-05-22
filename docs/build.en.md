@@ -3,19 +3,19 @@
 - Windows
 - Linux
 
-## Pre-requirements
-- CMake 3.12 or higher
-- git 2.21 or higher
-- Common C/C++ compiler that support C++17
-- Python Interpreter 3.6 or higher
-- vcpkg *(only Windows)*
+## Pre-requirements (At Least)
+- CMake 3.12
+- git 2.21
+- VS2017 (on Windows), GCC 8 (on Linux)
+- Python Interpreter 3.6
+- vcpkg (on Windows), and `VCPKG_ROOT` must be in the environment variables
 
 ## External Dependencies
 - External libraries (Third party libraries included in the project source code are not listed)
-  | Name | Version |
+  | Name | Version (At Least) |
   |:-|:-|
-  | SDL | 2.0.9 or higher |
-  | Boost | 1.70.0 or higher |
+  | SDL | 2.0.4 |
+  | Boost | 1.65.1 |
 
 ## Starting Build
 - Once you have all of the dependencies installed, you can start building the project

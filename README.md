@@ -1,5 +1,5 @@
 [简体中文](./docs/README.zh-CN.md) | [English](./docs/README.en.md)
-# [WIP] Subterranean Rose
+# [(制作中 / WIP) Subterranean Rose](https://github.com/HenryAWE/SubterraneanRose)
 ![Subterranean Rose CI](https://github.com/HenryAWE/SubterraneanRose/workflows/Subterranean%20Rose%20CI/badge.svg)
 
 ## 欢迎 / Welcome
