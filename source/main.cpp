@@ -54,6 +54,8 @@ int main(int argc, char* argv[])
             0,
             window_flags
         );
+        if(console::VSyncRequired())
+            window.SetVSync(true);
     }
     catch(const std::runtime_error& e)
     { // Create display failed

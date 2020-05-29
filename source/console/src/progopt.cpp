@@ -94,7 +94,8 @@ namespace srose::console
 
         po::options_description display(_("srose.cui.display"));
         display.add_options()
-            ("fullscreen,F", _("srose.cui.display.fullscreen").c_str());
+            ("fullscreen,F", _("srose.cui.display.fullscreen").c_str())
+            ("vsync,V", "Enable vertical synchronization");
         
         po::options_description video(_("srose.cui.video"));
         video.add_options()
@@ -325,6 +326,11 @@ namespace srose::console
         assert(vm&&"Call ParseArg() first!!!");
         return (bool)vm->count("fullscreen");
     }
+    bool SRSCALL VSyncRequired() noexcept
+    {
+        assert(vm&&"Call ParseArg() first!!!");
+        return vm->count("vsync");
+    }
     int SRSCALL DrawDebugOverlay() noexcept
     {
         assert(vm&&"Call ParseArg() first!!!");
@@ -369,6 +375,7 @@ namespace srose::console
     }
 
     int SRSCALL FullscreenRequired() noexcept { return false; }
+    bool SRSCALL VSyncRequired() noexcept { return false; }
     int SRSCALL DrawDebugOverlay() noexcept { return false; }
 } // namespace srose::console
 

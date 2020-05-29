@@ -27,6 +27,7 @@ namespace srose::console
      * @return int 1 means fullscrenn mode is required
      */
     int SRSCALL FullscreenRequired() noexcept;
+    bool SRSCALL VSyncRequired() noexcept;
     /**
      * @brief Is debug UI required
      * 
