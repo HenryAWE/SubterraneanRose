@@ -41,6 +41,9 @@ namespace srose::wm
         [[nodiscard]]
         constexpr SDL_GLContext glctx() const noexcept { return m_glctx; }
 
+        void SetTitle(const std::string& title);
+        void SetVSync(bool vsync);
+
         gpu::Renderer& GetRenderer();
 
     private:

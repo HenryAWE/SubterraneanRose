@@ -97,6 +97,41 @@ namespace srose::wm
         if(tmp_handle)
             SDL_DestroyWindow(tmp_handle);
     }
+
+    void Window::SetTitle(const std::string& title)
+    {
+        SDL_SetWindowTitle(m_handle, title.c_str());
+    }
+    void Window::SetVSync(bool vsync)
+    {
+        if(!m_glctx)
+            return;
+
+        if(vsync)
+        {
+            if(SDL_GL_SetSwapInterval(-1) < 0)
+            { // fallback
+                SDL_LogError(
+                    SDL_LOG_CATEGORY_VIDEO,
+                    "SDL_GL_SetSwapInterval(-1) failed, "
+                    "try SDL_GL_SetSwapInterval(1) instead"
+                );
+
+                if(SDL_GL_SetSwapInterval(1) < 0)
+                {
+                    SDL_LogError(
+                        SDL_LOG_CATEGORY_VIDEO,
+                        "SDL_GL_SetSwapInterval(1) failed"
+                    );
+                }
+            }
+        }
+        else
+        {
+            SDL_GL_SetSwapInterval(0);
+        }
+    }
+
     void Window::CreateRenderer()
     {
         m_renderer = new gpu::opengl3::Renderer(*this);
