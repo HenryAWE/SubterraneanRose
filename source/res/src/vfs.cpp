@@ -124,4 +124,18 @@ namespace srose::vfs
         assert(dynamic_cast<RegularFile*>(file));
         return static_cast<RegularFile*>(file)->OpenRead();
     }
+
+    bool VirtualFilesystem::Exists(const Path& pt) const
+    {
+        return const_cast<VirtualFilesystem*>(this)->LocateFile(pt) != nullptr;
+    }
+    bool VirtualFilesystem::IsDirectory(const Path& pt) const
+    {
+        return const_cast<VirtualFilesystem*>(this)->LocateDirectory(pt, false) != nullptr;
+    }
+    bool VirtualFilesystem::IsRegularFile(const Path& pt) const
+    {
+        FileBase* f = const_cast<VirtualFilesystem*>(this)->LocateFile(pt);
+        return f ? f->IsRegularFile() : false;
+    }
 } // namespace srose::vfs

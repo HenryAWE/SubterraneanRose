@@ -180,6 +180,10 @@ namespace srose::vfs
         );
 
         std::unique_ptr<std::istream> Open(const Path& pt);
+
+        bool Exists(const Path& pt) const;
+        bool IsDirectory(const Path& pt) const;
+        bool IsRegularFile(const Path& pt) const;
     };
 } // namespace srose::vfs
 

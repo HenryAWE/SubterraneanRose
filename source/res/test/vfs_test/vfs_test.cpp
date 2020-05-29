@@ -39,4 +39,11 @@ BOOST_AUTO_TEST_CASE(test_mounting)
     std::string content;
     std::getline(*stream, content);
     BOOST_TEST(content == "Testing virtual filesystem");
+    BOOST_TEST(vfs.IsRegularFile("/data/test.txt"));
+    BOOST_TEST(vfs.IsDirectory("/data/test.txt") == false);
+    BOOST_TEST(vfs.Exists("/data/test.txt"));
+    BOOST_TEST(vfs.IsDirectory("/data"));
+    BOOST_TEST(vfs.IsRegularFile("/data") == false);
+    BOOST_TEST(vfs.Exists("/data"));
+    BOOST_TEST(vfs.Exists("does/not/exist") == false);
 }
