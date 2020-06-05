@@ -10,6 +10,7 @@
 #include <stack>
 #include <functional>
 #include <optional>
+#include <boost/signals2.hpp>
 #include <imgui.h>
 #include <imguisr.h>
 #include <sr/core/macros.hpp>
@@ -17,6 +18,7 @@
 #include <sr/filesystem/common.hpp>
 #include <sr/util/string_tree.hpp>
 #include "widget.hpp"
+#include "node.hpp"
 
 
 namespace srose::ui
@@ -24,6 +26,8 @@ namespace srose::ui
     class UIManager
     {
         wm::Window* m_window = nullptr;
+
+        std::vector<std::shared_ptr<StandaloneNode>> m_standalone;
     public:
         UIManager();
 
@@ -44,8 +48,14 @@ namespace srose::ui
 
         wm::Window& GetWindow() noexcept;
 
+        std::vector<std::shared_ptr<StandaloneNode>>& GetStandaloneVector();
+
         util::string_tree<std::shared_ptr<Widget>> widget_tree;
         std::stack<std::shared_ptr<Widget>> widget_stack;
+
+        std::shared_ptr<RootNode> root;
+
+        boost::signals2::signal<void(const std::locale&)> OnImbue;
 
         /**
          * @brief Pass a new locale to every widget

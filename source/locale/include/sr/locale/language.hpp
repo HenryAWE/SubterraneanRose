@@ -83,6 +83,8 @@ namespace srose::locale
 
         [[nodiscard]]
         Language& get() const noexcept { return *m_lang.get(); }
+        [[nodiscard]]
+        const std::shared_ptr<Language>& getptr() const noexcept { return m_lang; }
     };
 
     class TranslationHelper
