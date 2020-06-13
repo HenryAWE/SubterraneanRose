@@ -9,5 +9,9 @@
 - 欢迎来到**地底蔷薇计划**的项目主页，更多信息请[访问此处](./docs/zh-CN/README.md) 
 - Welcome to the home page of the **Subterranean Rose Project**, you can [visit here](./docs/en/README.md) for further information.
 
+## 目录 / Contents
+1. [构建与安装](docs/zh-CN/build.md) / [Build & Install](docs/en/build.md)
+2. [第三方库](docs/zh-CN/3rd.md) / [Third-party Libraries](docs/en/3rd.md)
+
 ## 协议 / License
 - [GNU 通用公共许可证 3.0 版 / GNU General Public License v3.0](./LICENSE)
