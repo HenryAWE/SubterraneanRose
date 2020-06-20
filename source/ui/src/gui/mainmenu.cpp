@@ -20,6 +20,7 @@
 namespace srose::ui
 {
     MainMenu::MainMenu()
+        : Base("srose.mainmenu")
     {
         using std::make_pair;
 
@@ -47,26 +48,12 @@ namespace srose::ui
 
     void MainMenu::Update()
     {
-        Widget::Update();
+        Base::Update();
 
         auto& io = ImGui::GetIO();
 
-        int background_flags =
-            ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoBackground |
-            ImGuiWindowFlags_NoScrollbar |
-            ImGuiWindowFlags_NoSavedSettings;
-        ImGui::SetNextWindowPosCenter();
-        ImGui::SetNextWindowSize(io.DisplaySize/2.0f);
-        auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(
-            "##srose.mainmenu",
-            nullptr,
-            background_flags
-        );
-        assert(background);
+        SetFlags(ImGuiWindowFlags_NoScrollbar);
+        auto background = BeginContext();
 
         using std::get;
         const float button_height = (io.DisplaySize.y) / static_cast<float>(2 * m_buttons.size());
@@ -113,7 +100,7 @@ namespace srose::ui
         }
     }
 
-    void MainMenu::Load()
+    void MainMenu::LoadI18nData()
     {
         m_buttons[0].first = gettext("srose.ui.editor") + "###editor";
         m_buttons[1].first = gettext("srose.ui.mainmenu.config") + "###config";
@@ -122,10 +109,6 @@ namespace srose::ui
 
         m_crash_report_title = gettext("srose.ui.crash-report.title") + "###crash-report";
         m_crash_report_info = gettext("srose.ui.crash-report.info");
-    }
-    void MainMenu::OnImbue()
-    {
-        Load();
     }
 
     void MainMenu::Button_Editor()

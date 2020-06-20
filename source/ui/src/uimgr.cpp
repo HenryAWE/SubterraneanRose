@@ -28,9 +28,12 @@ namespace srose::ui
 
     void UIManager::Update()
     {
-        if(!widget_stack.empty())
+        assert(root);
+        root->Update();
+
+        for(auto& i : m_standalone)
         {
-            widget_stack.top()->Update();
+            if(i) i->Update();
         }
     }
 
@@ -45,18 +48,11 @@ namespace srose::ui
     {
         m_window = &window;
 
-        widget_stack.push(std::make_shared<MainMenu>());
-        widget_tree.emplace_at("mainmenu", widget_stack.top());
-        widget_tree.emplace_at("editor.window", std::make_shared<editor::EditorWindow>());
-        widget_tree.emplace_at("configpanel", std::make_shared<ConfigPanel>(*m_window));
-        widget_tree.emplace_at("about", std::make_shared<About>());
-        widget_tree.emplace_at("conwin", std::make_shared<ConsoleWindow>());
+        root = std::make_shared<MainMenu>();
     }
     void UIManager::Deinitialize() noexcept
     {
-        while(!widget_stack.empty())
-            widget_stack.pop();
-        widget_tree.clear();
+        root.reset();
         m_window = nullptr;
     }
 
@@ -66,19 +62,13 @@ namespace srose::ui
         return *m_window;
     }
 
-    void imbue_impl(
-        util::string_tree<std::shared_ptr<Widget>>& tree,
-        const std::locale& loc
-    ) {
-        auto func = [&loc](auto& w) { w->imbue(loc); };
-        for(auto& i : tree)
-        {
-            i.second.modify(func);
-            imbue_impl(i.second, loc);
-        }
+    std::vector<std::shared_ptr<StandaloneNode>>& UIManager::GetStandaloneVector()
+    {
+        return m_standalone;
     }
+
     void UIManager::imbue(const std::locale& loc)
     {
-        imbue_impl(widget_tree, loc);
+        OnImbue(loc);
     }
 } // namespace srose::ui
