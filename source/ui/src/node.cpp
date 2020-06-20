@@ -69,23 +69,31 @@ namespace srose::ui
     void RootNode::Update()
     {
         Base::Update();
+    }
 
+    RootNode::ContextGuard RootNode::BeginContext()
+    {
         auto& io = ImGui::GetIO();
 
-        constexpr int background_flags =
+        const int background_flags =
             ImGuiWindowFlags_NoSavedSettings |
             ImGuiWindowFlags_NoTitleBar |
             ImGuiWindowFlags_NoDecoration |
-            ImGuiWindowFlags_NoMove;
+            ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoMove |
+            ImGuiWindowFlags_NoBringToFrontOnFocus |
+            ImGuiWindowFlags_NoBackground |
+            m_flags;
+
         ImGui::SetNextWindowPosCenter(ImGuiCond_Always);
         ImGui::SetNextWindowSize(io.DisplaySize, ImGuiCond_Always);
-        auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(
-            m_id.c_str(),
-            nullptr,
-            background_flags
-        );
-        if(!background)
-            return;
+        bool value = ImGui::Begin(m_id.c_str(), nullptr, background_flags);
+        return ContextGuard(*this, value);
+    }
+
+    void RootNode::EndContext() noexcept
+    {
+        ImGui::End();
     }
 
 

@@ -64,6 +64,7 @@ namespace srose::ui
     class RootNode : public I18nNode
     {
         std::string m_id;
+        int m_flags;
     public:
         typedef I18nNode Base;
 
@@ -71,6 +72,27 @@ namespace srose::ui
         RootNode(std::string_view id, std::shared_ptr<locale::Language> lang);
 
         void Update() override;
+
+    protected:
+        void SetFlags(int flags) { m_flags = flags; }
+
+        struct ContextGuard
+        {
+            RootNode& node;
+            bool value;
+
+            ContextGuard(RootNode& node_, bool value_) noexcept
+                : node(node_), value(value_) {}
+            ~ContextGuard() noexcept { node.EndContext(); }
+
+            [[nodiscard]]
+            constexpr operator bool() const noexcept { return value; }
+        };
+
+        ContextGuard BeginContext();
+
+    private:
+        void EndContext() noexcept;
     };
 
     class StandaloneNode : public I18nNode
