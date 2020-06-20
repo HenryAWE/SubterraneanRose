@@ -105,7 +105,12 @@ namespace srose::ui
 
         void Connect(boost::signals2::signal<void(const std::locale&)>& notifier);
 
+        std::string gettext(std::string_view id);
+
         const std::shared_ptr<locale::Language>& getptr() const noexcept { return m_lang; }
+
+    protected:
+        virtual void LoadI18nData();
     };
 } // namespace srose::ui
 

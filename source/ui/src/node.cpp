@@ -122,4 +122,11 @@ namespace srose::ui
             [this](const std::locale& loc) { SetLanguage(loc); }
         );
     }
+
+    std::string I18nNode::gettext(std::string_view id)
+    {
+        return m_lang->gettext(id);
+    }
+
+    void I18nNode::LoadI18nData() {}
 } // namespace srose::ui
