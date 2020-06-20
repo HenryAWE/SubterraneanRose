@@ -18,77 +18,6 @@ namespace srose::ui
     void BaseNode::Update() {}
 
 
-    // Root node
-    RootNode::RootNode(std::string_view id)
-        : m_id("###" + std::string(id)) {}
-
-    void RootNode::Update()
-    {
-        Base::Update();
-
-        auto& io = ImGui::GetIO();
-
-        constexpr int background_flags =
-            ImGuiWindowFlags_NoSavedSettings |
-            ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoDecoration |
-            ImGuiWindowFlags_NoMove;
-        ImGui::SetNextWindowPosCenter(ImGuiCond_Always);
-        ImGui::SetNextWindowSize(io.DisplaySize, ImGuiCond_Always);
-        auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(
-            m_id.c_str(),
-            nullptr,
-            background_flags
-        );
-        if(!background)
-            return;
-    }
-
-
-    // Stand-alone node
-    StandaloneNode::StandaloneNode(std::string title, std::string name)
-    {
-        SetId(std::move(title), std::move(name));
-    }
-
-    void StandaloneNode::Update()
-    {
-        if(!m_open)
-            return;
-        auto guard = BeginContext();
-        if(!guard)
-            return;
-    }
-
-    StandaloneNode::ContextGuard::~ContextGuard() noexcept
-    {
-        node.EndContext();
-    }
-
-    StandaloneNode::ContextGuard StandaloneNode::BeginContext()
-    {
-        bool value = ImGui::Begin(m_id.c_str(), &m_open);
-        return ContextGuard(*this, value);
-    }
-
-    void StandaloneNode::EndContext() noexcept
-    {
-        ImGui::End();
-    }
-
-    void StandaloneNode::SetId(std::string title)
-    {
-        m_title.swap(title);
-        m_id = m_title + "###" + m_name;
-    }
-    void StandaloneNode::SetId(std::string title, std::string name)
-    {
-        m_title.swap(title);
-        m_name.swap(name);
-        m_id = m_title + "###" + m_name;
-    }
-
-
     // I18n node
     I18nNode::I18nNode()
         : I18nNode(std::locale()) {}
@@ -129,4 +58,82 @@ namespace srose::ui
     }
 
     void I18nNode::LoadI18nData() {}
+
+
+    // Root node
+    RootNode::RootNode(std::string_view id)
+        : m_id("###" + std::string(id)) {}
+    RootNode::RootNode(std::string_view id, std::shared_ptr<locale::Language> lang)
+        : I18nNode(std::move(lang)), m_id("###" + std::string(id)) {}
+
+    void RootNode::Update()
+    {
+        Base::Update();
+
+        auto& io = ImGui::GetIO();
+
+        constexpr int background_flags =
+            ImGuiWindowFlags_NoSavedSettings |
+            ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_NoDecoration |
+            ImGuiWindowFlags_NoMove;
+        ImGui::SetNextWindowPosCenter(ImGuiCond_Always);
+        ImGui::SetNextWindowSize(io.DisplaySize, ImGuiCond_Always);
+        auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(
+            m_id.c_str(),
+            nullptr,
+            background_flags
+        );
+        if(!background)
+            return;
+    }
+
+
+    // Stand-alone node
+    StandaloneNode::StandaloneNode(std::string title, std::string name)
+    {
+        SetId(std::move(title), std::move(name));
+    }
+    StandaloneNode::StandaloneNode(std::string title, std::string name, std::shared_ptr<locale::Language> lang)
+        : I18nNode(std::move(lang))
+    {
+        SetId(std::move(title), std::move(name));
+    }
+
+    void StandaloneNode::Update()
+    {
+        if(!m_open)
+            return;
+        auto guard = BeginContext();
+        if(!guard)
+            return;
+    }
+
+    StandaloneNode::ContextGuard::~ContextGuard() noexcept
+    {
+        node.EndContext();
+    }
+
+    StandaloneNode::ContextGuard StandaloneNode::BeginContext()
+    {
+        bool value = ImGui::Begin(m_id.c_str(), &m_open);
+        return ContextGuard(*this, value);
+    }
+
+    void StandaloneNode::EndContext() noexcept
+    {
+        ImGui::End();
+    }
+
+    void StandaloneNode::SetId(std::string title)
+    {
+        m_title.swap(title);
+        m_id = m_title + "###" + m_name;
+    }
+    void StandaloneNode::SetId(std::string title, std::string name)
+    {
+        m_title.swap(title);
+        m_name.swap(name);
+        m_id = m_title + "###" + m_name;
+    }
 } // namespace srose::ui

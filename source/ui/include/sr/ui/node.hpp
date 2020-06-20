@@ -31,27 +31,59 @@ namespace srose::ui
         virtual void Update();
     };
 
-    class RootNode : public BaseNode
+
+    class I18nNode : public BaseNode
     {
-        std::string m_id;
+        std::shared_ptr<locale::Language> m_lang;
+        boost::signals2::connection m_connection;
+
     public:
         typedef BaseNode Base;
 
+        I18nNode();
+        I18nNode(const std::locale& loc);
+        I18nNode(std::shared_ptr<locale::Language> lang);
+
+        ~I18nNode();
+
+        void Update() override;
+
+        void SetLanguage(const std::locale& loc);
+        void SetLanguage(std::shared_ptr<locale::Language> lang);
+
+        void Connect(boost::signals2::signal<void(const std::locale&)>& notifier);
+
+        std::string gettext(std::string_view id);
+
+        const std::shared_ptr<locale::Language>& getptr() const noexcept { return m_lang; }
+
+    protected:
+        virtual void LoadI18nData();
+    };
+
+    class RootNode : public I18nNode
+    {
+        std::string m_id;
+    public:
+        typedef I18nNode Base;
+
         RootNode(std::string_view id);
+        RootNode(std::string_view id, std::shared_ptr<locale::Language> lang);
 
         void Update() override;
     };
 
-    class StandaloneNode : public BaseNode
+    class StandaloneNode : public I18nNode
     {
         bool m_open = true;
         std::string m_title;
         std::string m_name;
         std::string m_id;
     public:
-        typedef BaseNode Base;
+        typedef I18nNode Base;
 
         StandaloneNode(std::string title, std::string name = std::string());
+        StandaloneNode(std::string title, std::string name, std::shared_ptr<locale::Language> lang);
 
         void Update() override;
 
@@ -82,35 +114,6 @@ namespace srose::ui
 
     private:
         void EndContext() noexcept;
-    };
-
-    class I18nNode : public BaseNode
-    {
-        std::shared_ptr<locale::Language> m_lang;
-        boost::signals2::connection m_connection;
-
-    public:
-        typedef BaseNode Base;
-
-        I18nNode();
-        I18nNode(const std::locale& loc);
-        I18nNode(std::shared_ptr<locale::Language> lang);
-
-        ~I18nNode();
-
-        void Update() override;
-
-        void SetLanguage(const std::locale& loc);
-        void SetLanguage(std::shared_ptr<locale::Language> lang);
-
-        void Connect(boost::signals2::signal<void(const std::locale&)>& notifier);
-
-        std::string gettext(std::string_view id);
-
-        const std::shared_ptr<locale::Language>& getptr() const noexcept { return m_lang; }
-
-    protected:
-        virtual void LoadI18nData();
     };
 } // namespace srose::ui
 
