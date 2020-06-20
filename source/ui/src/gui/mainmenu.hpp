@@ -12,13 +12,16 @@
 #include <imgui.h>
 #include <imguisr.h>
 #include <sr/ui/widget.hpp>
+#include <sr/ui/node.hpp>
 
 
 namespace srose::ui
 {
-    class MainMenu : public Widget
+    class MainMenu : public RootNode
     {
     public:
+        typedef RootNode Base;
+
         MainMenu();
 
         void Update() override;
@@ -32,8 +35,7 @@ namespace srose::ui
         bool m_show_stacktrace = false;
         std::string m_crash_report_stacktrace;
 
-        void Load();
-        void OnImbue() override;
+        void LoadI18nData() override;
 
         void Button_Editor();
         void Button_Config();

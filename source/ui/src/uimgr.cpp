@@ -48,7 +48,7 @@ namespace srose::ui
     {
         m_window = &window;
 
-        root = std::make_shared<RootNode>("main");
+        root = std::make_shared<MainMenu>();
     }
     void UIManager::Deinitialize() noexcept
     {
