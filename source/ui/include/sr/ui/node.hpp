@@ -59,6 +59,42 @@ namespace srose::ui
 
     protected:
         virtual void LoadI18nData();
+
+        void AddString(
+            std::string id,
+            std::optional<std::string> path,
+            std::string_view prefix = std::string_view(),
+            std::string_view suffix = std::string_view()
+        );
+        const std::string& GetString(std::string_view id);
+
+    private:
+        struct StringData
+        {
+            const std::optional<std::string> path;
+            const std::string prefix;
+            const std::string suffix;
+
+            std::string data;
+
+            StringData(const StringData&) = default;
+            StringData(StringData&&) = default;
+            StringData(
+                const util::string_tree<std::string>& tree,
+                std::optional<std::string> path_,
+                std::string prefix_,
+                std::string suffix_
+            ) : path(std::move(path_)), prefix(std::move(prefix_)), suffix(std::move(suffix_))
+            {
+                if(path.has_value())
+                    data = prefix + tree.get_value(*path) + suffix;
+                else
+                    data = prefix + suffix;
+            }
+
+            void Load(const util::string_tree<std::string>& tree);
+        };
+        std::map<std::string, StringData, util::string_comparator<char>> m_string_data;
     };
 
     class RootNode : public I18nNode

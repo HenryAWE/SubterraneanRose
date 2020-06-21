@@ -59,6 +59,28 @@ namespace srose::ui
 
     void I18nNode::LoadI18nData() {}
 
+    void I18nNode::AddString(
+            std::string id,
+            std::optional<std::string> path,
+            std::string_view prefix,
+            std::string_view suffix
+    ) {
+        StringData data(m_lang->GetStringTree(), std::move(path), std::string(prefix), std::string(prefix));
+        m_string_data.emplace(std::make_pair(id, std::move(data)));
+    }
+    const std::string& I18nNode::GetString(std::string_view id)
+    {
+        auto iter = m_string_data.find(id);
+        if(iter == m_string_data.end())
+            throw std::out_of_range("[UI] Unknown string id: " + std::string(id));
+        return iter->second.data;
+    }
+
+    void I18nNode::StringData::Load(const util::string_tree<std::string>& tree)
+    {
+        if(path.has_value())
+            data = prefix + tree.get_value(*path) + suffix;
+    }
 
     // Root node
     RootNode::RootNode(std::string_view id)
