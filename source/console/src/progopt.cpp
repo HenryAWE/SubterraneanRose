@@ -81,33 +81,35 @@ namespace srose::console
         using namespace srose;
         namespace po = boost::program_options;
 
-        po::options_description generic(_("srose.cui.generic"));
+        constexpr unsigned int line_length = UINT_MAX;
+
+        po::options_description generic(_("srose.cui.generic"), line_length);
         generic.add_options()
             ("help", _("srose.cui.generic.help").c_str())
             ("version", _("srose.cui.generic.version").c_str())
             ("build-info", _("srose.cui.generic.build").c_str());
 
-        po::options_description language(_("srose.cui.lang"));
+        po::options_description language(_("srose.cui.lang"), line_length);
         language.add_options()
             ("language", po::value<std::string>()->value_name("name")->default_value("auto"), _("srose.cui.lang.language").c_str())
             ("available-language", _("srose.cui.lang.available").c_str());
 
-        po::options_description display(_("srose.cui.display"));
+        po::options_description display(_("srose.cui.display"), line_length);
         display.add_options()
             ("fullscreen,F", _("srose.cui.display.fullscreen").c_str())
             ("vsync,V", "Enable vertical synchronization");
         
-        po::options_description video(_("srose.cui.video"));
+        po::options_description video(_("srose.cui.video"), line_length);
         video.add_options()
             ("get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), _("srose.cui.get-display-mode").c_str());
 
     #ifdef __WINDOWS__
-        po::options_description win32("Windows");
+        po::options_description win32("Windows", line_length);
         win32.add_options()
             ("win-console", po::value<std::string>()->value_name("mode")->default_value("auto"), "Windows console");
     #endif
 
-        return po::options_description(_("srose.cui.total"))
+        return po::options_description(_("srose.cui.total"), line_length)
             .add(generic)
         #ifdef __WINDOWS__
             .add(win32)

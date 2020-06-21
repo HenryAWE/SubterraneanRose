@@ -15,7 +15,7 @@
 @srose.cui.display.fullscreen = "全屏"
 
 @srose.cui.video = "视频"
-@srose.cui.get-display-mode = "获取指定显示器所有可用的\n显示模式"
+@srose.cui.get-display-mode = "获取指定显示器所有可用的显示模式"
 @srose.cui.get-display-mode.display-name = "显示器-%02d 名称: %s"
 @srose.cui.get-display-mode.display-mode-count = "显示模式数量: %d"
 @srose.cui.get-display-mode.format-desc = "模式\t每像素位数 - 格式名\t宽度 x 高度 @刷新率"
