@@ -152,7 +152,10 @@ namespace srose::ui
         void Close() noexcept { m_open = false; }
 
         void SetId(std::string title);
-        void SetId(std::string title, std::string name = std::string());
+        void SetId(std::string title, std::string name);
+
+        [[nodiscard]]
+        constexpr const std::string& GetName() const noexcept { return m_name; }
 
     protected:
         struct ContextGuard
