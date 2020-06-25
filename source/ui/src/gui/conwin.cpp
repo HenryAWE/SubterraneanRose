@@ -12,6 +12,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imguisr.h>
+#include <sr/ui/uimgr.hpp>
 
 
 namespace srose::ui
@@ -19,8 +20,10 @@ namespace srose::ui
     ConsoleWindow::ConsoleWindow(std::string name)
         : Base("", std::move(name))
     {
+        Connect(UIManager::GetInstance().OnImbue);
+
         SetId(gettext("srose.ui.conwin"));
-        AddString("logviewer", "srose.ui.conwin.log");
+        AddString("logviewer", "srose.ui.conwin.log", "", "###logviewer");
     }
 
     ConsoleWindow::~ConsoleWindow()

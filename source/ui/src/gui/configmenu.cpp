@@ -24,7 +24,19 @@ namespace srose::ui
     ConfigPanel::ConfigPanel(wm::Window& window)
         : Base("configpanel"), m_window(&window)
     {
-        LoadButtons();
+        Connect(UIManager::GetInstance().OnImbue);
+
+        AddString("windowed", "srose.ui.configpanel.video.windowed");
+        AddString("show-conwin", "srose.ui.configpanel.developer.show-conwin");
+
+        using std::pair;
+        constexpr int BUTTON_COUNT = 4;
+        m_buttons.reserve(BUTTON_COUNT);
+        m_buttons.push_back(pair(gettext("srose.ui.configpanel.video") + "###video", &ConfigPanel::Button_Video));
+        m_buttons.push_back(pair(gettext("srose.ui.configpanel.lang") + "###lang", &ConfigPanel::Button_Language));
+        m_buttons.push_back(pair(gettext("srose.ui.configpanel.developer") + "###developer", &ConfigPanel::Button_Developer));
+        m_buttons.push_back(pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
+
         m_conwin = std::make_shared<ConsoleWindow>("conwin");
     }
 
@@ -75,20 +87,6 @@ namespace srose::ui
 #endif
     }
 
-    void ConfigPanel::LoadButtons()
-    {
-        using std::make_pair;
-
-        constexpr int BUTTON_COUNT = 3;
-        m_buttons.reserve(BUTTON_COUNT);
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.video") + "###video", &ConfigPanel::Button_Video));
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.lang") + "###lang", &ConfigPanel::Button_Language));
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.developer") + "###developer", &ConfigPanel::Button_Developer));
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
-
-        AddString("windowed", "srose.ui.configpanel.video.windowed");
-        AddString("show-conwin", "srose.ui.configpanel.developer.show-conwin");
-    }
     void ConfigPanel::ResetStates()
     {
         m_content_func = nullptr;

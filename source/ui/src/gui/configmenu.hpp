@@ -27,7 +27,6 @@ namespace srose::ui
         void Update() override;
 
     private:
-        void LoadButtons();
         void ResetStates();
 
         void LoadI18nData() override;

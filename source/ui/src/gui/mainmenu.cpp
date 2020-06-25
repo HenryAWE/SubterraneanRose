@@ -22,6 +22,8 @@ namespace srose::ui
     MainMenu::MainMenu()
         : Base("srose.mainmenu")
     {
+        Connect(UIManager::GetInstance().OnImbue);
+
         using std::make_pair;
 
         constexpr int BUTTON_COUNT = 4;
