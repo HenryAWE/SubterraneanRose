@@ -177,7 +177,7 @@ namespace srose::ui
         if(ImGui::Button(GetString("show-conwin").c_str()))
         {
             auto& nodes = uimgr.GetStandaloneNodes();
-            auto& iter = std::find_if(
+            auto iter = std::find_if(
                 nodes.begin(), nodes.end(),
                 [](auto& v){ return v->GetName() == "conwin"; }
             );
