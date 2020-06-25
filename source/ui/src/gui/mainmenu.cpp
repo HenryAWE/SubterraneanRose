@@ -119,7 +119,7 @@ namespace srose::ui
     void MainMenu::Button_Config()
     {
         auto& uimgr = UIManager::GetInstance();
-        uimgr.widget_stack.push(uimgr.widget_tree["configpanel"]);
+        uimgr.PushRootNode(uimgr.GetUINodeTree()["configpanel"]);
     }
     void MainMenu::Button_About()
     {

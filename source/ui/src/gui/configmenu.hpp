@@ -10,15 +10,18 @@
 #include <vector>
 #include <utility>
 #include <sr/ui/widget.hpp>
+#include <sr/ui/node.hpp>
 #include <sr/wm/window.hpp>
 
 
 namespace srose::ui
 {
-    class ConfigPanel : public Widget
+    class ConfigPanel : public RootNode
     {
         wm::Window* m_window;
     public:
+        typedef RootNode Base;
+
         ConfigPanel(wm::Window& window);
 
         void Update() override;
@@ -27,7 +30,7 @@ namespace srose::ui
         void LoadButtons();
         void ResetStates();
 
-        void OnImbue() override;
+        void LoadI18nData() override;
 
         using callback_type = void(ConfigPanel::*)();
         std::vector<std::pair<std::string, callback_type>> m_buttons;

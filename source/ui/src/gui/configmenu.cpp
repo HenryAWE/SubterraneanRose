@@ -22,27 +22,19 @@
 namespace srose::ui
 {
     ConfigPanel::ConfigPanel(wm::Window& window)
-        : m_window(&window)
+        : Base("configpanel"), m_window(&window)
     {
         LoadButtons();
     }
 
     void ConfigPanel::Update()
     {
-        Widget::Update();
+        Base::Update();
 
         auto& io = ImGui::GetIO();
 
-        constexpr int background_flags =
-            ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoBackground |
-            ImGuiWindowFlags_NoScrollbar |
-            ImGuiWindowFlags_NoSavedSettings;
-        ImGui::SetNextWindowSize(io.DisplaySize);
-        auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>("##configpanel", nullptr, background_flags);
+        SetFlags(ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+        auto background = BeginContext();
 
         /* Configuration items' list */
         ImVec2 configitems_region(ImGui::GetWindowContentRegionWidth() * 0.18f, io.DisplaySize.y * 0.7f);
@@ -108,9 +100,9 @@ namespace srose::ui
         m_content_func = nullptr;
     }
 
-    void ConfigPanel::OnImbue()
+    void ConfigPanel::LoadI18nData()
     {
-        Widget::OnImbue();
+        Base::LoadI18nData();
 
         m_buttons[0].first = gettext("srose.ui.configpanel.video") + "###video";
         m_buttons[1].first = gettext("srose.ui.configpanel.lang") + "###lang";
@@ -152,8 +144,7 @@ namespace srose::ui
         m_show_audio_demo = false;
 #endif
         auto& uimgr = UIManager::GetInstance();
-        if(&*uimgr.widget_stack.top() == this)
-            uimgr.widget_stack.pop();
+        uimgr.PopRootNode();
     }
 
     void ConfigPanel::Content_Video()
