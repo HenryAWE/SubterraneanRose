@@ -43,6 +43,9 @@ namespace srose::ui
     void I18nNode::SetLanguage(std::shared_ptr<locale::Language> lang)
     {
         m_lang.swap(lang);
+        for(auto& i : m_string_data)
+            i.second.Load(m_lang->GetStringTree());
+        LoadI18nData();
     }
 
     void I18nNode::Connect(boost::signals2::signal<void(const std::locale&)>& notifier)
