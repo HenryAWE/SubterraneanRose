@@ -16,9 +16,11 @@
 
 namespace srose::ui
 {
-    ConsoleWindow::ConsoleWindow()
+    ConsoleWindow::ConsoleWindow(std::string name)
+        : Base("", std::move(name))
     {
-        Load();
+        SetId(gettext("srose.ui.conwin"));
+        AddString("logviewer", "srose.ui.conwin.log");
     }
 
     ConsoleWindow::~ConsoleWindow()
@@ -28,19 +30,11 @@ namespace srose::ui
 
     void ConsoleWindow::Update()
     {
-        Widget::Update();
+        Base::Update();
 
         auto& io = ImGui::GetIO();
 
-        constexpr int  conwin_flags = 
-            ImGuiWindowFlags_NoSavedSettings;
-        ImGui::SetNextWindowPosCenter(ImGuiCond_Appearing);
-        ImGui::SetNextWindowSize(io.DisplaySize*0.8f, ImGuiCond_Appearing);
-        auto conwin = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(
-            GetString("title").c_str(),
-            &open,
-            conwin_flags
-        );
+        auto conwin = BeginContext();
         if(!conwin)
             return;
 
@@ -52,10 +46,11 @@ namespace srose::ui
         UpdateLogViewerTabItem();
     }
 
-    void ConsoleWindow::Load()
+    void ConsoleWindow::LoadI18nData()
     {
-        AddString("title", "srose.ui.conwin", "", "###conwin");
-        AddString("logviewer", "srose.ui.conwin.log");
+        Base::LoadI18nData();
+
+        SetId(gettext("srose.ui.conwin"));
     }
 
     void ConsoleWindow::UpdateLogViewerTabItem()

@@ -44,6 +44,7 @@ namespace srose::ui
 
         void Content_Video();
         bool m_show_conwin = false;
+        std::shared_ptr<StandaloneNode> m_conwin;
 #ifndef SROSE_DISABLE_DEMO
         bool m_show_player_demo = false;
         bool m_show_render_demo = false;

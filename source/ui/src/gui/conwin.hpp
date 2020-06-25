@@ -10,15 +10,18 @@
 #include <tuple>
 #include <deque>
 #include <sr/ui/widget.hpp>
+#include <sr/ui/node.hpp>
 #include <SDL_log.h>
 
 
 namespace srose::ui
 {
-    class ConsoleWindow : public Widget
+    class ConsoleWindow : public StandaloneNode
     {
     public:
-        ConsoleWindow();
+        typedef StandaloneNode Base;
+
+        ConsoleWindow(std::string name = "conwin");
 
         ~ConsoleWindow();
 
@@ -28,7 +31,7 @@ namespace srose::ui
         bool verbose = false;
 
     private:
-        void Load();
+        void LoadI18nData() override;
 
         void UpdateLogViewerTabItem();
 

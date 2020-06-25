@@ -25,6 +25,7 @@ namespace srose::ui
         : Base("configpanel"), m_window(&window)
     {
         LoadButtons();
+        m_conwin = std::make_shared<ConsoleWindow>("conwin");
     }
 
     void ConfigPanel::Update()
@@ -62,13 +63,6 @@ namespace srose::ui
         }
         ImGui::EndChild();
 
-        if(m_show_conwin)
-        {
-            auto conwin = UIManager::GetInstance().widget_tree["conwin"].get();
-            static_cast<ConsoleWindow*>(conwin)->open = true;
-            conwin->Update();
-            m_show_conwin = static_cast<ConsoleWindow*>(conwin)->open;
-        }
 #ifndef SROSE_DISABLE_DEMO
         if(m_show_player_demo)
             player::ShowDemoWindow(*m_window, &m_show_player_demo);
@@ -179,7 +173,19 @@ namespace srose::ui
     }
     void ConfigPanel::Content_Developer()
     {
-        ImGui::Checkbox(GetString("show-conwin").c_str(), &m_show_conwin);
+        auto& uimgr = UIManager::GetInstance();
+        if(ImGui::Button(GetString("show-conwin").c_str()))
+        {
+            auto& nodes = uimgr.GetStandaloneNodes();
+            auto& iter = std::find_if(
+                nodes.begin(), nodes.end(),
+                [](auto& v){ return v->GetName() == "conwin"; }
+            );
+            if(iter == nodes.end())
+            {
+                nodes.push_back(m_conwin);
+            }
+        }
 #ifndef SROSE_DISABLE_DEMO
         ImGui::Separator();
         ImGui::Checkbox("Player test", &m_show_player_demo);
