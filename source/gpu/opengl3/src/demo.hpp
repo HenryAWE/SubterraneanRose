@@ -10,6 +10,7 @@
 #include <glad/glad.h>
 #include <vector>
 #include <sr/ui/widget.hpp>
+#include <sr/ui/node.hpp>
 #include <sr/gpu/opengl3/renderer.hpp>
 #include <sr/gpu/opengl3/buffer.hpp>
 #include <sr/gpu/opengl3/shader.hpp>
@@ -21,10 +22,12 @@
 
 namespace srose::gpu::opengl3
 {
-    class OpenGL3DemoWindow : public ui::Widget
+    class OpenGL3DemoWindow : public ui::StandaloneNode
     {
         Renderer* m_ren;
     public:
+        typedef StandaloneNode Base;
+
         OpenGL3DemoWindow(Renderer& ren, bool initgl = true);
 
         ~OpenGL3DemoWindow();
@@ -37,7 +40,6 @@ namespace srose::gpu::opengl3
 
         void Render();
 
-        bool open = true;
         void Update() override;
 
     private:

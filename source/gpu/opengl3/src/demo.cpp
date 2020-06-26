@@ -53,7 +53,7 @@ namespace srose::gpu::opengl3
     } // namespace detail
 
     OpenGL3DemoWindow::OpenGL3DemoWindow(Renderer& ren, bool initgl)
-        : m_ren(&ren)
+        : Base("OpenGL3 Demo", "opengl3-demo"), m_ren(&ren)
     {
         if(initgl)
             InitializeGL();
@@ -210,16 +210,10 @@ namespace srose::gpu::opengl3
         assert(m_gl_initialized);
         auto& io = ImGui::GetIO();
 
-        constexpr int background_flags = 
-            ImGuiWindowFlags_NoSavedSettings |
-            ImGuiWindowFlags_MenuBar;
+        SetFlags(ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar);
         ImGui::SetNextWindowPosCenter(ImGuiCond_Appearing);
         ImGui::SetNextWindowSize(io.DisplaySize * 0.8f, ImGuiCond_Appearing);
-        auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(
-            "OpenGL3 Demo",
-            &open,
-            background_flags
-        );
+        auto background = BeginContext();
         if(!background)
             return;
 

@@ -28,18 +28,13 @@ namespace srose::audio
 #ifndef SROSE_DISABLE_DEMO
         if(!m_demo_initialized)
         {
-            uimgr.widget_tree.emplace_at(
-                "srose.audio.demo",
-                std::make_shared<AudioDemoWindow>()
-            );
-
+            m_demo_window = std::make_shared<AudioDemoWindow>();
             m_demo_initialized = true;
         }
-        auto ptr = uimgr.widget_tree["srose.audio.demo"].get();
-        static_cast<AudioDemoWindow*>(ptr)->open = true;
-        ptr->Update();
+        m_demo_window->Open();
+        m_demo_window->Update();
         if(p_open)
-            *p_open = static_cast<AudioDemoWindow*>(ptr)->open;
+            *p_open = m_demo_window->visible();
 #else
         if(p_open)
             *p_open = false;

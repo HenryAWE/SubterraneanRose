@@ -41,7 +41,7 @@ namespace srose::player
     };
 
     PlayerDemoWindow::PlayerDemoWindow(gpu::Renderer& ren)
-        : m_ren(&ren), m_stage({350, 430})
+        : Base("Player Demo", "player-demo"), m_ren(&ren), m_stage({350, 430})
     {
         auto& emgr = m_stage.world.GetEntityManager();
         auto id = emgr.CreateEntity().GetId();
@@ -72,16 +72,10 @@ namespace srose::player
         m_stage.world.Update();
         auto& io = ImGui::GetIO();
 
-        constexpr int background_flags = 
-            ImGuiWindowFlags_NoSavedSettings |
-            ImGuiWindowFlags_MenuBar;
+        SetFlags(ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar);
         ImGui::SetNextWindowPosCenter(ImGuiCond_Appearing);
         ImGui::SetNextWindowSize(io.DisplaySize * 0.8f, ImGuiCond_Appearing);
-        auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(
-            "Player Demo",
-            &open,
-            background_flags
-        );
+        auto background = BeginContext();
         if(!background)
             return;
 

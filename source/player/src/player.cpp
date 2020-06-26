@@ -14,6 +14,7 @@
 namespace srose::player
 {
 #ifndef SROSE_DISABLE_DEMO
+    static std::shared_ptr<PlayerDemoWindow> g_demo_window;
     static bool g_demo_initialized = false;
 
     void ShowDemoWindow(wm::Window& window, bool* p_open)
@@ -22,17 +23,13 @@ namespace srose::player
 
         if(!g_demo_initialized)
         {
-            uimgr.widget_tree.emplace_at(
-                "srose.player.demo",
-                std::make_shared<PlayerDemoWindow>(window.GetRenderer())
-            );
+            g_demo_window = std::make_shared<PlayerDemoWindow>(window.GetRenderer());
             g_demo_initialized = true;
         }
-        auto ptr = uimgr.widget_tree["srose.player.demo"].get();
-        static_cast<PlayerDemoWindow*>(ptr)->open = true;
-        ptr->Update();
+        g_demo_window->Open();
+        g_demo_window->Update();
         if(p_open)
-            *p_open = static_cast<PlayerDemoWindow*>(ptr)->open;
+            *p_open = g_demo_window->visible();
     }
 
     void RenderDemoWindow()
@@ -40,10 +37,8 @@ namespace srose::player
         if(!g_demo_initialized)
             return;
 
-        auto& uimgr = ui::UIManager::GetInstance();
-        auto ptr = uimgr.widget_tree["srose.player.demo"].get();
-        if(static_cast<PlayerDemoWindow*>(ptr)->open)
-            static_cast<PlayerDemoWindow*>(ptr)->Render();
+        if(g_demo_window->visible())
+            g_demo_window->Render();
     }
 #endif
 
@@ -52,8 +47,8 @@ namespace srose::player
 #ifndef SROSE_DISABLE_DEMO
         if(g_demo_initialized)
         {
+            g_demo_window.reset();
             g_demo_initialized = false;
-            ui::UIManager::GetInstance().widget_tree.erase_at("srose.player.demo");
         }
 #endif
     }
