@@ -149,7 +149,7 @@ namespace srose::ui
 
     StandaloneNode::ContextGuard StandaloneNode::BeginContext()
     {
-        bool value = ImGui::Begin(m_id.c_str(), &m_open);
+        bool value = ImGui::Begin(m_id.c_str(), &m_open, m_flags);
         return ContextGuard(*this, value);
     }
 

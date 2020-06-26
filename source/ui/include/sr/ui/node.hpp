@@ -137,6 +137,7 @@ namespace srose::ui
         std::string m_title;
         std::string m_name;
         std::string m_id;
+        int m_flags;
     public:
         typedef I18nNode Base;
 
@@ -158,6 +159,8 @@ namespace srose::ui
         constexpr const std::string& GetName() const noexcept { return m_name; }
 
     protected:
+        void SetFlags(int flags) { m_flags = flags; }
+
         struct ContextGuard
         {
             StandaloneNode& node;
