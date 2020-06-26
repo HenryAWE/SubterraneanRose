@@ -9,7 +9,6 @@
 
 #include <sr/gpu/image.hpp>
 #include <sr/gpu/renderer.hpp>
-#include <sr/ui/widget.hpp>
 #include <sr/ui/node.hpp>
 #include <sr/player/player.hpp>
 #include <sr/player/stage.hpp>

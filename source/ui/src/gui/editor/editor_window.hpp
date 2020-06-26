@@ -9,7 +9,6 @@
 
 #include <sr/ui/property.hpp>
 #include <imguisr.h>
-#include <sr/ui/widget.hpp>
 #include <sr/ui/node.hpp>
 #include "srlc_editor.hpp"
 

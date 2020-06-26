@@ -61,9 +61,6 @@ namespace srose::ui
         [[nodiscard]]
         RootNode* GetUINodeStackTop() noexcept;
 
-        util::string_tree<std::shared_ptr<Widget>> widget_tree;
-        std::stack<std::shared_ptr<Widget>> widget_stack;
-
         boost::signals2::signal<void(const std::locale&)> OnImbue;
 
         /**

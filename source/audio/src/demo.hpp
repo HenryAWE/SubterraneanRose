@@ -9,7 +9,6 @@
 
 #include <vector>
 #include <sr/audio/aumgr.hpp>
-#include <sr/ui/widget.hpp>
 #include <sr/ui/node.hpp>
 
 

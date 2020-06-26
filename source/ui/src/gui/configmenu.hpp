@@ -9,7 +9,6 @@
 
 #include <vector>
 #include <utility>
-#include <sr/ui/widget.hpp>
 #include <sr/ui/node.hpp>
 #include <sr/wm/window.hpp>
 

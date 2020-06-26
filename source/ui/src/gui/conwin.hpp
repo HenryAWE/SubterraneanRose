@@ -9,7 +9,6 @@
 
 #include <tuple>
 #include <deque>
-#include <sr/ui/widget.hpp>
 #include <sr/ui/node.hpp>
 #include <SDL_log.h>
 

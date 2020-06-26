@@ -9,7 +9,6 @@
 
 #include <glad/glad.h>
 #include <vector>
-#include <sr/ui/widget.hpp>
 #include <sr/ui/node.hpp>
 #include <sr/gpu/opengl3/renderer.hpp>
 #include <sr/gpu/opengl3/buffer.hpp>

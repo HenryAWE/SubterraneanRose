@@ -7,7 +7,6 @@
 #ifndef SROSE_UI_GUI_EDITOR_srlc_editor_hpp_
 #define SROSE_UI_GUI_EDITOR_srlc_editor_hpp_
 
-#include <sr/ui/widget.hpp>
 #include <sr/ui/node.hpp>
 #include <sr/util/string_tree.hpp>
 

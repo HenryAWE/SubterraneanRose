@@ -12,13 +12,14 @@
 #include <tuple>
 #include <variant>
 #include <boost/signals2.hpp>
+#include <boost/noncopyable.hpp>
 #include <sr/util/string_comparator.hpp>
 #include <sr/locale/language.hpp>
 
 
 namespace srose::ui
 {
-    class BaseNode : public std::enable_shared_from_this<BaseNode>
+    class BaseNode : public std::enable_shared_from_this<BaseNode>, public boost::noncopyable
     {
     protected:
         BaseNode();
