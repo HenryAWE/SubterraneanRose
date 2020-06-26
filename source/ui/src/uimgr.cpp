@@ -51,6 +51,8 @@ namespace srose::ui
         auto root = m_ui_node_tree.emplace_at("root", std::make_shared<MainMenu>());
         PushRootNode(std::move(root));
         m_ui_node_tree.emplace_at("configpanel", std::make_shared<ConfigPanel>(*m_window));
+        m_ui_node_tree.emplace_at("about", std::make_shared<About>());
+        m_ui_node_tree.emplace_at("editor", std::make_shared<editor::EditorWindow>());
     }
     void UIManager::Deinitialize() noexcept
     {

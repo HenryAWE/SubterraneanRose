@@ -14,29 +14,24 @@
 namespace srose::ui::editor
 {
     EditorWindow::EditorWindow()
-        : m_srlc_editor(std::make_shared<SrlcEditor>())
+        : Base("srose.editor"), m_srlc_editor(std::make_shared<SrlcEditor>())
     {
-        LoadAll();
+        auto& uimgr = UIManager::GetInstance();
+        Connect(uimgr.OnImbue);
+        m_srlc_editor->Connect(uimgr.OnImbue);
+
+        m_title = gettext("srose.ui.editor");
+        m_chkbox_srlc_editor = gettext("srose.ui.srlc-editor") + "##srlc-editor";
+        m_button_return = gettext("srose.ui.common.return") + "##return";
     }
 
     void EditorWindow::Update()
     {
         auto& io = ImGui::GetIO();
 
-        constexpr int background_flags =
-            ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoBackground |
-            ImGuiWindowFlags_NoScrollbar |
-            ImGuiWindowFlags_NoSavedSettings |
-            ImGuiWindowFlags_MenuBar;
+        SetFlags(ImGuiWindowFlags_MenuBar);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::SetNextWindowSize(io.DisplaySize);
-        ImGui::SetNextWindowPosCenter();
-        auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>("##srose.ui.editor", nullptr, background_flags);
-        assert(background);
+        auto background = BeginContext();
         ImGui::PopStyleVar();
         if(first_appeared)
         {
@@ -46,22 +41,19 @@ namespace srose::ui::editor
         UpdateMenuBar();
         if(m_show_srlc_editor)
         {
-            m_srlc_editor->open = true;
+            m_srlc_editor->Open();
             m_srlc_editor->Update();
-            m_show_srlc_editor = m_srlc_editor->open;
+            m_show_srlc_editor = m_srlc_editor->visible();
         }
     }
 
-    void EditorWindow::LoadAll()
+    void EditorWindow::LoadI18nData()
     {
+        Base::LoadI18nData();
+
         m_title = gettext("srose.ui.editor");
         m_chkbox_srlc_editor = gettext("srose.ui.srlc-editor") + "##srlc-editor";
         m_button_return = gettext("srose.ui.common.return") + "##return";
-    }
-    void EditorWindow::OnImbue()
-    {
-        LoadAll();
-        m_srlc_editor->imbue(getloc());
     }
 
     void EditorWindow::UpdateMenuBar()
@@ -80,10 +72,7 @@ namespace srose::ui::editor
     void EditorWindow::Button_Return()
     {
         auto& uimgr = UIManager::GetInstance();
-        if(&*uimgr.widget_stack.top() == this)
-        {
-            uimgr.widget_stack.pop();
-        }
+        uimgr.PopRootNode();
         first_appeared = true;
     }
 } // namespace srose::ui

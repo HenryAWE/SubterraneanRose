@@ -10,15 +10,18 @@
 #include <sr/ui/property.hpp>
 #include <imguisr.h>
 #include <sr/ui/widget.hpp>
+#include <sr/ui/node.hpp>
 #include "srlc_editor.hpp"
 
 
 namespace srose::ui::editor
 {
-    class EditorWindow : public Widget
+    class EditorWindow : public RootNode
     {
         bool first_appeared = true;
     public:
+        typedef RootNode Base;
+
         EditorWindow();
 
         void Update() override;
@@ -26,8 +29,7 @@ namespace srose::ui::editor
     private:
         std::string m_title;
         std::string m_chkbox_srlc_editor;
-        void LoadAll();
-        void OnImbue() override;
+        void LoadI18nData() override;
 
         void UpdateMenuBar();
         bool m_show_srlc_editor = false;
