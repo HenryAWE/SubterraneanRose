@@ -43,6 +43,9 @@ namespace srose::ui
     void I18nNode::SetLanguage(std::shared_ptr<locale::Language> lang)
     {
         m_lang.swap(lang);
+        for(auto& i : m_string_data)
+            i.second.Load(m_lang->GetStringTree());
+        LoadI18nData();
     }
 
     void I18nNode::Connect(boost::signals2::signal<void(const std::locale&)>& notifier)
@@ -59,6 +62,28 @@ namespace srose::ui
 
     void I18nNode::LoadI18nData() {}
 
+    void I18nNode::AddString(
+            std::string id,
+            std::optional<std::string> path,
+            std::string_view prefix,
+            std::string_view suffix
+    ) {
+        StringData data(m_lang->GetStringTree(), std::move(path), std::string(prefix), std::string(prefix));
+        m_string_data.emplace(std::make_pair(id, std::move(data)));
+    }
+    const std::string& I18nNode::GetString(std::string_view id)
+    {
+        auto iter = m_string_data.find(id);
+        if(iter == m_string_data.end())
+            throw std::out_of_range("[UI] Unknown string id: " + std::string(id));
+        return iter->second.data;
+    }
+
+    void I18nNode::StringData::Load(const util::string_tree<std::string>& tree)
+    {
+        if(path.has_value())
+            data = prefix + tree.get_value(*path) + suffix;
+    }
 
     // Root node
     RootNode::RootNode(std::string_view id)
@@ -124,7 +149,7 @@ namespace srose::ui
 
     StandaloneNode::ContextGuard StandaloneNode::BeginContext()
     {
-        bool value = ImGui::Begin(m_id.c_str(), &m_open);
+        bool value = ImGui::Begin(m_id.c_str(), &m_open, m_flags);
         return ContextGuard(*this, value);
     }
 

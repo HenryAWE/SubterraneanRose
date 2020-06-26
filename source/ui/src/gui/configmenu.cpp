@@ -22,27 +22,32 @@
 namespace srose::ui
 {
     ConfigPanel::ConfigPanel(wm::Window& window)
-        : m_window(&window)
+        : Base("configpanel"), m_window(&window)
     {
-        LoadButtons();
+        Connect(UIManager::GetInstance().OnImbue);
+
+        AddString("windowed", "srose.ui.configpanel.video.windowed");
+        AddString("show-conwin", "srose.ui.configpanel.developer.show-conwin");
+
+        using std::pair;
+        constexpr int BUTTON_COUNT = 4;
+        m_buttons.reserve(BUTTON_COUNT);
+        m_buttons.push_back(pair(gettext("srose.ui.configpanel.video") + "###video", &ConfigPanel::Button_Video));
+        m_buttons.push_back(pair(gettext("srose.ui.configpanel.lang") + "###lang", &ConfigPanel::Button_Language));
+        m_buttons.push_back(pair(gettext("srose.ui.configpanel.developer") + "###developer", &ConfigPanel::Button_Developer));
+        m_buttons.push_back(pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
+
+        m_conwin = std::make_shared<ConsoleWindow>("conwin");
     }
 
     void ConfigPanel::Update()
     {
-        Widget::Update();
+        Base::Update();
 
         auto& io = ImGui::GetIO();
 
-        constexpr int background_flags =
-            ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoBackground |
-            ImGuiWindowFlags_NoScrollbar |
-            ImGuiWindowFlags_NoSavedSettings;
-        ImGui::SetNextWindowSize(io.DisplaySize);
-        auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>("##configpanel", nullptr, background_flags);
+        SetFlags(ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+        auto background = BeginContext();
 
         /* Configuration items' list */
         ImVec2 configitems_region(ImGui::GetWindowContentRegionWidth() * 0.18f, io.DisplaySize.y * 0.7f);
@@ -70,13 +75,6 @@ namespace srose::ui
         }
         ImGui::EndChild();
 
-        if(m_show_conwin)
-        {
-            auto conwin = UIManager::GetInstance().widget_tree["conwin"].get();
-            static_cast<ConsoleWindow*>(conwin)->open = true;
-            conwin->Update();
-            m_show_conwin = static_cast<ConsoleWindow*>(conwin)->open;
-        }
 #ifndef SROSE_DISABLE_DEMO
         if(m_show_player_demo)
             player::ShowDemoWindow(*m_window, &m_show_player_demo);
@@ -89,28 +87,14 @@ namespace srose::ui
 #endif
     }
 
-    void ConfigPanel::LoadButtons()
-    {
-        using std::make_pair;
-
-        constexpr int BUTTON_COUNT = 3;
-        m_buttons.reserve(BUTTON_COUNT);
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.video") + "###video", &ConfigPanel::Button_Video));
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.lang") + "###lang", &ConfigPanel::Button_Language));
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.developer") + "###developer", &ConfigPanel::Button_Developer));
-        m_buttons.push_back(make_pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
-
-        AddString("windowed", "srose.ui.configpanel.video.windowed");
-        AddString("show-conwin", "srose.ui.configpanel.developer.show-conwin");
-    }
     void ConfigPanel::ResetStates()
     {
         m_content_func = nullptr;
     }
 
-    void ConfigPanel::OnImbue()
+    void ConfigPanel::LoadI18nData()
     {
-        Widget::OnImbue();
+        Base::LoadI18nData();
 
         m_buttons[0].first = gettext("srose.ui.configpanel.video") + "###video";
         m_buttons[1].first = gettext("srose.ui.configpanel.lang") + "###lang";
@@ -152,8 +136,7 @@ namespace srose::ui
         m_show_audio_demo = false;
 #endif
         auto& uimgr = UIManager::GetInstance();
-        if(&*uimgr.widget_stack.top() == this)
-            uimgr.widget_stack.pop();
+        uimgr.PopRootNode();
     }
 
     void ConfigPanel::Content_Video()
@@ -188,7 +171,19 @@ namespace srose::ui
     }
     void ConfigPanel::Content_Developer()
     {
-        ImGui::Checkbox(GetString("show-conwin").c_str(), &m_show_conwin);
+        auto& uimgr = UIManager::GetInstance();
+        if(ImGui::Button(GetString("show-conwin").c_str()))
+        {
+            auto& nodes = uimgr.GetStandaloneNodes();
+            auto iter = std::find_if(
+                nodes.begin(), nodes.end(),
+                [](auto& v){ return v->GetName() == "conwin"; }
+            );
+            if(iter == nodes.end())
+            {
+                nodes.push_back(m_conwin);
+            }
+        }
 #ifndef SROSE_DISABLE_DEMO
         ImGui::Separator();
         ImGui::Checkbox("Player test", &m_show_player_demo);

@@ -14,8 +14,10 @@
 namespace srose::ui::editor
 {
     SrlcEditor::SrlcEditor()
+        : Base("", "srose.srlc-editor")
     {
-        Load();
+        SetId(gettext("srose.ui.srlc-editor"));
+        m_tree = getptr()->GetStringTree();
     }
 
     SrlcEditor::~SrlcEditor() = default;
@@ -26,23 +28,17 @@ namespace srose::ui::editor
 
         ImGui::SetNextWindowSize(io.DisplaySize * 0.8f, ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowPosCenter(ImGuiCond_FirstUseEver);
-        auto window =  ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(m_title.c_str(), &open);
+        auto window =  BeginContext();
         if(!window)
             return;
 
         IterateTree(m_tree);
     }
 
-    void SrlcEditor::Load()
+    void SrlcEditor::LoadI18nData()
     {
-        m_title = gettext("srose.ui.srlc-editor") + "###srlc-editor";
-
-        auto& facet = std::use_facet<locale::TranslationFacet>(getloc());
-        m_tree = facet.get().GetStringTree();
-    }
-    void SrlcEditor::OnImbue()
-    {
-        Load();
+        SetId(gettext("srose.ui.srlc-editor"));
+        m_tree = getptr()->GetStringTree();
     }
 
     void SrlcEditor::IterateTree(util::string_tree<std::string>& tr)

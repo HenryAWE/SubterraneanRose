@@ -22,6 +22,8 @@ namespace srose::ui
     MainMenu::MainMenu()
         : Base("srose.mainmenu")
     {
+        Connect(UIManager::GetInstance().OnImbue);
+
         using std::make_pair;
 
         constexpr int BUTTON_COUNT = 4;
@@ -114,17 +116,17 @@ namespace srose::ui
     void MainMenu::Button_Editor()
     {
         auto& uimgr = UIManager::GetInstance();
-        uimgr.widget_stack.push(uimgr.widget_tree["editor.window"]);
+        uimgr.PushRootNode(uimgr.GetUINodeTree()["editor"]);
     }
     void MainMenu::Button_Config()
     {
         auto& uimgr = UIManager::GetInstance();
-        uimgr.widget_stack.push(uimgr.widget_tree["configpanel"]);
+        uimgr.PushRootNode(uimgr.GetUINodeTree()["configpanel"]);
     }
     void MainMenu::Button_About()
     {
         auto& uimgr = UIManager::GetInstance();
-        uimgr.widget_stack.push(uimgr.widget_tree["about"]);
+        uimgr.PushRootNode(uimgr.GetUINodeTree()["about"]);
     }
     void MainMenu::Button_Exit()
     {

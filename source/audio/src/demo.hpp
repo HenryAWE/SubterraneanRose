@@ -9,21 +9,22 @@
 
 #include <vector>
 #include <sr/audio/aumgr.hpp>
-#include <sr/ui/widget.hpp>
+#include <sr/ui/node.hpp>
 
 
 #ifndef SROSE_DISABLE_DEMO
 
 namespace srose::audio
 {
-    class AudioDemoWindow : public ui::Widget
+    class AudioDemoWindow : public ui::StandaloneNode
     {
     public:
+        typedef StandaloneNode Base;
+
         AudioDemoWindow();
 
         ~AudioDemoWindow();
 
-        bool open = true;
         void Update() override;
 
     private:

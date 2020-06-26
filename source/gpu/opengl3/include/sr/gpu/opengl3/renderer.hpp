@@ -19,6 +19,10 @@
 
 namespace srose::gpu::opengl3
 {
+#ifndef SROSE_DISABLE_DEMO
+    class OpenGL3DemoWindow;
+#endif
+
     class Renderer : public gpu::Renderer
     {
     public:
@@ -52,6 +56,7 @@ namespace srose::gpu::opengl3
     protected:
         void AppendSpriteData(Texture* tex, const glm::mat4& transform);
 #ifndef SROSE_DISABLE_DEMO
+        std::shared_ptr<OpenGL3DemoWindow> m_demo_window;
         bool m_demo_initialized = false;
 #endif
 

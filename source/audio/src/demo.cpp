@@ -19,6 +19,7 @@
 namespace srose::audio
 {
     AudioDemoWindow::AudioDemoWindow()
+        : Base("Audio Demo", "audio-demo")
     {
         m_music_location_cache.resize(256);
         LoadDevicesList();
@@ -33,16 +34,10 @@ namespace srose::audio
     {
         auto& io = ImGui::GetIO();
 
-        constexpr int background_flags = 
-            ImGuiWindowFlags_NoSavedSettings |
-            ImGuiWindowFlags_MenuBar;
+        SetFlags(ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar);
         ImGui::SetNextWindowPosCenter(ImGuiCond_Appearing);
         ImGui::SetNextWindowSize(io.DisplaySize * 0.8f, ImGuiCond_Appearing);
-        auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>(
-            "Audio Demo",
-            &open,
-            background_flags
-        );
+        auto background = BeginContext();
         if(!background)
             return;
 

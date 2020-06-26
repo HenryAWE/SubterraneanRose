@@ -18,33 +18,24 @@
 namespace srose::ui
 {
     About::About()
+        : Base("about")
     {
-        Load();
+        AddString("return", "srose.ui.common.return");
+        AddString("website", "srose.ui.about.website");
     }
 
     void About::Update()
     {
-        Widget::Update();
+        Base::Update();
 
         auto& io = ImGui::GetIO();
 
-        constexpr int background_flags =
-            ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoBackground |
-            ImGuiWindowFlags_NoScrollbar |
-            ImGuiWindowFlags_NoSavedSettings;
-        ImGui::SetNextWindowSize(io.DisplaySize);
-        auto background = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Window>("##about", nullptr, background_flags);
-        assert(background);
+        SetFlags(ImGuiWindowFlags_NoScrollbar);
+        auto background = BeginContext();
 
         if(ImGui::Button(GetString("return").c_str()))
         {
-            auto& uimgr = UIManager::GetInstance();
-            if(&*uimgr.widget_stack.top() == this)
-                uimgr.widget_stack.pop();
+            UIManager::GetInstance().PopRootNode();
         }
         if(ImGui::Button(GetString("website").c_str()))
         {
@@ -52,9 +43,8 @@ namespace srose::ui
         }
     }
 
-    void About::Load()
+    void About::LoadI18nData()
     {
-        AddString("return", "srose.ui.common.return");
-        AddString("website", "srose.ui.about.website");
+        
     }
 } // namespace srose::ui

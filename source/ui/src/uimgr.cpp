@@ -28,8 +28,8 @@ namespace srose::ui
 
     void UIManager::Update()
     {
-        assert(root);
-        root->Update();
+        if(!m_ui_node_stack.empty())
+            m_ui_node_stack.back()->Update();
 
         for(auto& i : m_standalone)
         {
@@ -48,23 +48,43 @@ namespace srose::ui
     {
         m_window = &window;
 
-        root = std::make_shared<MainMenu>();
+        auto root = m_ui_node_tree.emplace_at("root", std::make_shared<MainMenu>());
+        PushRootNode(std::move(root));
+        m_ui_node_tree.emplace_at("configpanel", std::make_shared<ConfigPanel>(*m_window));
+        m_ui_node_tree.emplace_at("about", std::make_shared<About>());
+        m_ui_node_tree.emplace_at("editor", std::make_shared<editor::EditorWindow>());
     }
     void UIManager::Deinitialize() noexcept
     {
-        root.reset();
+        m_ui_node_stack.clear();
+        m_ui_node_tree.clear();
         m_window = nullptr;
+    }
+
+    void UIManager::PushRootNode(std::shared_ptr<RootNode> node)
+    {
+        assert(node);
+        m_ui_node_stack.emplace_back(std::move(node));
+    }
+    void UIManager::PopRootNode()
+    {
+        if(!m_ui_node_stack.empty())
+            m_ui_node_stack.pop_back();
+    }
+    void UIManager::ResetRootNode(std::shared_ptr<RootNode> node)
+    {
+        m_ui_node_stack.clear();
+        m_ui_node_stack.emplace_back(std::move(node));
+    }
+    RootNode* UIManager::GetUINodeStackTop() noexcept
+    {
+        return m_ui_node_stack.empty() ? nullptr : m_ui_node_stack.back().get();
     }
 
     wm::Window& UIManager::GetWindow() noexcept
     {
         assert(m_window);
         return *m_window;
-    }
-
-    std::vector<std::shared_ptr<StandaloneNode>>& UIManager::GetStandaloneVector()
-    {
-        return m_standalone;
     }
 
     void UIManager::imbue(const std::locale& loc)

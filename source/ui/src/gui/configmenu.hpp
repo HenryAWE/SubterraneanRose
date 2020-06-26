@@ -9,25 +9,26 @@
 
 #include <vector>
 #include <utility>
-#include <sr/ui/widget.hpp>
+#include <sr/ui/node.hpp>
 #include <sr/wm/window.hpp>
 
 
 namespace srose::ui
 {
-    class ConfigPanel : public Widget
+    class ConfigPanel : public RootNode
     {
         wm::Window* m_window;
     public:
+        typedef RootNode Base;
+
         ConfigPanel(wm::Window& window);
 
         void Update() override;
 
     private:
-        void LoadButtons();
         void ResetStates();
 
-        void OnImbue() override;
+        void LoadI18nData() override;
 
         using callback_type = void(ConfigPanel::*)();
         std::vector<std::pair<std::string, callback_type>> m_buttons;
@@ -41,6 +42,7 @@ namespace srose::ui
 
         void Content_Video();
         bool m_show_conwin = false;
+        std::shared_ptr<StandaloneNode> m_conwin;
 #ifndef SROSE_DISABLE_DEMO
         bool m_show_player_demo = false;
         bool m_show_render_demo = false;

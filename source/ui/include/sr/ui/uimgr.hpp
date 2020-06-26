@@ -28,6 +28,8 @@ namespace srose::ui
         wm::Window* m_window = nullptr;
 
         std::vector<std::shared_ptr<StandaloneNode>> m_standalone;
+        util::string_tree<std::shared_ptr<RootNode>> m_ui_node_tree;
+        std::vector<std::shared_ptr<RootNode>> m_ui_node_stack;
     public:
         UIManager();
 
@@ -48,12 +50,16 @@ namespace srose::ui
 
         wm::Window& GetWindow() noexcept;
 
-        std::vector<std::shared_ptr<StandaloneNode>>& GetStandaloneVector();
+        [[nodiscard]]
+        constexpr std::vector<std::shared_ptr<StandaloneNode>>& GetStandaloneNodes() { return m_standalone; }
+        [[nodiscard]]
+        constexpr util::string_tree<std::shared_ptr<RootNode>>& GetUINodeTree() { return m_ui_node_tree; }
 
-        util::string_tree<std::shared_ptr<Widget>> widget_tree;
-        std::stack<std::shared_ptr<Widget>> widget_stack;
-
-        std::shared_ptr<RootNode> root;
+        void PushRootNode(std::shared_ptr<RootNode> node);
+        void PopRootNode();
+        void ResetRootNode(std::shared_ptr<RootNode> node);
+        [[nodiscard]]
+        RootNode* GetUINodeStackTop() noexcept;
 
         boost::signals2::signal<void(const std::locale&)> OnImbue;
 

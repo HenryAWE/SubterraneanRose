@@ -68,8 +68,7 @@ namespace srose::gpu::opengl3
 #ifndef SROSE_DISABLE_DEMO
         if(m_demo_initialized)
         {
-            auto ptr = ui::UIManager::GetInstance().widget_tree["srose.opengl3.demo"].get();
-            static_cast<OpenGL3DemoWindow*>(ptr)->Render();
+            m_demo_window->Render();;
         }
 #endif
     }
@@ -98,17 +97,13 @@ namespace srose::gpu::opengl3
 #ifndef SROSE_DISABLE_DEMO
         if(!m_demo_initialized)
         {
-            uimgr.widget_tree.emplace_at(
-                "srose.opengl3.demo",
-                std::make_shared<OpenGL3DemoWindow>(*this, true)
-            );
+            m_demo_window = std::make_shared<OpenGL3DemoWindow>(*this, true);
             m_demo_initialized = true;
         }
-        auto ptr = uimgr.widget_tree["srose.opengl3.demo"].get();
-        static_cast<OpenGL3DemoWindow*>(ptr)->open = true;
-        ptr->Update();
+        m_demo_window->Open();
+        m_demo_window->Update();
         if(p_open)
-            *p_open = static_cast<OpenGL3DemoWindow*>(ptr)->open;
+            *p_open = m_demo_window->visible();
 #else
         if(p_open)
             *p_open = false;
@@ -120,8 +115,8 @@ namespace srose::gpu::opengl3
 #ifndef SROSE_DISABLE_DEMO
         if(!m_demo_initialized)
             return;
+        m_demo_window.reset();
         m_demo_initialized = false;
-        ui::UIManager::GetInstance().widget_tree.erase_at("srose.opengl3.demo");
 #endif
     }
 
