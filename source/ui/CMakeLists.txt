@@ -7,7 +7,7 @@ aux_source_directory(./src/gui/editor ui_gui_editor_src_list)
 list(APPEND ui_src_list ${ui_gui_editor_src_list})
 
 
-add_library("srose-ui" STATIC ${ui_src_list} ${CMAKE_BINARY_DIR}/embedded_en.cpp)
+add_library("srose-ui" STATIC ${ui_src_list})
 target_include_directories("srose-ui" PUBLIC ./include)
 
 target_link_libraries("srose-ui" PUBLIC "srose-core")
