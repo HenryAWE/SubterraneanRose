@@ -138,7 +138,7 @@ namespace srose::ui
         std::string m_title;
         std::string m_name;
         std::string m_id;
-        int m_flags;
+        int m_flags = 0;
     public:
         typedef I18nNode Base;
 
