@@ -14,6 +14,7 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>")
 # Build options
 option(SROSE_DISABLE_CUI "Disable console inferface" OFF)
 option(SROSE_DISABLE_DEMO "Disable demo codes" OFF)
+set(SROSE_BUILD_SUFFIX "" CACHE STRING "Build suffix")
 set(SROSE_RENDER_BACKEND "OpenGL3" CACHE STRING "Choose a render backend from: OpenGL3")
 
 

@@ -46,4 +46,13 @@ namespace srose::core
     {
         return sr_git_commit_body;
     }
+
+    const char* SRSCALL GetBuildSuffix() noexcept
+    {
+    #ifdef SR_CORE_BUILD_SUFFIX
+        return SR_CORE_BUILD_SUFFIX;
+    #else
+        return "";
+    #endif
+    }
 } // namespace srose::core

@@ -185,6 +185,13 @@ namespace srose::console
                 }
                 os << std::endl;
 
+                const char* build_suffix = core::GetBuildSuffix();
+                if(build_suffix[0] != '\0')
+                {
+                    os << "Build suffix: " <<  build_suffix << std::endl;
+                }
+                os << std::endl;
+
                 /* C++ Information */
                 os
                     << "C++ Information" << std::endl

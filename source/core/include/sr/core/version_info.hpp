@@ -44,6 +44,8 @@ namespace srose::core
      * @return const char* The body of the last commit
      */
     const char* SRSCALL GitCommitBody() noexcept;
+
+    const char* SRSCALL GetBuildSuffix() noexcept;
 } // namespace srose::core
 
 
