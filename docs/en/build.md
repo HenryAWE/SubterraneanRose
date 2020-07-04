@@ -18,7 +18,8 @@
   | Boost | 1.65.1 |
 
 ## Starting Build
-- Once you have all of the dependencies installed, you can start building the project
+- Once you have all of the dependencies installed, you can start building the project  
+  Please read the [Advanced Build](./advanced-build.md) for more options  
 - Clone the repository  
   **Warning: Never download the repository as an archive file, since the compilation depends on some source file generated during the configuration time based on the git information**
   ```
