@@ -29,4 +29,6 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options("srose-ui" PRIVATE "-Wno-format-security")
 endif()
 
-add_subdirectory(./test)
+if(NOT ${SROSE_DISABLE_TEST})
+    add_subdirectory(./test)
+endif()

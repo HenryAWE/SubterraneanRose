@@ -8,4 +8,6 @@ target_include_directories("srose-main" PUBLIC ./include)
 target_link_libraries("srose-main" PUBLIC "srose-fs")
 target_link_libraries("srose-main" PUBLIC "srose-ui")
 
-add_subdirectory(./test)
+if(NOT ${SROSE_DISABLE_TEST})
+    add_subdirectory(./test)
+endif()

@@ -30,7 +30,8 @@ target_compile_definitions(imgui PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD=1)
 target_link_libraries(imgui PRIVATE SDL2::Core)
 target_link_libraries(imgui PRIVATE glad::glad)
 
-
-find_package(Boost REQUIRED QUIET COMPONENTS unit_test_framework)
 add_library("srose-test" INTERFACE)
-target_link_libraries("srose-test" INTERFACE Boost::unit_test_framework)
+if(NOT ${SROSE_DISABLE_TEST})
+    find_package(Boost REQUIRED QUIET COMPONENTS unit_test_framework)
+    target_link_libraries("srose-test" INTERFACE Boost::unit_test_framework)
+endif()

@@ -8,4 +8,6 @@ add_library("srose-editor" STATIC ${editor_src_list})
 target_include_directories("srose-editor" PUBLIC ./include)
 target_link_libraries("srose-editor" PUBLIC Boost::serialization)
 
-add_subdirectory(./test)
+if(NOT ${SROSE_DISABLE_TEST})
+    add_subdirectory(./test)
+endif()

@@ -17,7 +17,12 @@ project(
     LANGUAGES C CXX
 )
 
-enable_testing()
+option(SROSE_DISABLE_TEST "Disable test cases" OFF)
+
+if(NOT ${SROSE_DISABLE_TEST})
+    enable_testing()
+endif()
+
 # WRANING: Don't change the order of the add_subdirectory(...)
 # The compilation of locale scripts require python scripts in the ./tools directory
 # The the embedded English locale file, which is generated from the locale script, is required by the UI module

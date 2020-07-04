@@ -20,8 +20,10 @@ endmacro()
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/locale)
 compile_lang(zh-CN)
-test_lang(en)
-test_lang(zh-CN)
+if(NOT ${SROSE_DISABLE_TEST})
+    test_lang(en)
+    test_lang(zh-CN)
+endif()
 
 include(SRf2c)
 file(GLOB_RECURSE en_files "en/*.txt")

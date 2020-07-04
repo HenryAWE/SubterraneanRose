@@ -7,4 +7,6 @@ target_link_libraries("srose-res" PRIVATE "srose-locale")
 target_link_libraries("srose-res" PUBLIC "srose-gpu")
 target_link_libraries("srose-res" PUBLIC "srose-fs")
 
-add_subdirectory(./test/vfs_test)
+if(NOT ${SROSE_DISABLE_TEST})
+    add_subdirectory(./test/vfs_test)
+endif()
