@@ -38,6 +38,15 @@ namespace srose::ui
         auto& io = ImGui::GetIO();
 
         auto conwin = BeginContext();
+        if(visible() == false)
+        {
+            auto& nodes = UIManager::GetInstance().GetStandaloneNodes();
+            auto iter = std::find_if(
+                nodes.begin(), nodes.end(),
+                [this](const auto& v) { return v.get() == this; }
+            );
+            nodes.erase(iter);
+        }
         if(!conwin)
             return;
 

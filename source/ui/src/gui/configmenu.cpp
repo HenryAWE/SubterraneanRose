@@ -29,13 +29,18 @@ namespace srose::ui
         AddString("windowed", "srose.ui.configpanel.video.windowed");
         AddString("show-conwin", "srose.ui.configpanel.developer.show-conwin");
 
+        AddString("video", "srose.ui.configpanel.video", "", "###video");
+        AddString("lang", "srose.ui.configpanel.lang", "", "###lang");
+        AddString("developer", "srose.ui.configpanel.developer", "", "###developer");
+        AddString("return", "srose.ui.configpanel.return", "", "###return");
+
         using std::pair;
         constexpr int BUTTON_COUNT = 4;
         m_buttons.reserve(BUTTON_COUNT);
-        m_buttons.push_back(pair(gettext("srose.ui.configpanel.video") + "###video", &ConfigPanel::Button_Video));
-        m_buttons.push_back(pair(gettext("srose.ui.configpanel.lang") + "###lang", &ConfigPanel::Button_Language));
-        m_buttons.push_back(pair(gettext("srose.ui.configpanel.developer") + "###developer", &ConfigPanel::Button_Developer));
-        m_buttons.push_back(pair(gettext("srose.ui.configpanel.return") + "###return", &ConfigPanel::Button_Return));
+        m_buttons.push_back(pair("video", &ConfigPanel::Button_Video));
+        m_buttons.push_back(pair("lang", &ConfigPanel::Button_Language));
+        m_buttons.push_back(pair("developer", &ConfigPanel::Button_Developer));
+        m_buttons.push_back(pair("return", &ConfigPanel::Button_Return));
 
         m_conwin = std::make_shared<ConsoleWindow>("conwin");
     }
@@ -50,13 +55,13 @@ namespace srose::ui
         auto background = BeginContext();
 
         /* Configuration items' list */
-        ImVec2 configitems_region(ImGui::GetWindowContentRegionWidth() * 0.18f, io.DisplaySize.y * 0.7f);
+        ImVec2 configitems_region(ImGui::GetWindowContentRegionWidth() * 0.18f, -1);
         ImGui::BeginChild("##configitems", configitems_region, true, ImGuiWindowFlags_NoScrollbar);
         using std::get;
         const float button_width = ImGui::GetWindowContentRegionWidth();
         for(const auto& i : m_buttons)
         {
-            if(ImGui::Button(get<0>(i).c_str(), ImVec2(button_width, 0.0f)))
+            if(ImGui::Button(GetString(get<0>(i)).c_str(), ImVec2(button_width, 0.0f)))
             {
                 auto cb = get<1>(i);
                 if(cb) (this->*cb)();
@@ -67,7 +72,7 @@ namespace srose::ui
         ImGui::SameLine();
 
         /* Item content */
-        ImVec2 content_region(ImGui::GetContentRegionAvail().x * 0.85f, io.DisplaySize.y * 0.7f);
+        ImVec2 content_region(-1, -1);
         ImGui::BeginChild("##content", content_region, true);
         if(m_content_func)
         {
@@ -95,11 +100,6 @@ namespace srose::ui
     void ConfigPanel::LoadI18nData()
     {
         Base::LoadI18nData();
-
-        m_buttons[0].first = gettext("srose.ui.configpanel.video") + "###video";
-        m_buttons[1].first = gettext("srose.ui.configpanel.lang") + "###lang";
-        m_buttons[2].first = gettext("srose.ui.configpanel.developer") + "###developer";
-        m_buttons[3].first = gettext("srose.ui.configpanel.return") + "###return";
     }
 
     void ConfigPanel::Button_Video()
@@ -183,6 +183,7 @@ namespace srose::ui
             {
                 nodes.push_back(m_conwin);
             }
+            m_conwin->Open();
         }
 #ifndef SROSE_DISABLE_DEMO
         ImGui::Separator();
