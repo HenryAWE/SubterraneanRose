@@ -9,8 +9,9 @@
 
 #include <tuple>
 #include <deque>
+#include <memory>
+#include <sstream>
 #include <sr/ui/node.hpp>
-#include <SDL_log.h>
 
 
 namespace srose::ui
@@ -34,7 +35,9 @@ namespace srose::ui
 
         void UpdateLogViewerTabItem();
 
-        std::deque<std::tuple<SDL_LogPriority, std::string>> m_logbuf;
+        std::shared_ptr<std::stringstream> m_backend;
+
+        std::deque<std::tuple<std::string>> m_logbuf;
         bool m_logchanged = false;
     };
 } // namespace srose::ui

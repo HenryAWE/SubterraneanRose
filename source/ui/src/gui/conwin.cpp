@@ -13,13 +13,16 @@
 #include <imgui_internal.h>
 #include <imguisr.h>
 #include <sr/ui/uimgr.hpp>
+#include <sr/trace/log.hpp>
 
 
 namespace srose::ui
 {
     ConsoleWindow::ConsoleWindow(std::string name)
-        : Base("", std::move(name))
+        : Base("", std::move(name)), m_backend(std::make_shared<std::stringstream>())
     {
+        trace::AddStream(m_backend);
+
         Connect(UIManager::GetInstance().OnImbue);
 
         SetId(gettext("srose.ui.conwin"));
@@ -50,6 +53,12 @@ namespace srose::ui
         if(!conwin)
             return;
 
+        for(std::string line; std::getline(*m_backend, line);)
+        {
+            m_logbuf.push_back(std::tuple(std::move(line)));
+            m_logchanged = true;
+        }
+
         constexpr int tabbar_flags = 
              ImGuiTabBarFlags_NoTooltip |
              ImGuiTabBarFlags_Reorderable;
@@ -76,12 +85,8 @@ namespace srose::ui
             using std::get;
             for(const auto& i : m_logbuf)
             {
-                ImVec4 col = {1, 1, 1, 1};
-                if(get<0>(i) >= SDL_LOG_PRIORITY_ERROR)
-                    col = {1, 0, 0, 1};
-                else if(get<0>(i) >= SDL_LOG_PRIORITY_WARN)
-                    col = {0.871f, 0.51f, 0.156f, 1.0f};
-                ImGui::TextColored(col, get<1>(i).c_str());
+                auto* text = get<0>(i).c_str();
+                ImGui::TextUnformatted(text, text + get<0>(i).length());
                 ImGui::Separator();
             }
             if(m_logchanged)
