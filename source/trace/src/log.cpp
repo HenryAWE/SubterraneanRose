@@ -7,17 +7,21 @@
 #include <sr/trace/log.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup.hpp>
+#include <boost/log/sinks/sync_frontend.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
 #include <SDL.h>
 
 
 namespace srose::trace
 {
+    constexpr char SR_LOG_FMT[] = "[%TimeStamp%][%Severity%]: %Message%";
+
     void InitializeLogger()
     {
         using namespace boost;
         namespace kw = log::keywords;
 
-        std::string fmt = "[%TimeStamp%][%Severity%]: %Message%";
+        std::string fmt = SR_LOG_FMT;
 
         log::register_simple_formatter_factory<boost::log::trivial::severity_level, char>("Severity");
         
@@ -38,6 +42,24 @@ namespace srose::trace
         );
 
         log::add_common_attributes();
+    }
+
+    void AddStream(const std::shared_ptr<std::ostream>& os)
+    {
+        boost::shared_ptr<std::ostream> ptr(
+            os.get(),
+            [p = os](...) mutable { p.reset(); }
+        );
+
+        using namespace boost;
+        namespace kw = log::keywords;
+
+        typedef log::sinks::synchronous_sink<log::sinks::text_ostream_backend> text_sink;
+        boost::shared_ptr< text_sink > sink = boost::make_shared< text_sink >();
+
+        sink->locked_backend()->add_stream(std::move(ptr));
+
+        log::core::get()->add_sink(std::move(sink));
     }
 
     const char* to_chars(int category)
