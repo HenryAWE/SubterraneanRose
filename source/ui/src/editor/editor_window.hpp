@@ -15,8 +15,22 @@
 
 namespace srose::ui::editor
 {
+    class EditorWindow;
+
+    class FileMenu
+    {
+        EditorWindow& m_editor;
+    public:
+        FileMenu(EditorWindow& editor);
+
+        void Update();
+
+        void LoadI18nData(const locale::Language& lang);
+    };
+
     class EditorWindow : public RootNode
     {
+        friend class FileMenu;
         bool first_appeared = true;
     public:
         typedef RootNode Base;
@@ -36,6 +50,8 @@ namespace srose::ui::editor
 
         std::string m_button_return;
         void Button_Return();
+
+        FileMenu m_filemenu;
     };
 } // namespace srose::ui
 

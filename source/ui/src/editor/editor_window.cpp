@@ -13,12 +13,35 @@
 
 namespace srose::ui::editor
 {
+    FileMenu::FileMenu(EditorWindow& editor)
+        : m_editor(editor) {}
+
+    void FileMenu::Update()
+    {
+        auto menu = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Menu>("File");
+        if(!menu)
+            return;
+        if(ImGui::MenuItem("Exit"))
+        {
+            m_editor.Button_Return();
+        }
+    }
+
+    void FileMenu::LoadI18nData(const locale::Language& lang)
+    {
+
+    }
+
+
     EditorWindow::EditorWindow()
-        : Base("srose.editor"), m_srlc_editor(std::make_shared<SrlcEditor>())
+        : Base("srose.editor"),
+        m_srlc_editor(std::make_shared<SrlcEditor>()),
+        m_filemenu(*this)
     {
         auto& uimgr = UIManager::GetInstance();
         Connect(uimgr.OnImbue);
         m_srlc_editor->Connect(uimgr.OnImbue);
+        m_filemenu.LoadI18nData(*getptr());
 
         m_title = gettext("srose.ui.editor");
         m_chkbox_srlc_editor = gettext("srose.ui.srlc-editor") + "##srlc-editor";
@@ -53,20 +76,19 @@ namespace srose::ui::editor
 
         m_title = gettext("srose.ui.editor");
         m_chkbox_srlc_editor = gettext("srose.ui.srlc-editor") + "##srlc-editor";
-        m_button_return = gettext("srose.ui.common.return") + "##return";
+
+        m_filemenu.LoadI18nData(*getptr());
     }
 
     void EditorWindow::UpdateMenuBar()
     {
         auto bar = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_MenuBar>();
-        if(ImGui::MenuItem(m_button_return.c_str()))
-            Button_Return();
-        ImGui::Separator();
         if (!bar)
             return;
         ImGui::Text(m_title.c_str());
         ImGui::Separator();
         ImGui::Checkbox(m_chkbox_srlc_editor.c_str(), &m_show_srlc_editor);
+        m_filemenu.Update();
     }
 
     void EditorWindow::Button_Return()
