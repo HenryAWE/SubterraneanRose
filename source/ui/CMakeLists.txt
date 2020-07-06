@@ -1,10 +1,10 @@
 # SubterraneanRose User Interface Module
 
 aux_source_directory(./src ui_src_list)
-aux_source_directory(./src/gui ui_gui_src_list)
-list(APPEND ui_src_list ${ui_gui_src_list})
-aux_source_directory(./src/gui/editor ui_gui_editor_src_list)
-list(APPEND ui_src_list ${ui_gui_editor_src_list})
+aux_source_directory(./src/menu ui_menu_src_list)
+list(APPEND ui_src_list ${ui_menu_src_list})
+aux_source_directory(./src/editor ui_editor_src_list)
+list(APPEND ui_src_list ${ui_editor_src_list})
 
 
 add_library("srose-ui" STATIC ${ui_src_list})

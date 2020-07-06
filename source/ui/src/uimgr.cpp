@@ -7,11 +7,11 @@
 #include <sr/ui/uimgr.hpp>
 #include <SDL_events.h>
 #include <memory>
-#include "gui/mainmenu.hpp"
-#include "gui/editor/editor_window.hpp"
-#include "gui/configmenu.hpp"
-#include "gui/about.hpp"
-#include "gui/conwin.hpp"
+#include "menu/mainmenu.hpp"
+#include "menu/configmenu.hpp"
+#include "menu/about.hpp"
+#include "menu/conwin.hpp"
+#include "editor/editor_window.hpp"
 
 
 namespace srose::ui
