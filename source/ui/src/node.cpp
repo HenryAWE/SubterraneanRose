@@ -135,11 +135,7 @@ namespace srose::ui
 
     void StandaloneNode::Update()
     {
-        if(!m_open)
-            return;
-        auto guard = BeginContext();
-        if(!guard)
-            return;
+        Base::Update();
     }
 
     StandaloneNode::ContextGuard::~ContextGuard() noexcept
