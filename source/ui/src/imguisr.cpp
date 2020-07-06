@@ -17,6 +17,8 @@
 #   include <atlcomcli.h>
 #   include <ShObjIdl_core.h>
 #   include <SDL_syswm.h>
+#   undef min
+#   undef max
 #endif
 #include <sr/ui/uimgr.hpp>
 
@@ -35,8 +37,180 @@ namespace ImGuiSR
 
     class IImGuiFileBrowser : public IFileBrowser
     {
+        std::string m_id;
+        bool m_visible = false;
+
+        srose::filesystem::path m_current;
+        std::vector<FilterSpec> m_filters;
+        bool m_pick_folder = false;
+
+        std::optional<srose::filesystem::path> m_result;
+
+        struct Cache
+        {
+            std::vector<std::string> path_elements;
+            typedef std::tuple<
+                srose::filesystem::path, // filename
+                std::string, // name (with/without extension)
+                bool // is folder
+            > FileInfo;
+            std::vector<FileInfo> files;
+        };
+        Cache m_cache;
+        bool m_update_req = false;
+
+        static void UpdateCacheImpl(
+            Cache& cache,
+            const srose::filesystem::path& folder,
+            const std::vector<FilterSpec>& filters,
+            bool pick_folder
+        ) {
+                assert(is_directory(folder));
+
+                namespace fs = srose::filesystem;
+
+                cache.path_elements.clear();
+                std::transform(
+                    folder.begin(), folder.end(),
+                    std::back_inserter(cache.path_elements),
+                    [](const fs::path& p) { return p.u8string(); }
+                );
+
+                cache.files.clear();
+                for(auto dt : fs::directory_iterator(folder))
+                {
+                    using std::get;
+
+                    auto pt = dt.path();
+                    Cache::FileInfo info;
+                    get<0>(info) = pt.filename();
+                    get<1>(info) = pt.stem().u8string();
+                    get<2>(info) = is_directory(pt);
+
+                    cache.files.push_back(std::move(info));
+                }
+        }
+        void UpdateCache()
+        {
+            UpdateCacheImpl(m_cache, m_current, m_filters, m_pick_folder);
+            m_update_req = false;
+        }
     public:
-        
+        IImGuiFileBrowser()
+            : m_id("###filebrowser"),
+            m_current(srose::filesystem::current_path()) {}
+
+        void Show() override
+        {
+            UpdateCache();
+            m_visible = true;
+            m_update_req = true;
+        }
+        void Update() override
+        {
+            if(!m_visible)
+                return;
+
+            if(m_update_req)
+                UpdateCache();
+
+            auto& io = ImGui::GetIO();
+
+            auto clsid = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_ID>(this);
+
+            constexpr int popup_flags =
+                ImGuiWindowFlags_MenuBar |
+                ImGuiWindowFlags_NoCollapse |
+                ImGuiWindowFlags_NoSavedSettings;
+
+            ImGui::OpenPopup(m_id.c_str());
+            ImGui::SetNextWindowSize(io.DisplaySize * 0.8f, ImGuiCond_Appearing);
+            ImGui::SetNextWindowPosCenter(ImGuiCond_Appearing);
+            if(!ImGui::BeginPopupModal(m_id.c_str(), &m_visible, popup_flags))
+            {
+                return;
+            }
+            if(ImGui::Button("Current"))
+            {
+                m_current = srose::filesystem::current_path(),
+                UpdateCache();
+            }
+            ImGui::SameLine();
+            ImGui::Separator();
+
+            std::size_t idx = 0;
+            bool idx_pressed = false;
+            for(auto& i : m_cache.path_elements)
+            {
+                ImGui::SameLine();
+                idx_pressed |= ImGui::Button(i.c_str());
+                if(!idx_pressed) ++idx;
+            }
+
+            if(!m_cache.path_elements.empty() && idx_pressed)
+            {
+                if(idx <= 2)
+                    idx = std::min((std::size_t)2, m_cache.path_elements.size());
+
+                srose::filesystem::path tmp;
+                for(std::size_t i = 0; i < idx; ++i)
+                {
+                    tmp.append(m_cache.path_elements[i]);
+                }
+                tmp.swap(m_current);
+                m_update_req = true;
+            }
+
+            ImGui::Separator();
+
+            ImGui::BeginChild("##fileview");
+            UpdateFileView();
+            ImGui::EndChild();
+
+            ImGui::EndPopup();
+        }
+
+        void UpdateFileView()
+        {
+            for(auto& i : m_cache.files)
+            {
+                using std::get;
+
+                if(ImGui::MenuItem(get<1>(i).c_str(), get<2>(i)?"Folder":""))
+                {
+                    if(get<2>(i))
+                    {
+                        m_current /= get<0>(i);
+                        m_update_req = true;
+                    }
+                    else
+                    {
+                        m_result = m_current / get<0>(i);
+                        m_visible = false;
+                        ImGui::CloseCurrentPopup();
+                    }
+                }
+            }
+        }
+
+        bool visible() const override { return m_visible; }
+
+        void SetTitle(const std::string& title) override { m_id = title + "###filebrowser"; }
+        void SetFolder(const srose::filesystem::path& folder) override
+        {
+            m_current = folder;
+        }
+
+        void SetFilter(const std::vector<FilterSpec>& filters) override
+        {
+            m_filters = filters;
+        }
+        void SetPickFolder(bool value) override { m_pick_folder = value; }
+
+        std::optional<srose::filesystem::path> GetResult() override
+        {
+            return m_result;
+        }
     };
 
 
@@ -217,9 +391,12 @@ namespace ImGuiSR
     std::shared_ptr<IFileBrowser> CreateIFileBrowser(bool native)
     {
     #ifdef __WINDOWS__
-        return std::make_shared<INativeFileBrowser>();
+        if(native)
+            return std::make_shared<INativeFileBrowser>();
+        else
+            return std::make_shared<IImGuiFileBrowser>();
     #else
-        return nullptr;
+        return std::make_shared<IImGuiFileBrowser>();
     #endif
     }
 } // namespace ImGuiSR

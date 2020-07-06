@@ -110,6 +110,9 @@ namespace ImGuiSR
                 : name(name_), exts(exts_) {}
             FilterSpec(const FilterSpec&) = default;
             FilterSpec(FilterSpec&&) = default;
+
+            FilterSpec& operator=(const FilterSpec&) = default;
+            FilterSpec& operator=(FilterSpec&&) = default;
         };
         virtual void SetFilter(const std::vector<FilterSpec>& filters) = 0;
         virtual void SetPickFolder(bool value = true) = 0;
