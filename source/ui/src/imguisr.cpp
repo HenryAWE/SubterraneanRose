@@ -149,11 +149,11 @@ namespace ImGuiSR
 
             if(!m_cache.path_elements.empty() && idx_pressed)
             {
-                if(idx <= 2)
-                    idx = std::min((std::size_t)2, m_cache.path_elements.size());
+                if(idx <= 1)
+                    idx = std::min((std::size_t)1, m_cache.path_elements.size());
 
                 srose::filesystem::path tmp;
-                for(std::size_t i = 0; i < idx; ++i)
+                for(std::size_t i = 0; i < idx + 1; ++i)
                 {
                     tmp.append(m_cache.path_elements[i]);
                 }
