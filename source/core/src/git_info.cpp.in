@@ -10,4 +10,5 @@ extern "C"
     const char* sr_git_commit_id = @commit_id@;
     const char* sr_git_commit_msg = R@commit_msg_raw@;
     const char* sr_git_commit_body = R@commit_body_raw@;
+    const char* sr_git_branch = "@git_branch@";
 }

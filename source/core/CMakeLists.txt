@@ -10,6 +10,7 @@ sr_git_log(commit_id_abbr "%h")
 sr_git_log(commit_id "%H")
 sr_git_log(commit_msg_raw "(%s)")
 sr_git_log(commit_body_raw "(%b)")
+sr_git_output(git_branch "rev-parse" "--abbrev-ref" "HEAD")
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/git_info.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/git_info.cpp
     @ONLY

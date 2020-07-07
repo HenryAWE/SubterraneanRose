@@ -19,3 +19,22 @@ function(sr_git_log output format)
         set(${output} "\"\"" PARENT_SCOPE)
     endif()
 endfunction()
+
+# Get output of git
+function(sr_git_output output)
+    if(${GIT_FOUND} AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
+        list(REMOVE_AT ARGV 0) # Remove the argument "output"
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} ${ARGV}
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE git_output
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+
+        # Return value
+        set(${output} ${git_output} PARENT_SCOPE)
+
+    else()
+        set(${output} "\"\"" PARENT_SCOPE)
+    endif()
+endfunction()

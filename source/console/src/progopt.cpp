@@ -177,7 +177,8 @@ namespace srose::console
                 os
                     << "Subterranean Rose " << core::GetVersionString() << std::endl
                     << core::GitCommitMsg() << " - "
-                    << core::GitCommitID() << std::endl;
+                    << core::GitCommitID() << std::endl
+                    << "Branch: " << core::GitBranch() << std::endl;
                 const char* commit_body = core::GitCommitBody();
                 if(commit_body[0] != '\0')
                 {
