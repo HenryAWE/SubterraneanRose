@@ -52,6 +52,7 @@ namespace srose::ui::editor
         void Button_Return();
 
         FileMenu m_filemenu;
+        std::shared_ptr<ImGuiSR::IFileBrowser> m_ifile_dialog;
     };
 } // namespace srose::ui
 

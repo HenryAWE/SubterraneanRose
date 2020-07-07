@@ -21,6 +21,11 @@ namespace srose::ui::editor
         auto menu = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Menu>("File");
         if(!menu)
             return;
+        if(ImGui::MenuItem("Open"))
+        {
+            m_editor.m_ifile_dialog->SetTitle("Open Project");
+            m_editor.m_ifile_dialog->Show();
+        }
         if(ImGui::MenuItem("Exit"))
         {
             m_editor.Button_Return();
@@ -36,7 +41,8 @@ namespace srose::ui::editor
     EditorWindow::EditorWindow()
         : Base("srose.editor"),
         m_srlc_editor(std::make_shared<SrlcEditor>()),
-        m_filemenu(*this)
+        m_filemenu(*this),
+        m_ifile_dialog(ImGuiSR::CreateIFileBrowser(false))
     {
         auto& uimgr = UIManager::GetInstance();
         Connect(uimgr.OnImbue);
@@ -68,6 +74,7 @@ namespace srose::ui::editor
             m_srlc_editor->Update();
             m_show_srlc_editor = m_srlc_editor->visible();
         }
+        m_ifile_dialog->Update();
     }
 
     void EditorWindow::LoadI18nData()
