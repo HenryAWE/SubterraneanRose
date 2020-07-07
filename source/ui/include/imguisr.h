@@ -117,7 +117,9 @@ namespace ImGuiSR
         virtual void SetFilter(const std::vector<FilterSpec>& filters) = 0;
         virtual void SetPickFolder(bool value = true) = 0;
 
+        virtual bool HasResult() const = 0;
         virtual std::optional<srose::filesystem::path> GetResult() = 0;
+        virtual void ClearResult() = 0;
 
     protected:
         FileBrowserBase();

@@ -207,10 +207,12 @@ namespace ImGuiSR
         }
         void SetPickFolder(bool value) override { m_pick_folder = value; }
 
+        bool HasResult() const override { return m_result.has_value(); }
         std::optional<srose::filesystem::path> GetResult() override
         {
             return m_result;
         }
+        void ClearResult() override { m_result.reset(); }
     };
 
 
@@ -381,10 +383,12 @@ namespace ImGuiSR
                 _com_raise_error(hr);
         }
 
+        bool HasResult() const override { return m_result.has_value(); }
         std::optional<srose::filesystem::path> GetResult() override
         {
             return m_result;
         }
+        void ClearResult() override { m_result.reset(); }
     };
 #endif
 
