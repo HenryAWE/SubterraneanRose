@@ -26,6 +26,23 @@ namespace srose::ui::editor
             m_editor.m_ifile_dialog->SetTitle("Open Project");
             m_editor.m_ifile_dialog->Show();
         }
+        if(ImGui::MenuItem("New"))
+        {
+            m_editor.NewProject();
+        }
+        if(m_editor.HasProject())
+        {
+            ImGui::Separator();
+            // TODO: Implement these menu items
+            if(ImGui::MenuItem("Save")) {}
+            if(ImGui::MenuItem("Save As")) {}
+            ImGui::Separator();
+            if(ImGui::MenuItem("Close"))
+            {
+                m_editor.CloseProject();
+            }
+        }
+        ImGui::Separator();
         if(ImGui::MenuItem("Exit"))
         {
             m_editor.Button_Return();
@@ -56,6 +73,7 @@ namespace srose::ui::editor
 
     void EditorWindow::Update()
     {
+        auto id = BeginID();
         auto& io = ImGui::GetIO();
 
         SetFlags(ImGuiWindowFlags_MenuBar);
@@ -75,6 +93,22 @@ namespace srose::ui::editor
             m_show_srlc_editor = m_srlc_editor->visible();
         }
         m_ifile_dialog->Update();
+    }
+
+    void EditorWindow::NewProject()
+    {
+        m_project = std::make_shared<srose::editor::Project>();
+        SetWindowTitle();
+    }
+    void EditorWindow::CloseProject()
+    {
+        m_project.reset();
+        SetWindowTitle();
+    }
+
+    ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_ID> EditorWindow::BeginID() noexcept
+    {
+        return ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_ID>("srose.editor");
     }
 
     void EditorWindow::LoadI18nData()
@@ -101,7 +135,21 @@ namespace srose::ui::editor
     void EditorWindow::Button_Return()
     {
         auto& uimgr = UIManager::GetInstance();
+        CloseProject();
         uimgr.PopRootNode();
         first_appeared = true;
+    }
+
+    void EditorWindow::SetWindowTitle()
+    {
+        auto& win = UIManager::GetInstance().GetWindow();
+        if(HasProject())
+        {
+            win.SetTitle("Subterranean Rose - " + m_project->name());
+        }
+        else
+        {
+            win.SetTitle("Subterranean Rose");
+        }
     }
 } // namespace srose::ui

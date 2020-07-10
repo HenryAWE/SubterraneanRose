@@ -10,6 +10,7 @@
 #include <sr/ui/property.hpp>
 #include <imguisr.h>
 #include <sr/ui/node.hpp>
+#include <sr/editor/project.hpp>
 #include "srlc_editor.hpp"
 
 
@@ -32,6 +33,8 @@ namespace srose::ui::editor
     {
         friend class FileMenu;
         bool first_appeared = true;
+
+        std::shared_ptr<srose::editor::Project> m_project;
     public:
         typedef RootNode Base;
 
@@ -39,7 +42,16 @@ namespace srose::ui::editor
 
         void Update() override;
 
+        void NewProject();
+        void CloseProject();
+        [[nodiscard]]
+        bool HasProject() const noexcept { return static_cast<bool>(m_project); }
+        [[nodiscard]]
+        constexpr const std::shared_ptr<srose::editor::Project>& GetCurrentProject() const noexcept { return m_project; }
+
     private:
+        static ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_ID> BeginID() noexcept;
+
         std::string m_title;
         std::string m_chkbox_srlc_editor;
         void LoadI18nData() override;
@@ -53,6 +65,8 @@ namespace srose::ui::editor
 
         FileMenu m_filemenu;
         std::shared_ptr<ImGuiSR::IFileBrowser> m_ifile_dialog;
+
+        void SetWindowTitle();
     };
 } // namespace srose::ui
 
