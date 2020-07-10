@@ -17,14 +17,14 @@ project(
     LANGUAGES C CXX
 )
 
-# Dependencies
-add_subdirectory(./external)
-
 option(SROSE_DISABLE_TEST "Disable test cases" OFF)
 
 if(NOT ${SROSE_DISABLE_TEST})
     enable_testing()
 endif()
+
+# Dependencies
+add_subdirectory(./external)
 
 # WRANING: Don't change the order of the add_subdirectory(...)
 # The compilation of locale scripts require python scripts in the ./tools directory
