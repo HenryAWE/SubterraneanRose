@@ -17,6 +17,9 @@ project(
     LANGUAGES C CXX
 )
 
+# Dependencies
+add_subdirectory(./external)
+
 option(SROSE_DISABLE_TEST "Disable test cases" OFF)
 
 if(NOT ${SROSE_DISABLE_TEST})

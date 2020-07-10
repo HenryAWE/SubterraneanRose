@@ -18,10 +18,6 @@ set(SROSE_BUILD_SUFFIX "" CACHE STRING "Build suffix")
 set(SROSE_RENDER_BACKEND "OpenGL3" CACHE STRING "Choose a render backend from: OpenGL3")
 
 
-# Dependencies
-add_subdirectory(./ext)
-
-
 # Libraries
 add_subdirectory(./headers)
 add_subdirectory(./trace)
