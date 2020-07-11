@@ -35,3 +35,6 @@ if(NOT ${SROSE_DISABLE_TEST})
     find_package(Boost REQUIRED QUIET COMPONENTS unit_test_framework)
     target_link_libraries("srose-test" INTERFACE Boost::unit_test_framework)
 endif()
+
+# {fmt}
+add_subdirectory(./fmt)
