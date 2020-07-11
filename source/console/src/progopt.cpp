@@ -8,7 +8,7 @@
 
 #include <sr/console/progopt.hpp>
 #include <boost/program_options.hpp>
-#include <boost/format.hpp>
+#include <fmt/format.h>
 #include <memory>
 #include <cassert>
 #include <sr/core/version_info.hpp>
@@ -163,9 +163,12 @@ namespace srose::console
             if(vm->count("version"))
             {
                 RequestCommandLineOutput(*vm, true);
-                os << boost::format("%d.%d.%d - %s")
-                        % SR_VERSION_MAJOR % SR_VERSION_MINOR % SR_VERSION_PATCH
-                        % core::GitCommitShortID()
+                os
+                    << fmt::format(
+                            "{}.{}.{} - {}",
+                            SR_VERSION_MAJOR, SR_VERSION_MINOR, SR_VERSION_PATCH,
+                            core::GitCommitShortID()
+                        )
                     << std::endl;
 
                 SR_PAUSE_IF_NECESSARY();
@@ -174,11 +177,14 @@ namespace srose::console
             if(vm->count("build-info"))
             {
                 RequestCommandLineOutput(*vm, true);
-                os
-                    << "Subterranean Rose " << core::GetVersionString() << std::endl
-                    << core::GitCommitMsg() << " - "
-                    << core::GitCommitID() << std::endl
-                    << "Branch: " << core::GitBranch() << std::endl;
+                os << fmt::format(
+                    "Subterranean Rose {}\n"
+                    "{} - {}\n"
+                    "Branch: {}\n",
+                    core::GetVersionString(),
+                    core::GitCommitMsg(), core::GitCommitID(),
+                    core::GitBranch()
+                );
                 const char* commit_body = core::GitCommitBody();
                 if(commit_body[0] != '\0')
                 {
@@ -283,9 +289,11 @@ namespace srose::console
         if(dm_count < 1)
         {
             os
-                << boost::format("Get number of the display modes of the display-%02d failed: %s")
-                    % disp_index
-                    % SDL_GetError()
+                << fmt::format(
+                    "Get number of the display modes of the display-{:02d} failed: {}",
+                    disp_index,
+                    SDL_GetError()
+                )
                 << std::endl;
 
             return false;
@@ -294,36 +302,40 @@ namespace srose::console
         const char* disp_name = SDL_GetDisplayName(disp_index);
 
         os
-            << boost::format(_("srose.cui.get-display-mode.display-name"))
-                % disp_index
-                % (disp_name ? disp_name : "(failed)")
+            << fmt::format(
+                _("srose.cui.get-display-mode.display-name"),
+                disp_index,
+                disp_name ? disp_name : "(failed)"
+            )
             << std::endl
-            << boost::format(_("srose.cui.get-display-mode.display-mode-count")) % dm_count
+            << fmt::format(_("srose.cui.get-display-mode.display-mode-count"), dm_count)
             << std::endl
             << _("srose.cui.get-display-mode.format-desc")
             << std::endl;
 
-        boost::format fmt(_("srose.cui.get-display-mode.format"));
+        std::string display_mode_fmt((_("srose.cui.get-display-mode.format")));
         for(int i = 0; i < dm_count; ++i)
         {
             SDL_DisplayMode mode{};
             if(SDL_GetDisplayMode(disp_index, i, &mode) != 0)
             {
                 os
-                    << boost::format("%03d:\tfailed - %s\n")
-                        % i % SDL_GetError()
+                    << fmt::format("{:03d}:\tfailed - {}\n", i, SDL_GetError())
                     << std::endl;
 
                 continue;
             }
 
             os
-                << fmt
-                    % i
-                    % SDL_BITSPERPIXEL(mode.format)
-                    % (SDL_GetPixelFormatName(mode.format) + sizeof("SDL_PIXELFORMAT"))
-                    % mode.w % mode.h
-                    % mode.refresh_rate
+                << fmt::format(
+                    display_mode_fmt,
+                    i,
+                    SDL_BITSPERPIXEL(mode.format),
+                    (SDL_GetPixelFormatName(mode.format) + sizeof("SDL_PIXELFORMAT")),
+                    mode.w,
+                    mode.h,
+                    mode.refresh_rate
+                )
                 << std::endl;
         }
 

@@ -16,9 +16,9 @@
 
 @srose.cui.video = "Video"
 @srose.cui.get-display-mode = "Get all available display mode(s) of the specific display"
-@srose.cui.get-display-mode.display-name = "Display-%02d Name: %s"
-@srose.cui.get-display-mode.display-mode-count = "Display mode count: %d"
+@srose.cui.get-display-mode.display-name = "Display-{:02d} Name: {}"
+@srose.cui.get-display-mode.display-mode-count = "Display mode count: {}"
 @srose.cui.get-display-mode.format-desc = "Mode\tBits per Pixel - Format Name\tWidth x Height @Refresh Rate"
-@srose.cui.get-display-mode.format = "%03d:\t%ibpp - %s\t\t%i x %i @%dHz"
+@srose.cui.get-display-mode.format = "{:03d}:\t{}bpp - {}\t\t{} x {} @{}Hz"
 
 @srose.cui.total = "Allowed options"

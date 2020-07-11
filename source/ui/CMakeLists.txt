@@ -10,6 +10,7 @@ list(APPEND ui_src_list ${ui_editor_src_list})
 add_library("srose-ui" STATIC ${ui_src_list})
 target_include_directories("srose-ui" PUBLIC ./include)
 
+target_link_libraries("srose-ui" PUBLIC fmt)
 target_link_libraries("srose-ui" PUBLIC "srose-core")
 target_link_libraries("srose-ui" PRIVATE "srose-main")
 target_link_libraries("srose-ui" PUBLIC "srose-console")
