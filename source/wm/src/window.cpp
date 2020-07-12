@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <sr/core/init.hpp>
 #include <sr/gpu/opengl3/renderer.hpp>
+#include <sr/trace/log.hpp>
 
 
 namespace srose::wm
@@ -55,11 +56,14 @@ namespace srose::wm
 
         flags |= SDL_WINDOW_OPENGL;
         /* Set the OpenGL attributes for window&context creation*/
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
+        #define SROSE_SET_GLATTR(attr, arg) \
+        if(SDL_GL_SetAttribute(attr, arg) != 0)\
+            BOOST_LOG_TRIVIAL(error) << ("SDL_GL_SetAttribute(" #attr ", " #arg "failed")
+        SROSE_SET_GLATTR(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SROSE_SET_GLATTR(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        SROSE_SET_GLATTR(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SROSE_SET_GLATTR(SDL_GL_DEPTH_SIZE, 24);
+        SROSE_SET_GLATTR(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
 
         SDL_Window* tmp_handle = SDL_CreateWindow(
             title.c_str(),
