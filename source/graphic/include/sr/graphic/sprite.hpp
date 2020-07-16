@@ -4,8 +4,8 @@
  * @brief Sprite
  */
 
-#ifndef SROSE_GPU_OPENGL3_sprite_hpp_
-#define SROSE_GPU_OPENGL3_sprite_hpp_
+#ifndef SROSE_GRAPHIC_OPENGL3_sprite_hpp_
+#define SROSE_GRAPHIC_OPENGL3_sprite_hpp_
 
 #include <glm/glm.hpp>
 #include "image.hpp"

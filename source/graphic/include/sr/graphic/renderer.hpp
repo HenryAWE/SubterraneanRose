@@ -4,8 +4,8 @@
  * @brief Renderer
  */
 
-#ifndef SROSE_GPU_renderer_hpp_
-#define SROSE_GPU_renderer_hpp_
+#ifndef SROSE_GRAPHIC_renderer_hpp_
+#define SROSE_GRAPHIC_renderer_hpp_
 
 #include <glm/glm.hpp>
 #include <stack>

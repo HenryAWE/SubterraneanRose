@@ -4,8 +4,8 @@
  * @brief Assertion for OpenGL3 module
  */
 
-#ifndef SROSE_GPU_OPENGL3_gl_assert_h_
-#define SROSE_GPU_OPENGL3_gl_assert_h_
+#ifndef SROSE_GRAPHIC_OPENGL3_gl_assert_h_
+#define SROSE_GRAPHIC_OPENGL3_gl_assert_h_
 
 #include <glad/glad.h>
 #include <assert.h>

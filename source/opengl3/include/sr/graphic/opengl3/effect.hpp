@@ -4,8 +4,8 @@
  * @brief Shader effects
  */
 
-#ifndef SROSE_GPU_OPENGL3_effect_hpp_
-#define SROSE_GPU_OPENGL3_effect_hpp_
+#ifndef SROSE_GRAPHIC_OPENGL3_effect_hpp_
+#define SROSE_GRAPHIC_OPENGL3_effect_hpp_
 
 #include <glad/glad.h>
 #include "shader.hpp"

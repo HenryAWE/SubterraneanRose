@@ -4,8 +4,8 @@
  * @brief Image
  */
 
-#ifndef SROSE_GPU_image_hpp_
-#define SROSE_GPU_image_hpp_
+#ifndef SROSE_GRAPHIC_image_hpp_
+#define SROSE_GRAPHIC_image_hpp_
 
 #include <utility>
 #include <imgui.h>

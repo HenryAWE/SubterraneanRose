@@ -4,8 +4,8 @@
  * @brief OpenGL3 Demo for testing
  */
 
-#ifndef SROSE_GPU_OPENGL3_demo_hpp_
-#define SROSE_GPU_OPENGL3_demo_hpp_
+#ifndef SROSE_GRAPHIC_OPENGL3_demo_hpp_
+#define SROSE_GRAPHIC_OPENGL3_demo_hpp_
 
 #include <glad/glad.h>
 #include <vector>

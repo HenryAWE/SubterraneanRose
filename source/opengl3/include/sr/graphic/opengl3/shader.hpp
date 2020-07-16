@@ -4,8 +4,8 @@
  * @brief Shader program
  */
 
-#ifndef SROSE_GPU_OPENGL3_shader_hpp_
-#define SROSE_GPU_OPENGL3_shader_hpp_
+#ifndef SROSE_GRAPHIC_OPENGL3_shader_hpp_
+#define SROSE_GRAPHIC_OPENGL3_shader_hpp_
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>

@@ -4,8 +4,8 @@
  * @brief OpenGL texture wrapper
  */
 
-#ifndef SROSE_GPU_OPENGL3_texture_hpp_
-#define SROSE_GPU_OPENGL3_texture_hpp_
+#ifndef SROSE_GRAPHIC_OPENGL3_texture_hpp_
+#define SROSE_GRAPHIC_OPENGL3_texture_hpp_
 
 #include <glad/glad.h>
 #include <filesystem>

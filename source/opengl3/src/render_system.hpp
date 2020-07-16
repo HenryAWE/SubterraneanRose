@@ -4,8 +4,8 @@
  * @brief Render system and components
  */
 
-#ifndef SROSE_GPU_OPENGL3_render_system_hpp_
-#define SROSE_GPU_OPENGL3_render_system_hpp_
+#ifndef SROSE_GRAPHIC_OPENGL3_render_system_hpp_
+#define SROSE_GRAPHIC_OPENGL3_render_system_hpp_
 
 #include <sr/player/system/system.hpp>
 #include <sr/player/component/image.hpp>
