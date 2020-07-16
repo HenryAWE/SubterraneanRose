@@ -11,7 +11,7 @@
 #include <string>
 #include <map>
 #include <glm/glm.hpp>
-#include <sr/gpu/renderer.hpp>
+#include <sr/graphic/renderer.hpp>
 #include "texture.hpp"
 #include "buffer.hpp"
 #include "shader.hpp"

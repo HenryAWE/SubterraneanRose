@@ -13,8 +13,8 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imguisr.h>
-#include <sr/gpu/opengl3/renderer.hpp>
-#include <sr/gpu/sprite.hpp>
+#include <sr/graphic/opengl3/renderer.hpp>
+#include <sr/graphic/sprite.hpp>
 
 
 #ifndef SROSE_DISABLE_DEMO

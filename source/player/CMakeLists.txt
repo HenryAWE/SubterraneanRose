@@ -18,7 +18,7 @@ target_link_libraries("srose-player" PRIVATE "srose-ui")
 target_link_libraries("srose-player" PUBLIC glm::glm)
 if(${SROSE_DISABLE_DEMO})
     target_compile_definitions("srose-player" PUBLIC SROSE_DISABLE_DEMO=1)
-    target_link_libraries("srose-player" PRIVATE "srose-gpu")
+    target_link_libraries("srose-player" PRIVATE "srose-graphic")
 endif()
 
 # Tests

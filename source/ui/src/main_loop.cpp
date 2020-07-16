@@ -10,7 +10,7 @@
 #include <sr/wm/event.hpp>
 #include <sr/ui/uimgr.hpp>
 #include <sr/wm/input.hpp>
-#include <sr/gpu/renderer.hpp>
+#include <sr/graphic/renderer.hpp>
 
 
 static bool g_loop = true;

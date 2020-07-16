@@ -4,7 +4,7 @@
  * @brief Renderer
  */
 
-#include <sr/gpu/renderer.hpp>
+#include <sr/graphic/renderer.hpp>
 #include <cassert>
 
 

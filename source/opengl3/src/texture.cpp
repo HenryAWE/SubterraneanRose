@@ -5,7 +5,7 @@
  */
 
 #include <glad/glad.h>
-#include <sr/gpu/opengl3/texture.hpp>
+#include <sr/graphic/opengl3/texture.hpp>
 #include <cassert>
 #include <SDL.h>
 #include <stb_image.h>

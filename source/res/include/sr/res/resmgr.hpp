@@ -9,7 +9,7 @@
 
 #include "config.hpp"
 #include <sr/filesystem/filesystem.hpp>
-#include <sr/gpu/image.hpp>
+#include <sr/graphic/image.hpp>
 
 
 namespace srose::res

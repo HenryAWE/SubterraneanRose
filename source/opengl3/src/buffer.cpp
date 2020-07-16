@@ -5,7 +5,7 @@
  */
 
 #include <glad/glad.h>
-#include <sr/gpu/opengl3/buffer.hpp>
+#include <sr/graphic/opengl3/buffer.hpp>
 #include "gl_assert.h"
 
 

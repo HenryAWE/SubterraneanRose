@@ -11,7 +11,7 @@
 #include <filesystem>
 #include <utility>
 #include <glm/vec2.hpp>
-#include <sr/gpu/image.hpp>
+#include <sr/graphic/image.hpp>
 #include "buffer.hpp"
 
 

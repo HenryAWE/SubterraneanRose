@@ -16,7 +16,7 @@
 #include <sr/player/player.hpp>
 #include <sr/srose/app.hpp>
 #include <sr/wm/event.hpp>
-#include <sr/gpu/renderer.hpp>
+#include <sr/graphic/renderer.hpp>
 #ifdef __WINDOWS__
 #   include <comdef.h>
 #   include <combaseapi.h>

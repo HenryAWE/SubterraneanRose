@@ -10,11 +10,11 @@
 #include <glad/glad.h>
 #include <vector>
 #include <sr/ui/node.hpp>
-#include <sr/gpu/opengl3/renderer.hpp>
-#include <sr/gpu/opengl3/buffer.hpp>
-#include <sr/gpu/opengl3/shader.hpp>
-#include <sr/gpu/opengl3/texture.hpp>
-#include <sr/gpu/opengl3/effect.hpp>
+#include <sr/graphic/opengl3/renderer.hpp>
+#include <sr/graphic/opengl3/buffer.hpp>
+#include <sr/graphic/opengl3/shader.hpp>
+#include <sr/graphic/opengl3/texture.hpp>
+#include <sr/graphic/opengl3/effect.hpp>
 
 
 #ifndef SROSE_DISABLE_DEMO

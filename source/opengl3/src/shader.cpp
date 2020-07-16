@@ -4,7 +4,7 @@
  * @brief Shader program
  */
 
-#include <sr/gpu/opengl3/shader.hpp>
+#include <sr/graphic/opengl3/shader.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <SDL_log.h>
 #include "gl_assert.h"

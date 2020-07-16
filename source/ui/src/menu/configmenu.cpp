@@ -12,7 +12,7 @@
 #include <imgui_internal.h>
 #include <imguisr.h>
 #include <sr/ui/uimgr.hpp>
-#include <sr/gpu/renderer.hpp>
+#include <sr/graphic/renderer.hpp>
 #include <sr/audio/aumgr.hpp>
 #include <sr/player/player.hpp>
 #include <sr/i18n/i18n.hpp>

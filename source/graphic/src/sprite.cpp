@@ -4,7 +4,7 @@
  * @brief Sprite
  */
 
-#include <sr/gpu/sprite.hpp>
+#include <sr/graphic/sprite.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 

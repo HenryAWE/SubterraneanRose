@@ -11,7 +11,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imguisr.h>
-#include <sr/gpu/renderer.hpp>
+#include <sr/graphic/renderer.hpp>
 #include <sr/player/component/transform.hpp>
 #include <sr/player/component/move.hpp>
 #include <sr/player/component/image.hpp>

@@ -7,8 +7,8 @@
 #ifndef SROSE_PLAYER_demo_hpp_
 #define SROSE_PLAYER_demo_hpp_
 
-#include <sr/gpu/image.hpp>
-#include <sr/gpu/renderer.hpp>
+#include <sr/graphic/image.hpp>
+#include <sr/graphic/renderer.hpp>
 #include <sr/ui/node.hpp>
 #include <sr/player/player.hpp>
 #include <sr/player/stage.hpp>

@@ -4,7 +4,7 @@
  * @brief Shader effects
  */
 
-#include <sr/gpu/opengl3/effect.hpp>
+#include <sr/graphic/opengl3/effect.hpp>
 #include <string>
 
 

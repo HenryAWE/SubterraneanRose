@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <imgui_impl_sdl.h>
 #include <sr/core/init.hpp>
-#include <sr/gpu/opengl3/renderer.hpp>
+#include <sr/graphic/opengl3/renderer.hpp>
 #include <sr/trace/log.hpp>
 
 

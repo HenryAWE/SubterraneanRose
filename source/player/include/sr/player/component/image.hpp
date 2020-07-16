@@ -8,7 +8,7 @@
 #define SROSE_PLAYER_COMPONENT_image_hpp_
 
 #include "component.hpp"
-#include <sr/gpu/image.hpp>
+#include <sr/graphic/image.hpp>
 
 
 namespace srose::player::component

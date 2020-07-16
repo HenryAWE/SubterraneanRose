@@ -4,7 +4,7 @@
  * @brief OpenGL3 renderer
  */
 
-#include <sr/gpu/opengl3/renderer.hpp>
+#include <sr/graphic/opengl3/renderer.hpp>
 #include <glad/glad.h>
 #include <SDL.h>
 #include <imgui_impl_opengl3.h>

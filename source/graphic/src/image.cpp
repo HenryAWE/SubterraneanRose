@@ -4,7 +4,7 @@
  * @brief Image
  */
 
-#include <sr/gpu/image.hpp>
+#include <sr/graphic/image.hpp>
 
 
 namespace srose::gpu

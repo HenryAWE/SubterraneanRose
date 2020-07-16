@@ -5,7 +5,7 @@
  */
 
 #include "render_system.hpp"
-#include <sr/gpu/opengl3/renderer.hpp>
+#include <sr/graphic/opengl3/renderer.hpp>
 
 
 namespace srose::gpu::opengl3
