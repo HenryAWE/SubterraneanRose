@@ -26,22 +26,22 @@ void DoMainLoop(srose::wm::Window& window)
     /*Event processing*/
     input.ProcessAllEvent();
     g_loop = static_cast<bool>(input);
-    wm::NewFrame();
+    window.NewImGuiFrame();
     try
     {
         gui.Update();
     }
     catch(...)
     {
-        wm::EndFrame();
+        window.EndImGuiFrame();
         throw;
     }
-    wm::EndFrame();
+    window.EndImGuiFrame();
 
     /*Rendering */
     renderer.ClearScreen();
     renderer.Render();
-    wm::RenderFrame();
+    window.RenderImGuiFrame();
     renderer.Present();
 }
 

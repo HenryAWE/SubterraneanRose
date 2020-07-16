@@ -10,6 +10,8 @@
 #include <SDL.h>
 #include <string>
 #include <glm/vec2.hpp>
+#include <imgui.h>
+
 
 namespace srose::gpu
 {
@@ -45,10 +47,16 @@ namespace srose::wm
         void SetVSync(bool vsync);
 
         gpu::Renderer& GetRenderer();
+        ImGuiContext* GetContext() const noexcept { return m_imctx; }
+
+        void NewImGuiFrame();
+        void EndImGuiFrame();
+        void RenderImGuiFrame();
 
     private:
         handle_type m_handle = nullptr;
         SDL_GLContext m_glctx = nullptr;
+        ImGuiContext* m_imctx = nullptr;
         gpu::Renderer* m_renderer = nullptr;
 
         void CreateDisplay(
@@ -58,8 +66,10 @@ namespace srose::wm
             int flags
         );
         void CreateRenderer();
+        void CreateImGuiContext();
         void DestroyRenderer() noexcept;
         void DestroyDisplay() noexcept;
+        void DestroyImGuiContext() noexcept;
     };
 } // namespace srose::wm
 

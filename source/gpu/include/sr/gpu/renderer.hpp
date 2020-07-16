@@ -78,6 +78,12 @@ namespace srose::gpu
     protected:
         virtual Texture* NewTexture() = 0;
         virtual Texture* NewScreenTexture(glm::ivec2 size) = 0;
+
+        friend class wm::Window;
+        virtual void InitImGuiRenderer() = 0;
+        virtual void ShutdownImGuiRenderer() = 0;
+        virtual void NewImGuiFrame() = 0;
+        virtual void RenderImGuiFrame() = 0;
     };
 } // namespace srose::gpu
 

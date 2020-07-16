@@ -6,6 +6,7 @@
 
 #include <sr/wm/window.hpp>
 #include <stdexcept>
+#include <imgui_impl_sdl.h>
 #include <sr/core/init.hpp>
 #include <sr/gpu/opengl3/renderer.hpp>
 #include <sr/trace/log.hpp>
@@ -30,11 +31,13 @@ namespace srose::wm
             return;
         CreateDisplay(size, title, display_index, flags);
         CreateRenderer();
+        CreateImGuiContext();
     }
     void Window::Destroy() noexcept
     {
         if(!m_handle)
             return;
+        DestroyImGuiContext();
         DestroyRenderer();
         DestroyDisplay();
     }
@@ -136,9 +139,33 @@ namespace srose::wm
         }
     }
 
+    void Window::NewImGuiFrame()
+    {
+        m_renderer->NewImGuiFrame();
+        ImGui_ImplSDL2_NewFrame(handle());
+        ImGui::NewFrame();
+    }
+    void Window::EndImGuiFrame()
+    {
+        ImGui::EndFrame();
+    }
+    void Window::RenderImGuiFrame()
+    {
+        ImGui::Render();
+        m_renderer->RenderImGuiFrame();
+    }
+
     void Window::CreateRenderer()
     {
         m_renderer = new gpu::opengl3::Renderer(*this);
+    }
+    void Window::CreateImGuiContext()
+    {
+        assert(!m_imctx);
+        m_imctx = ImGui::CreateContext();
+        if(!ImGui_ImplSDL2_InitForOpenGL(handle(), glctx()))
+            throw std::runtime_error("[WN] ImGui_ImplSDL2_InitForOpenGL() failed");
+        m_renderer->InitImGuiRenderer();
     }
     void Window::DestroyRenderer() noexcept
     {
@@ -151,5 +178,12 @@ namespace srose::wm
         m_glctx = nullptr;
         SDL_DestroyWindow(m_handle);
         m_handle = nullptr;
+    }
+    void Window::DestroyImGuiContext() noexcept
+    {
+        m_renderer->ShutdownImGuiRenderer();
+        ImGui_ImplSDL2_Shutdown();
+        ImGui::DestroyContext(m_imctx);
+        m_imctx = nullptr;
     }
 } // namespace srose::wm

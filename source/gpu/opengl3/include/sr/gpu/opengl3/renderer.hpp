@@ -65,6 +65,11 @@ namespace srose::gpu::opengl3
         Texture* NewTexture() override;
         ScreenTexture* NewScreenTexture(glm::ivec2 size) override;
 
+        void InitImGuiRenderer() override;
+        void ShutdownImGuiRenderer() override;
+        void NewImGuiFrame() override;
+        void RenderImGuiFrame() override;
+
         VertexArray m_sprite_vao;
         Buffer m_sprite_vbo[2];
         Buffer m_sprite_ebo;

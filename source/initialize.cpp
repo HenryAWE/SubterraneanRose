@@ -57,7 +57,6 @@ namespace srose
         if(::HRESULT hr = ::CoInitialize(nullptr); FAILED(hr))
             _com_raise_error(hr);
     #endif
-        wm::InitEventSystem(window);
         GetApp().LoadUsers();
         auto font_ready = std::async(std::launch::async, LoadFonts);
         audio::CreateAudioManager();

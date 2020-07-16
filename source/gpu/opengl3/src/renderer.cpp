@@ -7,6 +7,7 @@
 #include <sr/gpu/opengl3/renderer.hpp>
 #include <glad/glad.h>
 #include <SDL.h>
+#include <imgui_impl_opengl3.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <sr/ui/uimgr.hpp>
 #include "gl_assert.h"
@@ -195,6 +196,24 @@ namespace srose::gpu::opengl3
         std::unique_ptr<ScreenTexture> guard(new ScreenTexture);
         guard->Generate(size);
         return guard.release();
+    }
+
+    void Renderer::InitImGuiRenderer()
+    {
+        if(!ImGui_ImplOpenGL3_Init())
+            throw std::runtime_error("[WM] ImGui_ImplOpenGL3_Init() failed");
+    }
+    void Renderer::ShutdownImGuiRenderer()
+    {
+        ImGui_ImplOpenGL3_Shutdown();
+    }
+    void Renderer::NewImGuiFrame()
+    {
+        ImGui_ImplOpenGL3_NewFrame();
+    }
+    void Renderer::RenderImGuiFrame()
+    {
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
     void Renderer::InitSpriteRenderer()
