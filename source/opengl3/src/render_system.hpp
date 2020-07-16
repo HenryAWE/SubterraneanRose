@@ -12,7 +12,7 @@
 #include <sr/player/component/transform.hpp>
 
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     class Renderer;
 
@@ -28,7 +28,7 @@ namespace srose::gpu::opengl3
             player::component::Image& img
         );
     };
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3
 
 
 #endif

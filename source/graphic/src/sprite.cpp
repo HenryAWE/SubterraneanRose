@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-namespace srose::gpu
+namespace srose::graphic
 {
     glm::mat4 Sprite::CalcMatrix() const noexcept
     {
@@ -19,4 +19,4 @@ namespace srose::gpu
 
         return result;
     }
-} // namespace srose::gpu
+} // namespace srose::graphic

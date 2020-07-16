@@ -12,7 +12,7 @@
 #include "gl_assert.h"
 
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     Texture::~Texture() noexcept
     {
@@ -228,4 +228,4 @@ namespace srose::gpu::opengl3
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3

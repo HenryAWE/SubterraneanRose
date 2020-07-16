@@ -19,7 +19,7 @@
 
 #ifndef SROSE_DISABLE_DEMO
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     namespace detail
     {
@@ -483,6 +483,6 @@ namespace srose::gpu::opengl3
         }
         ImGui::EndChild();
     }
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3
 
 #endif

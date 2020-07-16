@@ -7,7 +7,7 @@
 #include <sr/graphic/image.hpp>
 
 
-namespace srose::gpu
+namespace srose::graphic
 {
     ImVec2 Texture::GetSizeImVec2() const noexcept
     {
@@ -17,4 +17,4 @@ namespace srose::gpu
             static_cast<float>(sz.y)
         );
     }
-} // namespace srose::gpu
+} // namespace srose::graphic

@@ -15,10 +15,10 @@ namespace srose::player::component
 {
     struct Image : public Component<Image>
     {
-        Image(gpu::Texture* image_ = nullptr) noexcept
+        Image(graphic::Texture* image_ = nullptr) noexcept
             : image(image_) {}
 
-        gpu::Texture* image;
+        graphic::Texture* image;
     };
 } // namespace srose::player::component
 

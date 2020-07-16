@@ -11,7 +11,7 @@
 #include "image.hpp"
 
 
-namespace srose::gpu
+namespace srose::graphic
 {
     struct StageRenderData : public player::component::Component<StageRenderData>
     {
@@ -21,7 +21,7 @@ namespace srose::gpu
             std::unique_ptr<Texture> screen_texture_
         ) : screen_texture(std::move(screen_texture_)) {}
     };
-} // namespace srose::gpu
+} // namespace srose::graphic
 
 
 #endif

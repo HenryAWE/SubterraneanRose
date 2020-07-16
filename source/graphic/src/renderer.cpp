@@ -8,7 +8,7 @@
 #include <cassert>
 
 
-namespace srose::gpu
+namespace srose::graphic
 {
     Renderer::Renderer(wm::Window& window)
         : m_window(&window) {}
@@ -44,4 +44,4 @@ namespace srose::gpu
 
         return result;
     }
-} // namespace srose::gpu
+} // namespace srose::graphic

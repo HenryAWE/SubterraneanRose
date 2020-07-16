@@ -11,7 +11,7 @@
 #include "shader.hpp"
 
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     enum class EffectID : int
     {
@@ -23,7 +23,7 @@ namespace srose::gpu::opengl3
     };
 
     ShaderProgram CreateEffect(EffectID id);
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3
 
 
 #endif

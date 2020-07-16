@@ -42,7 +42,7 @@ namespace srose::wm
         DestroyDisplay();
     }
 
-    gpu::Renderer& Window::GetRenderer()
+    graphic::Renderer& Window::GetRenderer()
     {
         return *m_renderer;
     }
@@ -157,7 +157,7 @@ namespace srose::wm
 
     void Window::CreateRenderer()
     {
-        m_renderer = new gpu::opengl3::Renderer(*this);
+        m_renderer = new graphic::opengl3::Renderer(*this);
     }
     void Window::CreateImGuiContext()
     {

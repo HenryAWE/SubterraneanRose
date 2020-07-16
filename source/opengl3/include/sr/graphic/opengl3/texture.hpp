@@ -15,12 +15,12 @@
 #include "buffer.hpp"
 
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     /**
      * @brief OpenGL texture wrapper
      */
-    class Texture : public gpu::Texture
+    class Texture : public graphic::Texture
     {
     public:
         typedef GLuint handle_type;
@@ -90,7 +90,7 @@ namespace srose::gpu::opengl3
         Framebuffer m_fbo;
         Renderbuffer m_rbo;
     };
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3
 
 
 #endif

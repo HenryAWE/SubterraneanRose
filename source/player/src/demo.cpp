@@ -40,7 +40,7 @@ namespace srose::player
         }
     };
 
-    PlayerDemoWindow::PlayerDemoWindow(gpu::Renderer& ren)
+    PlayerDemoWindow::PlayerDemoWindow(graphic::Renderer& ren)
         : Base("Player Demo", "player-demo"), m_ren(&ren), m_stage({350, 430})
     {
         auto& emgr = m_stage.world.GetEntityManager();
@@ -79,7 +79,7 @@ namespace srose::player
         if(!background)
             return;
 
-        auto& screen = *m_stage.world.GetGlobalComponent<gpu::StageRenderData>()->screen_texture;
+        auto& screen = *m_stage.world.GetGlobalComponent<graphic::StageRenderData>()->screen_texture;
         if(ImGui::BeginChild("##screen"))
         {
             ImGui::Image(

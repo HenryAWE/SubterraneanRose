@@ -9,7 +9,7 @@
 #include "gl_assert.h"
 
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     Buffer::~Buffer() noexcept
     {
@@ -91,4 +91,4 @@ namespace srose::gpu::opengl3
             return;
         glDeleteRenderbuffers(1, &m_handle);
     }
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3

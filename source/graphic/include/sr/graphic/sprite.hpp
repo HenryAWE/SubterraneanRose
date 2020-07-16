@@ -11,7 +11,7 @@
 #include "image.hpp"
 
 
-namespace srose::gpu
+namespace srose::graphic
 {
     class Sprite
     {
@@ -73,7 +73,7 @@ namespace srose::gpu
         float m_rotation = 0.0f; // In radians, not in degrees!
         Texture* m_texture = nullptr;
     };
-} // namespace srose::gpu
+} // namespace srose::graphic
 
 
 #endif

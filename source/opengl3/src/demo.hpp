@@ -19,7 +19,7 @@
 
 #ifndef SROSE_DISABLE_DEMO
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     class OpenGL3DemoWindow : public ui::StandaloneNode
     {
@@ -77,7 +77,7 @@ namespace srose::gpu::opengl3
         glm::ivec4 m_effect_viewport;
         void EffectDemoTabItem();
     };
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3
 
 #endif
 

@@ -35,10 +35,10 @@ void main(){
     color = texture(tex, texcoord);
 })";
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     Renderer::Renderer(wm::Window& window)
-        : gpu::Renderer(window)
+        : graphic::Renderer(window)
     {
         SR_ASSERT_CTX();
 
@@ -263,4 +263,4 @@ namespace srose::gpu::opengl3
             sprite_fs
         );
     }
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3

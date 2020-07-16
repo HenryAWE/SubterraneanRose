@@ -8,7 +8,7 @@
 #include <sr/graphic/opengl3/renderer.hpp>
 
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     RenderSystem::RenderSystem(Renderer* ren)
         : m_ren(ren) {}
@@ -18,7 +18,7 @@ namespace srose::gpu::opengl3
             player::component::Transform& tr,
             player::component::Image& img
     ) {
-        gpu::Sprite sp;
+        graphic::Sprite sp;
         sp.position(tr.position);
         sp.scale(tr.scale);
         sp.rotation(tr.rotation);
@@ -26,4 +26,4 @@ namespace srose::gpu::opengl3
 
         m_ren->AddSprite(sp);
     }
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3

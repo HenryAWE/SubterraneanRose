@@ -21,11 +21,11 @@ namespace srose::player
     class PlayerDemoWindow : public ui::StandaloneNode
     {
         Stage m_stage;
-        gpu::Renderer* m_ren;
+        graphic::Renderer* m_ren;
     public:
         typedef StandaloneNode Base;
 
-        PlayerDemoWindow(gpu::Renderer& ren);
+        PlayerDemoWindow(graphic::Renderer& ren);
 
         void Update() override;
 

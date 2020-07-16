@@ -76,7 +76,7 @@ void main(){
     out_color = color;
 })";
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     namespace detail
     {
@@ -141,4 +141,4 @@ namespace srose::gpu::opengl3
 
         return std::move(sh);
     }
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3

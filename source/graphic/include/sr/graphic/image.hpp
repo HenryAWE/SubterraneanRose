@@ -14,7 +14,7 @@
 #include <glm/vec4.hpp>
 
 
-namespace srose::gpu
+namespace srose::graphic
 {
     class Texture
     {
@@ -104,7 +104,7 @@ namespace srose::gpu
          */
         virtual bool LoadFromFileEx(const filesystem::path& file, const Description& desc) = 0;
     };
-} // namespace srose::gpu
+} // namespace srose::graphic
 
 
 #endif

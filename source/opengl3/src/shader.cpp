@@ -10,7 +10,7 @@
 #include "gl_assert.h"
 
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     ShaderProgram::~ShaderProgram() noexcept
     {
@@ -116,4 +116,4 @@ namespace srose::gpu::opengl3
         glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(m));
         SR_ASSERT_GL();
     }
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3

@@ -13,10 +13,10 @@
 #include <imgui.h>
 
 
-namespace srose::gpu
+namespace srose::graphic
 {
     class Renderer;
-} // namespace srose::gpu
+} // namespace srose::graphic
 
 namespace srose::wm
 {
@@ -46,7 +46,7 @@ namespace srose::wm
         void SetTitle(const std::string& title);
         void SetVSync(bool vsync);
 
-        gpu::Renderer& GetRenderer();
+        graphic::Renderer& GetRenderer();
         ImGuiContext* GetContext() const noexcept { return m_imctx; }
 
         void NewImGuiFrame();
@@ -57,7 +57,7 @@ namespace srose::wm
         handle_type m_handle = nullptr;
         SDL_GLContext m_glctx = nullptr;
         ImGuiContext* m_imctx = nullptr;
-        gpu::Renderer* m_renderer = nullptr;
+        graphic::Renderer* m_renderer = nullptr;
 
         void CreateDisplay(
             glm::ivec2 size,

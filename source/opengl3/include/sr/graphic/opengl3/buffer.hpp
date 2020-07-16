@@ -11,7 +11,7 @@
 #include <utility>
 
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     class Buffer
     {
@@ -112,7 +112,7 @@ namespace srose::gpu::opengl3
     private:
         handle_type m_handle = 0;
     };
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3
 
 
 #endif

@@ -18,7 +18,7 @@
 #include "stage_data.hpp"
 
 
-namespace srose::gpu
+namespace srose::graphic
 {
     /**
      * @brief Renderer base
@@ -85,7 +85,7 @@ namespace srose::gpu
         virtual void NewImGuiFrame() = 0;
         virtual void RenderImGuiFrame() = 0;
     };
-} // namespace srose::gpu
+} // namespace srose::graphic
 
 
 #endif

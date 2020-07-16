@@ -17,13 +17,13 @@
 #include "shader.hpp"
 
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
 #ifndef SROSE_DISABLE_DEMO
     class OpenGL3DemoWindow;
 #endif
 
-    class Renderer : public gpu::Renderer
+    class Renderer : public graphic::Renderer
     {
     public:
         Renderer(wm::Window& window);
@@ -81,7 +81,7 @@ namespace srose::gpu::opengl3
         std::map<GLuint /* Texture ID */, std::vector<SpriteRenderData>> m_sprite_data;
         void InitSpriteRenderer();
     };
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3
 
 
 #endif

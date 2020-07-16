@@ -12,7 +12,7 @@
 #include <utility>
 
 
-namespace srose::gpu::opengl3
+namespace srose::graphic::opengl3
 {
     class ShaderProgram
     {
@@ -48,7 +48,7 @@ namespace srose::gpu::opengl3
     void Uniform(GLint loc, const float (&v)[4]);
     void Uniform(GLint loc, const glm::vec4& v);
     void Uniform(GLint loc, const glm::mat4& m);
-} // namespace srose::gpu::opengl3
+} // namespace srose::graphic::opengl3
 
 
 #endif
