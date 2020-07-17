@@ -270,26 +270,4 @@ namespace srose::console
     {
         return m_clidata->vm.count("vsync");
     }
-
-#if !defined SROSE_DISABLE_CUI // Controlled by the build flag SROSE_DISABLE_CUI
-    const boost::program_options::variables_map& GetVariablesMapInternal() noexcept;
-
-    std::string GetPreferredLanguage()
-    {
-        if(GetVariablesMapInternal().count("language"))
-        {
-            std::string lang = GetVariablesMapInternal()["language"].as<std::string>();
-            return lang=="auto" ? std::string() : std::move(lang);
-        }
-        else
-        {
-            return std::string();
-        }
-    }
-#else
-    std::string GetPreferredLanguage()
-    {
-        return std::string();
-    }
-#endif
 } // namespace srose::console

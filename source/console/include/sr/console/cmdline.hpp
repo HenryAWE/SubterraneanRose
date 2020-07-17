@@ -10,13 +10,10 @@
 #include <iosfwd>
 #include <string>
 #include <memory>
-#include "progopt.hpp"
 
 
 namespace srose::console
 {
-    std::string GetPreferredLanguage();
-
     namespace detailed
     {
         class CLIData;
