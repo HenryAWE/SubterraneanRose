@@ -81,6 +81,7 @@ if (NOT SDL2_LIBRARIES)
 
     include(SelectLibraryConfigurations)
     select_library_configurations(SDL2)
+    select_library_configurations(SDL2main)
 endif()
 
 # Find the SDL2 version.
