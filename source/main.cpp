@@ -27,9 +27,16 @@ int main(int argc, char* argv[])
     trace::InitializeLogger();
     trace::RedirectSDLOutput();
     i18n::LoadAllLanguage(filesystem::GetLocaleFolder());
+    i18n::SelectLanguage();
 
-    if(console::ParseArg(argc, argv) == 1)
+    auto& cli = console::CommandLineInterface::GetGlobalInstance();
+    cli.ParseArg(argc, argv);
+    cli.HandleArg();
+    if(cli.QuitRequested())
     {
+        #ifdef _WIN32
+        if(cli.WinPauseRequested()) std::system("pause");
+        #endif
         return EXIT_SUCCESS;
     }
 
@@ -44,7 +51,7 @@ int main(int argc, char* argv[])
     }
 
     int window_flags = 0;
-    window_flags |= console::FullscreenRequired()?SDL_WINDOW_FULLSCREEN:0;
+    window_flags |= cli.FullscreenRequired()?SDL_WINDOW_FULLSCREEN:0;
     wm::Window window;
     try
     {
@@ -54,7 +61,7 @@ int main(int argc, char* argv[])
             0,
             window_flags
         );
-        if(console::VSyncRequired())
+        if(cli.VSyncRequired())
             window.SetVSync(true);
     }
     catch(const std::runtime_error& e)
