@@ -47,7 +47,11 @@ if(MSVC)
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/verinfo.rc.in" "verinfo.rc")
     list(APPEND sr_exec_src_list "${CMAKE_CURRENT_BINARY_DIR}/verinfo.rc")
 endif()
-add_executable("srose-exec" ${sr_exec_src_list})
+add_executable(
+    "srose-exec"
+    WIN32
+    ${sr_exec_src_list}
+)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries("srose-exec" PRIVATE pthread)
