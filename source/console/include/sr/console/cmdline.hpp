@@ -48,7 +48,7 @@ namespace srose::console
         void RequestQuit(bool req = true) noexcept { m_quit_req = req; }
         bool QuitRequested() const noexcept { return m_quit_req; }
         void WinRequestPause(bool req = true) noexcept { m_win_pause_req = req; }
-        bool WinPauseRequested() const noexcept { return m_win_pause_req; }
+        bool WinPauseRequested() const noexcept;
 
         // Helpers
         std::string GenerateHelp();

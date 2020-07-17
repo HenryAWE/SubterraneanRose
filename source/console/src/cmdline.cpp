@@ -8,9 +8,12 @@
 #include <iostream>
 #include <sstream>
 #include <boost/program_options.hpp>
+#include <fmt/core.h>
+#include <sr/core/version_info.hpp>
 #include <sr/locale/locale.hpp>
 #include <sr/i18n/i18n.hpp>
 #include "mswin.hpp"
+#include "buildinfo.hpp"
 
 
 namespace srose::console
@@ -175,10 +178,68 @@ namespace srose::console
 
         if(vm.count("help"))
         {
-            os << GenerateHelp() << endl;
+            detailed::RequestCommandLineOutput(vm, true);
+            os << "Subterranean Rose CLI\n" << GenerateHelp() << endl;
             WinRequestPause();
             RequestQuit();
         }
+        if(vm.count("version"))
+        {
+            detailed::RequestCommandLineOutput(vm, true);
+            os
+                << fmt::format(
+                        "{}.{}.{} - {}",
+                        SR_VERSION_MAJOR, SR_VERSION_MINOR, SR_VERSION_PATCH,
+                        core::GitCommitShortID()
+                    )
+                << std::endl;
+            WinRequestPause();
+            RequestQuit();
+        }
+        if(vm.count("build-info"))
+        {
+            detailed::RequestCommandLineOutput(vm, true);
+            os << fmt::format(
+                "Subterranean Rose {}\n"
+                "{} - {}\n"
+                "Branch: {}\n",
+                core::GetVersionString(),
+                core::GitCommitMsg(), core::GitCommitID(),
+                core::GitBranch()
+            );
+            const char* commit_body = core::GitCommitBody();
+            if(commit_body[0] != '\0')
+            {
+                os << std::endl << commit_body << std::endl;
+            }
+            os << std::endl;
+
+            const char* build_suffix = core::GetBuildSuffix();
+            if(build_suffix[0] != '\0')
+            {
+                os << "Build suffix: " <<  build_suffix << std::endl;
+            }
+            os << std::endl;
+
+            /* C++ Information */
+            os
+                << "C++ Information" << std::endl
+                << GenerateCppInfo()
+                << std::endl;
+            /* Third Party Libraries */
+            os
+                << "Third Party Libraries" << std::endl
+                << GenerateLibInfo()
+                << std::endl;
+
+            WinRequestPause();
+            RequestQuit();
+        }
+    }
+
+    bool CommandLineInterface::WinPauseRequested() const noexcept
+    {
+        return m_win_pause_req && detailed::win_helper.release;
     }
 
     std::string CommandLineInterface::GenerateHelp()
