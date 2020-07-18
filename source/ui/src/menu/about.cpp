@@ -12,7 +12,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <sr/ui/uimgr.hpp>
-#include <sr/util/open_in_browser.hpp>
+#include <sr/util/shell.hpp>
 
 
 namespace srose::ui
