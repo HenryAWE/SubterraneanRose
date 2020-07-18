@@ -69,6 +69,7 @@ namespace srose::console
         public:
             std::ostream* output = nullptr;
             po::variables_map vm;
+            std::vector<std::string> unrecognized;
             std::optional<po::options_description> desc;
             std::shared_ptr<locale::Language> language;
 
@@ -117,12 +118,31 @@ namespace srose::console
                     .add(video);
             }
 
-            void ParseArg(int argc, char* argv[])
+            bool ParseArg(int argc, char* argv[])
             {
                 if(!desc)
                     desc.emplace(BuildDesc());
-                po::store(po::parse_command_line(argc, argv, *desc), vm);
-                po::notify(vm);
+
+                auto& os = *output;
+                try
+                {
+                    auto parsed = po::command_line_parser(argc, argv)
+                        .options(*desc)
+                        .allow_unregistered()
+                        .run();
+                    po::store(parsed, vm);
+                    po::notify(vm);
+
+                    unrecognized = po::collect_unrecognized(parsed.options, po::include_positional);
+                }
+                catch(const po::error& e)
+                {
+                    detailed::RequestCommandLineOutput(vm, true);
+                    os << e.what() << std::endl;
+                    return false;
+                }
+
+                return true;
             }
 
             void UpdateI18nData(std::shared_ptr<locale::Language> new_lang)
@@ -155,7 +175,12 @@ namespace srose::console
 
     void CommandLineInterface::ParseArg(int argc, char* argv[])
     {
-        m_clidata->ParseArg(argc, argv);
+        bool no_error = m_clidata->ParseArg(argc, argv);
+        if(!no_error)
+        {
+            RequestQuit();
+            WinRequestPause();
+        }
     }
     void CommandLineInterface::HandleArg()
     {
@@ -164,6 +189,18 @@ namespace srose::console
         auto& os = *m_clidata->output;
         auto& vm = m_clidata->vm;
         detailed::RequestCommandLineOutput(vm);
+
+        if(auto& unrecognized = m_clidata->unrecognized; !unrecognized.empty())
+        {
+            detailed::RequestCommandLineOutput(m_clidata->vm, true);
+            os << "Unrecognized option(s): ";
+            for(const auto& i : unrecognized)
+                os << fmt::format("\"{}\" ", i);
+            os << std::endl;
+            RequestQuit();
+            WinRequestPause();
+            return;
+        }
 
         std::string preferred = GetPreferredLanguage();
         if(!preferred.empty())
