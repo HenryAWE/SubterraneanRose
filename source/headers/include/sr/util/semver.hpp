@@ -25,14 +25,17 @@ namespace srose::util
         SemVer& operator=(const SemVer& rhs) noexcept = default;
 
         [[nodiscard]]
-        value_type major() const noexcept { return m_major; }
-        value_type major(value_type val) noexcept { return m_major = val; }
+        constexpr value_type& major() noexcept { return m_major; }
         [[nodiscard]]
-        value_type minor() const noexcept { return m_minor; }
-        value_type minor(value_type val) noexcept { return m_minor = val; }
+        constexpr const value_type& major() const noexcept { return m_major; }
         [[nodiscard]]
-        value_type patch() const noexcept { return m_patch; }
-        value_type patch(value_type val) noexcept { return m_patch = val; }
+        constexpr value_type& minor() noexcept { return m_minor; }
+        [[nodiscard]]
+        constexpr const value_type& minor() const noexcept { return m_minor; }
+        [[nodiscard]]
+        constexpr value_type& patch() noexcept { return m_patch; }
+        [[nodiscard]]
+        constexpr const value_type& patch() const noexcept { return m_patch; }
 
         int Compare(const SemVer& other) const noexcept
         {
