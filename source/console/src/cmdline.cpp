@@ -239,7 +239,11 @@ namespace srose::console
 
     bool CommandLineInterface::WinPauseRequested() const noexcept
     {
+        #ifdef BOOST_WINDOWS
         return m_win_pause_req && detailed::win_helper.release;
+        #else
+        return false;
+        #endif
     }
 
     std::string CommandLineInterface::GenerateHelp()
