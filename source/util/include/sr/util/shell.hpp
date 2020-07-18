@@ -1,11 +1,11 @@
 /**
- * @file open_in_browser.hpp
+ * @file shell.hpp
  * @author HenryAWE
- * @brief Open URL in system browser
+ * @brief Shell API abstraction
  */
 
-#ifndef SROSE_UTIL_open_in_browser_hpp_
-#define SROSE_UTIL_open_in_browser_hpp_
+#ifndef SROSE_UTIL_shell_hpp_
+#define SROSE_UTIL_shell_hpp_
 
 #include <sr/core/macros.hpp>
 

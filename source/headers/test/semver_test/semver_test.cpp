@@ -30,6 +30,13 @@ BOOST_AUTO_TEST_CASE(test_semver)
     BOOST_TEST(zero < SemVer(1, 1, 0));
     BOOST_TEST(zero < SemVer(1, 0, 1));
     BOOST_TEST(zero < SemVer(1, 0, 0));
+
+    SemVer ver;
+    ver = SemVer(1, 0, 0);
+    BOOST_TEST(ver.major() == 1);
+    BOOST_TEST(ver.minor() == 0);
+    ver.minor() = 1;
+    BOOST_TEST(ver.minor() == 1);
 }
 
 BOOST_AUTO_TEST_CASE(test_semver_io)

@@ -33,5 +33,6 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 if(NOT ${SROSE_DISABLE_TEST})
-    add_subdirectory(./test)
+    add_subdirectory(./test/property_test)
+    add_subdirectory(./test/node_test)
 endif()

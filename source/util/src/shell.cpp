@@ -1,10 +1,10 @@
 /**
- * @file open_in_browser.cpp
+ * @file shell.cpp
  * @author HenryAWE
- * @brief Open URL in system browser
+ * @brief Shell API abstraction
  */
 
-#include <sr/util/open_in_browser.hpp>
+#include <sr/util/shell.hpp>
 #include <SDL_platform.h>
 #include <SDL_syswm.h>
 #include <string.h>

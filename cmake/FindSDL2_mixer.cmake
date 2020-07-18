@@ -130,3 +130,5 @@ if(SDL2_MIXER_FOUND)
         endif()
     endif()
 endif()
+
+mark_as_advanced(SDL2_MIXER_INCLUDE_DIR)

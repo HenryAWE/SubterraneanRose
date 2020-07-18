@@ -14,9 +14,6 @@
 #include <sr/console/cmdline.hpp>
 
 /*Program entry */
-#ifdef _MSC_VER
-#   pragma comment(linker, "/subsystem:windows")
-#endif
 int main(int argc, char* argv[])
 {
     using namespace srose;
