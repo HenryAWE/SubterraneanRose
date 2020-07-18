@@ -8,7 +8,7 @@
 #define SROSE_CONSOLE_mswin_hpp_
 
 #include <SDL_platform.h>
-#if defined(__WINDOWS__) && !defined(SROSE_DISABLE_CUI)
+#if defined(__WINDOWS__) && !defined(SROSE_DISABLE_CLI)
 
 namespace srose::console
 {

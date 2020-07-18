@@ -1,7 +1,7 @@
 /**
  * @file cmdline.hpp
  * @author HenryAWE
- * @brief Functions for parsed command line arguments
+ * @brief Command line interface
  */
 
 #ifndef SROSE_UI_CONSOLE_cmdline_hpp_

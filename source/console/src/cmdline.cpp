@@ -1,7 +1,7 @@
 /**
  * @file cmdline.cpp
  * @author HenryAWE
- * @brief Functions for parsed command line arguments
+ * @brief Command line interface
  */
 
 #include <sr/console/cmdline.hpp>

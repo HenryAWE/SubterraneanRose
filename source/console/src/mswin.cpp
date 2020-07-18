@@ -12,7 +12,7 @@
 #endif
 
 
-#if defined(__WINDOWS__) && !defined(SROSE_DISABLE_CUI)
+#if defined(__WINDOWS__) && !defined(SROSE_DISABLE_CLI)
 
 namespace srose::console
 {

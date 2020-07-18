@@ -4,7 +4,7 @@
  * @brief Outputting build information to command line
  */
 
-#ifndef SROSE_DISABLE_CUI
+#ifndef SROSE_DISABLE_CLI
 
 #include <string>
 #include <sstream>
