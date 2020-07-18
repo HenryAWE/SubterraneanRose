@@ -2,7 +2,7 @@
 - **Please read the [Build](./build.md) page first**
 
 ## CMake Options
-- `SROSE_DISABLE_CUI`  
+- `SROSE_DISABLE_CLI`  
   Disable the command interface, set to `OFF` by default (not disabled)  
   When enabled, the program will ignore any parameter passed from the command line
 
