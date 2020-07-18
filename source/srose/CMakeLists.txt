@@ -9,5 +9,5 @@ target_link_libraries("srose-main" PUBLIC "srose-fs")
 target_link_libraries("srose-main" PUBLIC "srose-ui")
 
 if(NOT ${SROSE_DISABLE_TEST})
-    add_subdirectory(./test)
+    add_subdirectory(./test/profile_test)
 endif()

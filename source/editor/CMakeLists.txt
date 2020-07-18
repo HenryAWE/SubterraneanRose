@@ -9,5 +9,5 @@ target_include_directories("srose-editor" PUBLIC ./include)
 target_link_libraries("srose-editor" PUBLIC Boost::serialization)
 
 if(NOT ${SROSE_DISABLE_TEST})
-    add_subdirectory(./test)
+    add_subdirectory(./test/project_test)
 endif()

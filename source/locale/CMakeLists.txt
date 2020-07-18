@@ -12,5 +12,6 @@ target_link_libraries("srose-locale" PUBLIC "srose-core")
 target_link_libraries("srose-locale" PUBLIC "srose-fs")
 
 if(NOT ${SROSE_DISABLE_TEST})
-    add_subdirectory(./test)
+    add_subdirectory(./test/parser_test)
+    add_subdirectory(./test/language_test)
 endif()
