@@ -4,6 +4,8 @@
  * @brief Command line interface
  */
 
+#ifndef SROSE_DISABLE_CLI
+
 #include <sr/console/cmdline.hpp>
 #include <iostream>
 #include <sstream>
@@ -175,6 +177,8 @@ namespace srose::console
 
     void CommandLineInterface::ParseArg(int argc, char* argv[])
     {
+        m_argc = argc;
+        m_argv = argv;
         bool no_error = m_clidata->ParseArg(argc, argv);
         if(!no_error)
         {
@@ -312,3 +316,99 @@ namespace srose::console
         return m_clidata->vm.count("vsync");
     }
 } // namespace srose::console
+
+#else
+
+#include <sr/console/cmdline.hpp>
+#include <iostream>
+#ifdef _WIN32
+#   define WIN32_LEAN_AND_MEAN 1
+#   include <Windows.h>
+#endif
+
+
+namespace srose::console
+{
+    namespace detailed
+    {
+        class CLIData
+        {
+        public:
+            std::ostream* output = nullptr;
+
+            CLIData(std::ostream* os) noexcept : output(os) {}
+            ~CLIData() noexcept = default;
+        };
+    } // namespace detailed
+    
+
+    CommandLineInterface::CommandLineInterface()
+        :CommandLineInterface(std::cout) {}
+    CommandLineInterface::CommandLineInterface(std::ostream& os)
+        : m_clidata(std::make_unique<detailed::CLIData>(&os)) {}
+
+    CommandLineInterface::~CommandLineInterface() = default;
+
+    CommandLineInterface& CommandLineInterface::GetGlobalInstance()
+    {
+        static CommandLineInterface instance(std::cout);
+        return instance;
+    }
+
+    void CommandLineInterface::ParseArg(int argc, char* argv[])
+    {
+        m_argc = argc;
+        m_argv = argv;
+    }
+    void CommandLineInterface::HandleArg()
+    {
+        if(m_argc > 1)
+        {
+            auto help = GenerateHelp();
+            #ifdef _WIN32
+            ::MessageBoxA(
+                    nullptr,
+                    help.c_str(),
+                    "The command line interface has been disabled",
+                    MB_OK | MB_ICONINFORMATION
+            );
+            #else
+            *m_clidata->output << help << std::endl;
+            #endif
+
+            RequestQuit();
+        }
+    }
+
+    bool CommandLineInterface::WinPauseRequested() const noexcept
+    {
+        #ifdef _WIN32
+        return m_win_pause_req;
+        #else
+        return false;
+        #endif
+    }
+
+    std::string CommandLineInterface::GenerateHelp()
+    {
+        return
+            "The program was built with SROSE_DISABLE_CLI set to ON\n"
+            "If you want the functionality of the command line interface,\n"
+            "please re-build the program with SROSE_DISABLE_CLI set to OFF";
+    }
+
+    std::string CommandLineInterface::GetPreferredLanguage()
+    {
+        return std::string();
+    }
+    bool CommandLineInterface::FullscreenRequired()
+    {
+        return false;
+    }
+    bool CommandLineInterface::VSyncRequired()
+    {
+        return false;
+    }
+} // namespace srose::console
+
+#endif

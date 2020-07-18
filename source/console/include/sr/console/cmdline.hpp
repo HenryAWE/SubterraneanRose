@@ -27,6 +27,8 @@ namespace srose::console
         std::unique_ptr<detailed::CLIData> m_clidata;
         bool m_quit_req = false;
         bool m_win_pause_req = false;
+        int m_argc = 0;
+        char** m_argv = nullptr;
     public:
         CommandLineInterface();
         explicit CommandLineInterface(std::ostream& os);
