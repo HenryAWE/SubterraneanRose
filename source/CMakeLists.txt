@@ -70,6 +70,7 @@ set_target_properties("srose-exec" PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT
 install(
     TARGETS "srose-exec"
     RUNTIME DESTINATION bin
+    COMPONENT Main
 )
 
 # Set the information of the package
