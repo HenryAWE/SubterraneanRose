@@ -23,9 +23,8 @@ endfunction()
 # Get output of git
 function(sr_git_output output)
     if(${GIT_FOUND} AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
-        list(REMOVE_AT ARGV 0) # Remove the argument "output"
         execute_process(
-            COMMAND ${GIT_EXECUTABLE} ${ARGV}
+            COMMAND ${GIT_EXECUTABLE} ${ARGN}
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             OUTPUT_VARIABLE git_output
             OUTPUT_STRIP_TRAILING_WHITESPACE
