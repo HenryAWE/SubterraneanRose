@@ -32,7 +32,7 @@ namespace srose::i18n
         return std::make_shared<locale::Language>(ss);
     }
 
-    static std::map<std::string, std::shared_ptr<locale::Language>> g_lang_map;
+    static locale::LanguageSet g_lang_set;
     static std::shared_ptr<locale::Language> g_default_lang;
     static std::shared_ptr<locale::Language> g_built_in_lang = CreateBuiltinLang();
 
@@ -47,7 +47,7 @@ namespace srose::i18n
 
     void LoadAllLanguage(const std::filesystem::path& lcres)
     {
-        g_lang_map[g_built_in_lang->gettext("srose.language.iso")] = g_built_in_lang;
+        g_lang_set.insert(g_built_in_lang);
 
         namespace fs = filesystem;
         if(!fs::exists(lcres))
@@ -59,7 +59,7 @@ namespace srose::i18n
             if(fs::is_directory(dt.path()) || dt.path().extension()!=".srlc") continue;
             auto lang = std::make_shared<locale::Language>(dt.path());
 
-            g_lang_map[lang->gettext("srose.language.iso")] = std::move(lang);
+            g_lang_set.insert(std::move(lang));
         }
     }
     void SelectLanguage(const char* preferred)
@@ -98,10 +98,10 @@ namespace srose::i18n
         string country_name = regex_replace(locale_name, locale_pattern, "$2");
 
         std::vector<std::pair<std::string /*name*/, int /*weight*/>> lcs_weight;
-        lcs_weight.reserve(g_lang_map.size());
+        lcs_weight.reserve(g_lang_set.size());
         std::for_each(
-            g_lang_map.begin(), g_lang_map.end(),
-            [&lcs_weight](auto& in){ lcs_weight.push_back(pair(in.first, 0)); }
+            g_lang_set.begin(), g_lang_set.end(),
+            [&lcs_weight](auto& in){ lcs_weight.push_back(pair(in->GetId(), 0)); }
         );
         for(auto& [name, weight] : lcs_weight)
         { // Calculate locale's weight
@@ -134,11 +134,11 @@ namespace srose::i18n
             lcs_weight.end()
         ); 
         if(lcs_weight.size() == 0) return g_default_lang;
-        return g_lang_map[lcs_weight[0].first];
+        return *g_lang_set.find(lcs_weight[0].first);
     }
 
-    const std::map<std::string, std::shared_ptr<locale::Language>>& GetLanguageMap() noexcept
+    const locale::LanguageSet& GetLanguageSet() noexcept
     {
-        return g_lang_map;
+        return g_lang_set;
     }
 } // namespace srose::i18n

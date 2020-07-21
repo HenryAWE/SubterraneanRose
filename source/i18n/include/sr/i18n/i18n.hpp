@@ -55,12 +55,7 @@ namespace srose::i18n
      */
     std::shared_ptr<locale::Language> GetNearestLanguage(std::string locale_name);
 
-    /**
-     * @brief Get the reference of the global language map
-     * 
-     * @return const std::map<std::string, std::shared_ptr<locale::Language>>& Reference of the map
-     */
-    const std::map<std::string, std::shared_ptr<locale::Language>>& GetLanguageMap() noexcept;
+    const locale::LanguageSet& GetLanguageSet() noexcept;
 } // namespace srose::i18n
 
 

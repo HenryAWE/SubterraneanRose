@@ -8,7 +8,9 @@
 #define SROSE_LOCALE_language_hpp_
 
 #include <utility>
+#include <memory>
 #include <iostream>
+#include <set>
 #include <sr/core/macros.hpp>
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/util/string_tree.hpp>
@@ -16,9 +18,30 @@
 
 namespace srose::locale
 {
-    class Language
+    class Language : std::enable_shared_from_this<Language>
     {
     public:
+        struct Comparator
+        {
+            typedef void is_transparent;
+
+            template <typename T, typename U>
+            bool operator()(T&& lhs, U&& rhs) const noexcept
+            {
+                return View(lhs) < View(rhs);
+            }
+
+        private:
+            [[nodiscard]]
+            static constexpr std::string_view View(std::string_view value) noexcept { return value; }
+            [[nodiscard]]
+            static std::string_view View(const Language& value) noexcept { return value.GetId(); }
+            static std::string_view View(const std::shared_ptr<Language>& value)
+            {
+                return value ? value->GetId() : std::string_view();
+            }
+        };
+
         Language();
         Language(const Language& other)
             : m_tr(other.m_tr),
@@ -56,6 +79,8 @@ namespace srose::locale
         const std::shared_ptr<Language>& fallback() const noexcept { return m_fallback; }
 
         [[nodiscard]]
+        const std::string& GetId() const noexcept { return m_iso; }
+        [[nodiscard]]
         constexpr const util::string_tree<std::string>& GetStringTree() const noexcept { return m_tr; }
 
     private:
@@ -68,6 +93,11 @@ namespace srose::locale
         void Load(std::istream& is);
         void LoadSpecStrings();
     };
+
+    using LanguageSet = std::set<
+        std::shared_ptr<Language>,
+        Language::Comparator
+    >;
 
     std::locale SRSCALL CreateTranslation(const std::locale& in, std::shared_ptr<Language> lang);
 

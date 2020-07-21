@@ -147,18 +147,18 @@ namespace srose::ui
     }
     void ConfigPanel::Content_Language()
     {
-        auto& langs = i18n::GetLanguageMap();
+        auto& langs = i18n::GetLanguageSet();
         bool first = true;
-        for(auto&[id, lang] : langs)
+        for(auto& i : langs)
         {
-            ImGui::PushID(id.c_str());
+            ImGui::PushID(i->GetId().c_str());
             if(!first)
                 ImGui::SameLine();
             else
                 first = false;
-            if(ImGui::Button(lang->name().c_str()))
+            if(ImGui::Button(i->name().c_str()))
             {
-                i18n::SelectLanguage(lang);
+                i18n::SelectLanguage(i);
                 UIManager::GetInstance().imbue(std::locale());
             }
 
