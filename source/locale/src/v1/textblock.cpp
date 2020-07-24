@@ -7,6 +7,7 @@
 #include "textblock.hpp"
 #include <iostream>
 #include <sr/locale/parser.hpp>
+#include <sr/trace/log.hpp>
 
 
 namespace srose::locale::v1
@@ -25,6 +26,10 @@ namespace srose::locale::v1
         {
             texts = detailed::Decode_SRStrTree(is);
         }
-        catch(const std::ios_base::failure&) {}
+        catch(const std::ios_base::failure& e)
+        {
+            BOOST_LOG_TRIVIAL(warning)
+                << e.code() << " : " << e.what();
+        }
     }
 } // namespace srose::locale::v1

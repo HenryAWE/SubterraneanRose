@@ -11,6 +11,7 @@ target_link_libraries("srose-locale" PUBLIC Boost::locale)
 target_link_libraries("srose-locale" PUBLIC "srose-headers")
 target_link_libraries("srose-locale" PUBLIC "srose-core")
 target_link_libraries("srose-locale" PUBLIC "srose-fs")
+target_link_libraries("srose-locale" PRIVATE "srose-trace")
 
 if(NOT ${SROSE_DISABLE_TEST})
     add_subdirectory(./test/parser_test)
