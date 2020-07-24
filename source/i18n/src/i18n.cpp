@@ -32,22 +32,27 @@ namespace srose::i18n
         return std::make_shared<locale::Language>(ss);
     }
 
+    static std::shared_ptr<locale::Language>& GetBuiltinLang()
+    {
+        static auto builtin_lang = CreateBuiltinLang();
+        return builtin_lang;
+    }
+
     static locale::LanguageSet g_lang_set;
     static std::shared_ptr<locale::Language> g_default_lang;
-    static std::shared_ptr<locale::Language> g_built_in_lang = CreateBuiltinLang();
 
     std::shared_ptr<locale::Language> GetDefaultLanguage() noexcept
     {
-        return g_default_lang ? g_default_lang : g_built_in_lang;
+        return g_default_lang ? g_default_lang : GetBuiltinLang();
     }
     std::shared_ptr<locale::Language> GetBuiltinLanguage() noexcept
     {
-        return g_built_in_lang;
+        return GetBuiltinLang();
     }
 
     void LoadAllLanguage(const std::filesystem::path& lcres)
     {
-        g_lang_set.insert(g_built_in_lang);
+        g_lang_set.insert(GetBuiltinLang());
 
         namespace fs = filesystem;
         if(!fs::exists(lcres))
@@ -77,7 +82,7 @@ namespace srose::i18n
             g_default_lang = GetNearestLanguage(lc_info.name());
         }
         if(!g_default_lang)
-            g_default_lang = g_built_in_lang;
+            g_default_lang = GetBuiltinLang();
         std::locale::global(locale::CreateTranslation(sys_lc, g_default_lang));
     }
     void SelectLanguage(std::shared_ptr<locale::Language> lang)
