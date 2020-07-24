@@ -12,6 +12,8 @@
 #include "v1/textblock.hpp"
 
 
+#define SROSE_LOCALE_BACKEND_API_VERSION 1
+
 namespace srose::locale
 {
     Language::Language()
@@ -77,12 +79,9 @@ namespace srose::locale
         if(strncmp(header, "SRLC", 4) != 0)
             throw std::runtime_error("[locale] Corrupted locale file");
         /* Version number */
-        int major = detailed::Decode_U32LE(is);
-        int minor = detailed::Decode_U32LE(is);
-        int patch = detailed::Decode_U32LE(is);
-        assert(major == 0);
-        assert(minor == 1);
-        assert(patch == 0);
+        int backend_version = detailed::Decode_U32LE(is);
+        if(backend_version != SROSE_LOCALE_BACKEND_API_VERSION)
+            throw std::runtime_error("[locale] Invalid version number");
 
         char subheader[5]{};
         is.read(subheader, 4);

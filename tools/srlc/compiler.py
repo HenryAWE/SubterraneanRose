@@ -136,8 +136,8 @@ class srlc_compiler:
     @staticmethod
     def write_header(stream):
         stream.write(b'SRLC')
-        # Version number
-        stream.write(struct.Struct("<III").pack(0, 1, 0))
+        # Backend version number
+        stream.write(struct.Struct("<I").pack(1))
 
     def load_txt(self, files, compile = True, display = False, check = False):
         for file in files:
