@@ -9,6 +9,7 @@
 #include <cstring>
 #include <fstream>
 #include <boost/locale.hpp>
+#include "v1/textblock.hpp"
 
 
 namespace srose::locale
@@ -24,11 +25,11 @@ namespace srose::locale
         std::ifstream ifs(file, std::ios_base::binary);
         if(!ifs.good())
             throw std::runtime_error("[locale] Load " + file.u8string() + " failed");
-        Load(ifs);
+        Decode(ifs);
     }
     Language::Language(std::istream& is)
     {
-        Load(is);
+        Decode(is);
     }
 
     std::string Language::gettext(std::string_view path)
@@ -67,7 +68,7 @@ namespace srose::locale
         return opt.has_value() ? *opt : std::string(alternate);
     }
 
-    void Language::Load(std::istream& is)
+    void Language::Decode(std::istream& is)
     {
         is.exceptions(std::ios_base::failbit);
         /* Check the header */
@@ -85,19 +86,24 @@ namespace srose::locale
 
         char subheader[5]{};
         is.read(subheader, 4);
-        if(strncmp(subheader, "@txt", 4) == 0)
+        while(is.good())
         {
-            try
+            using namespace v1;
+
+            if(strncmp(subheader, "@txt", 4) == 0)
             {
-                while(is.good())
-                {
-                    m_tr.merge(detailed::Decode_SRStrTree(is));
-                }
+                TextBlock txt(is);
+                m_tr.merge(std::move(txt.texts));
             }
-            catch(std::ios_base::failure&) {}
-            LoadSpecStrings();
         }
+
+        LoadSpecStrings();
     }
+    void Language::DecodeTextBlock(std::istream& is)
+    {
+        m_tr.merge(detailed::Decode_SRStrTree(is));
+    }
+
     void Language::LoadSpecStrings()
     {
         m_name = gettext("srose.language.name", "Default");

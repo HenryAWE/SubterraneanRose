@@ -90,7 +90,9 @@ namespace srose::locale
 
         std::shared_ptr<Language> m_fallback;
 
-        void Load(std::istream& is);
+        void Decode(std::istream& is);
+        void DecodeTextBlock(std::istream& is);
+
         void LoadSpecStrings();
     };
 
