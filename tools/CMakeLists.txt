@@ -3,10 +3,9 @@
 find_package(PythonInterp 3 REQUIRED)
 
 install(
-    DIRECTORY ./srlc
-    DESTINATION tools
+    FILES ./srlc/__init__.py ./srlc/compiler.py
+    DESTINATION tools/srlc
     COMPONENT Tools
-    FILES_MATCHING PATTERN "*.py"
 )
 install(
     PROGRAMS ./lccl.py

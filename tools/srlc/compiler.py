@@ -19,10 +19,10 @@ class script_compiler:
 
     def __init__(self, verbosity):
         self.verbosity = verbosity
-        self.data = {}
+        self.text = {}
 
     def push_data(self, strid, translation):
-        items = self.data
+        items = self.text
         ids = strid.split('.')
         for idx in range(0, len(ids)):
             id = ids[idx]
@@ -97,28 +97,34 @@ class script_compiler:
 
     @staticmethod
     def compile_I32(value:int):
+        if value >= 4294967295:
+            raise ValueError("Value too larege")
         return struct.Struct("<I").pack(value)
     @staticmethod
     def compile_cxxstr(value:str):
+        # Length
         if not value:
             return script_compiler.compile_I32(0)
         bstr = value.encode()
+        # Data
         return script_compiler.compile_I32(len(bstr))+bstr
     @staticmethod
     def compile_srstrtree(subid, value):
         # Identifier
         bstr = script_compiler.compile_cxxstr(subid)
+        # Data
         bstr += script_compiler.compile_cxxstr(value[1])
-        # Children
+        # Children count
         count = len(value[0])
         bstr += script_compiler.compile_I32(count)
+        # Children
         for it in value[0].items():
             bstr += script_compiler.compile_srstrtree(it[0], it[1])
         return bstr
 
     def output(self, stream):
         stream.write(b'@txt')
-        for it in self.data.items():
+        for it in self.text.items():
             stream.write(script_compiler.compile_srstrtree(it[0], it[1]))
 
 
