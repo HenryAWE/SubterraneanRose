@@ -13,15 +13,15 @@ BOOST_AUTO_TEST_CASE(test_parser)
     using namespace srose::locale;
     std::stringstream ss;
     ss.write("\x08\x00\x00\x00", 4);
-    BOOST_REQUIRE(detail::Decode_U32LE(ss) == 0x8u);
+    BOOST_REQUIRE(detailed::Decode_U32LE(ss) == 0x8u);
     ss.write("\x04\x00\x00\x00""abcd", 8);
-    BOOST_REQUIRE(detail::Decode_CxxStr(ss) == "abcd");
+    BOOST_REQUIRE(detailed::Decode_CxxStr(ss) == "abcd");
     // Test empty string
     ss.write("\x00\x00\x00\x00", 4);
-    BOOST_REQUIRE(detail::Decode_CxxStr(ss) == std::string());
+    BOOST_REQUIRE(detailed::Decode_CxxStr(ss) == std::string());
     // Test UTF-8
     ss.write("\x06\x00\x00\x00""\xE4\xB8\xAD\xE6\x96\x87", 10);
-    BOOST_REQUIRE(detail::Decode_CxxStr(ss) == "中文");
+    BOOST_REQUIRE(detailed::Decode_CxxStr(ss) == "中文");
 
     // Test string tree
     // The following data equal to

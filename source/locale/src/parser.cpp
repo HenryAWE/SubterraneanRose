@@ -11,7 +11,7 @@
 
 namespace srose::locale
 {
-    namespace detail
+    namespace detailed
     {
         std::uint32_t Decode_U32LE(std::istream& is)
         {
@@ -46,10 +46,10 @@ namespace srose::locale
 
             return std::move(ret);
         }
-    } // namespace detail
+    } // namespace detailed
 
     util::string_tree<std::string> ParseTranslation(std::istream& is)
     {
-        return detail::Decode_SRStrTree(is);
+        return detailed::Decode_SRStrTree(is);
     }
 } // namespace srose::locale

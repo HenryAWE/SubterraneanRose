@@ -76,9 +76,9 @@ namespace srose::locale
         if(strncmp(header, "SRLC", 4) != 0)
             throw std::runtime_error("[locale] Corrupted locale file");
         /* Version number */
-        int major = detail::Decode_U32LE(is);
-        int minor = detail::Decode_U32LE(is);
-        int patch = detail::Decode_U32LE(is);
+        int major = detailed::Decode_U32LE(is);
+        int minor = detailed::Decode_U32LE(is);
+        int patch = detailed::Decode_U32LE(is);
         assert(major == 0);
         assert(minor == 1);
         assert(patch == 0);
@@ -91,7 +91,7 @@ namespace srose::locale
             {
                 while(is.good())
                 {
-                    m_tr.merge(detail::Decode_SRStrTree(is));
+                    m_tr.merge(detailed::Decode_SRStrTree(is));
                 }
             }
             catch(std::ios_base::failure&) {}
