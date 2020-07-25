@@ -17,4 +17,12 @@ namespace srose::filesystem
     {
         return current_path()/"locale";
     }
+    path GetWritableFolder()
+    {
+        return GetAppData()/"Subterranean Rose";
+    }
+    path GetLogFolder()
+    {
+        return GetWritableFolder()/"log";
+    }
 } // namespace srose::filesystem

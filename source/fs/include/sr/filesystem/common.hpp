@@ -8,6 +8,7 @@
 #define SROSE_FILESYSTEM_common_hpp_
 
 #include <filesystem>
+#include "platform.hpp"
 
 
 namespace srose::filesystem
@@ -16,6 +17,8 @@ namespace srose::filesystem
 
     path GetResourceFolder();
     path GetLocaleFolder();
+    path GetWritableFolder();
+    path GetLogFolder();
 } // namespace srose::filesystem
 
 
