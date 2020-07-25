@@ -278,6 +278,11 @@ namespace srose::console
         }
     }
 
+    bool CommandLineInterface::Exists(const std::string& name)
+    {
+        return m_clidata->vm.count(name) > 0;
+    }
+
     bool CommandLineInterface::WinPauseRequested() const noexcept
     {
         #ifdef BOOST_WINDOWS
@@ -285,6 +290,11 @@ namespace srose::console
         #else
         return false;
         #endif
+    }
+
+    std::ostream& CommandLineInterface::GetOutputStream()
+    {
+        return *m_clidata->output;
     }
 
     std::string CommandLineInterface::GenerateHelp()
