@@ -14,6 +14,7 @@
 #include <sr/core/macros.hpp>
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/util/string_tree.hpp>
+#include <sr/util/semver.hpp>
 
 
 namespace srose::locale
@@ -43,18 +44,8 @@ namespace srose::locale
         };
 
         Language();
-        Language(const Language& other)
-            : m_tr(other.m_tr),
-            m_name(other.m_name),
-            m_iso(other.m_iso),
-            m_default(other.m_default),
-            m_fallback(other.m_fallback) {}
-        Language(Language&& move) noexcept
-            : m_tr(std::move(move.m_tr)),
-            m_name(std::move(move.m_name)),
-            m_iso(std::move(move.m_iso)),
-            m_default(std::move(move.m_default)),
-            m_fallback(std::move(move.m_fallback)) {}
+        Language(const Language& other);
+        Language(Language&& move) noexcept;
         explicit Language(const filesystem::path& file);
         explicit Language(std::istream& is);
 
@@ -68,9 +59,13 @@ namespace srose::locale
         std::string gettext(std::string_view path, std::string_view alternate);
 
         [[nodiscard]]
-        const std::string& name() const noexcept { return m_name; }
+        const std::string& GetId() const noexcept { return m_id; }
         [[nodiscard]]
-        const std::string& iso() const noexcept { return m_iso; }
+        const std::string& GetName() const noexcept { return m_name; }
+        [[nodiscard]]
+        const util::SemVer& GetVersion() const noexcept { return m_version; }
+        [[nodiscard]]
+        constexpr const util::string_tree<std::string>& GetTextStringTree() const noexcept { return m_text; }
         [[nodiscard]]
         const std::optional<std::string>& default_str() const noexcept { return m_default; }
 
@@ -78,14 +73,11 @@ namespace srose::locale
         [[nodiscard]]
         const std::shared_ptr<Language>& fallback() const noexcept { return m_fallback; }
 
-        [[nodiscard]]
-        const std::string& GetId() const noexcept { return m_iso; }
-        [[nodiscard]]
-        constexpr const util::string_tree<std::string>& GetStringTree() const noexcept { return m_tr; }
-
     private:
-        util::string_tree<std::string> m_tr;
-        std::string m_name, m_iso;
+        std::string m_id;
+        std::string m_name;
+        util::SemVer m_version;
+        util::string_tree<std::string> m_text;
         std::optional<std::string> m_default;
 
         std::shared_ptr<Language> m_fallback;

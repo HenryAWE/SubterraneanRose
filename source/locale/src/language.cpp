@@ -19,10 +19,21 @@ namespace srose::locale
 {
     Language::Language()
     {
-        m_tr.emplace_at("srose.language.name", "Default");
-        m_tr.emplace_at("srose.language.iso", "C");
+        m_text.emplace_at("srose.language.name", "Default");
+        m_text.emplace_at("srose.language.iso", "C");
     }
-
+    Language::Language(const Language& other)
+        : m_id(other.m_id),
+        m_name(other.m_name),
+        m_text(other.m_text),
+        m_default(other.m_default),
+        m_fallback(other.m_fallback) {}
+    Language::Language(Language&& move) noexcept
+        : m_id(std::move(move.m_id)),
+        m_name(std::move(move.m_name)),
+        m_text(std::move(move.m_text)),
+        m_default(std::move(move.m_default)),
+        m_fallback(std::move(move.m_fallback)) {}
     Language::Language(const filesystem::path& file)
     {
         std::ifstream ifs(file, std::ios_base::binary);
@@ -39,24 +50,24 @@ namespace srose::locale
     {
         if(m_default.has_value())
         {
-            auto opt = m_tr.get_value_optional(path);
+            auto opt = m_text.get_value_optional(path);
             assert(m_default.has_value());
             return opt.has_value()? *opt : *m_default;
         }
         else
         {
-            return m_tr.get_value(path);
+            return m_text.get_value(path);
         }
     }
     std::string Language::gettext(std::string_view path, use_fallback_t)
     {
-        auto opt = m_tr.get_value_optional(path);
+        auto opt = m_text.get_value_optional(path);
         if(opt.has_value())
             return std::move(*opt);
 
         if(m_fallback)
         {
-            opt = m_fallback->m_tr.get_value_optional(path);
+            opt = m_fallback->m_text.get_value_optional(path);
             if(opt.has_value())
                 return std::move(*opt);
         }
@@ -67,7 +78,7 @@ namespace srose::locale
     }
     std::string Language::gettext(std::string_view path, std::string_view alternate)
     {
-        auto opt = m_tr.get_value_optional(path);
+        auto opt = m_text.get_value_optional(path);
         return opt.has_value() ? *opt : std::string(alternate);
     }
 
@@ -94,13 +105,14 @@ namespace srose::locale
             if(strncmp(subheader, "@inf", 4) == 0)
             {
                 InfoBlock inf(is);
-                m_iso = inf.id;
+                m_id = inf.id;
                 m_name = inf.name;
+                m_version = inf.version;
             }
             if(strncmp(subheader, "@txt", 4) == 0)
             {
                 TextBlock txt(is);
-                m_tr.merge(std::move(txt.texts));
+                m_text.merge(std::move(txt.texts));
             }
         }
 
@@ -108,12 +120,12 @@ namespace srose::locale
     }
     void Language::DecodeTextBlock(std::istream& is)
     {
-        m_tr.merge(detailed::Decode_SRStrTree(is));
+        m_text.merge(detailed::Decode_SRStrTree(is));
     }
 
     void Language::LoadSpecStrings()
     {
-        m_default = m_tr.get_value_optional("srose.language.default");
+        m_default = m_text.get_value_optional("srose.language.default");
     }
 
     std::locale SRSCALL CreateTranslation(const std::locale& in, std::shared_ptr<Language> lang)

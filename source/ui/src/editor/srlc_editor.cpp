@@ -17,7 +17,7 @@ namespace srose::ui::editor
         : Base("", "srose.srlc-editor")
     {
         SetId(gettext("srose.ui.srlc-editor"));
-        m_tree = getptr()->GetStringTree();
+        m_tree = getptr()->GetTextStringTree();
     }
 
     SrlcEditor::~SrlcEditor() = default;
@@ -38,7 +38,7 @@ namespace srose::ui::editor
     void SrlcEditor::LoadI18nData()
     {
         SetId(gettext("srose.ui.srlc-editor"));
-        m_tree = getptr()->GetStringTree();
+        m_tree = getptr()->GetTextStringTree();
     }
 
     void SrlcEditor::IterateTree(util::string_tree<std::string>& tr)

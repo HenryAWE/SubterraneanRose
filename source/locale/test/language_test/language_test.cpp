@@ -20,8 +20,8 @@ BOOST_AUTO_TEST_CASE(test1)
     BOOST_TEST_REQUIRE(default_lc.gettext("srose.language.iso") == "C");
 
     locale::Language en("en.srlc");
-    BOOST_TEST_REQUIRE(en.name() == "English");
-    BOOST_TEST_REQUIRE(en.iso() == "en");
+    BOOST_TEST_REQUIRE(en.GetId() == "en");
+    BOOST_TEST_REQUIRE(en.GetName() == "English");
     BOOST_TEST_REQUIRE(en.gettext("@not.found", "You'll get me") == "You'll get me");
     BOOST_TEST_REQUIRE(en.gettext("test.sub.hello") == "Greeting from sub-directory!");
     BOOST_TEST_REQUIRE(en.default_str().has_value() == false);
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(test1)
     auto converted = boost::locale::conv::utf_to_utf<wchar_t>(zh_CN.gettext("srose.hello"));
     BOOST_TEST_REQUIRE(bool(converted == L"你好世界"));
     BOOST_TEST_REQUIRE(zh_CN.gettext("srose.hello") == "你好世界");
-    BOOST_TEST_REQUIRE(zh_CN.name() == "简体中文");
+    BOOST_TEST_REQUIRE(zh_CN.GetName() == "简体中文");
     BOOST_TEST_REQUIRE(zh_CN.gettext("srose.language.default") == "（加载失败）");
     BOOST_TEST_REQUIRE(zh_CN.default_str().has_value());
     BOOST_TEST_REQUIRE(bool(*zh_CN.default_str() == "（加载失败）"));
@@ -70,7 +70,7 @@ void test_stream_operator(std::shared_ptr<srose::locale::Language> lang)
     using namespace srose::locale;
     std::locale lang_lc(std::locale(), new TranslationFacet(lang));
     auto& tr = std::use_facet<TranslationFacet>(lang_lc).get();
-    BOOST_TEST_REQUIRE(tr.name() == "简体中文");
+    BOOST_TEST_REQUIRE(tr.GetName() == "简体中文");
 
     std::stringstream ss;
     ss.imbue(lang_lc);

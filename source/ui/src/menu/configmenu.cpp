@@ -156,7 +156,7 @@ namespace srose::ui
                 ImGui::SameLine();
             else
                 first = false;
-            if(ImGui::Button(i->name().c_str()))
+            if(ImGui::Button(i->GetName().c_str()))
             {
                 i18n::SelectLanguage(i);
                 UIManager::GetInstance().imbue(std::locale());
@@ -165,9 +165,11 @@ namespace srose::ui
             ImGui::PopID();
         }
         ImGui::Separator();
-        ImGui::Text(i18n::GetDefaultLanguage()->name().c_str());
+        ImGui::Text(i18n::GetDefaultLanguage()->GetName().c_str());
         ImGui::SameLine();
-        ImGui::TextDisabled("(%s)", i18n::GetDefaultLanguage()->iso().c_str());
+        ImGui::TextDisabled("(%s)", i18n::GetDefaultLanguage()->GetId().c_str());
+        auto& version = i18n::GetDefaultLanguage()->GetVersion();
+        ImGui::Text("%d.%d.%d", version.major(), version.minor(), version.patch());
     }
     void ConfigPanel::Content_Developer()
     {

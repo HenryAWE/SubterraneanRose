@@ -44,7 +44,7 @@ namespace srose::ui
     {
         m_lang.swap(lang);
         for(auto& i : m_string_data)
-            i.second.Load(m_lang->GetStringTree());
+            i.second.Load(m_lang->GetTextStringTree());
         LoadI18nData();
     }
 
@@ -68,7 +68,7 @@ namespace srose::ui
             std::string_view prefix,
             std::string_view suffix
     ) {
-        StringData data(m_lang->GetStringTree(), std::move(path), std::string(prefix), std::string(prefix));
+        StringData data(m_lang->GetTextStringTree(), std::move(path), std::string(prefix), std::string(prefix));
         m_string_data.emplace(std::make_pair(id, std::move(data)));
     }
     const std::string& I18nNode::GetString(std::string_view id)
