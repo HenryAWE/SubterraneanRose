@@ -12,6 +12,7 @@
 #include <sr/trace/log.hpp>
 #include <sr/trace/trace.hpp>
 #include <sr/console/cmdline.hpp>
+#include <sr/filesystem/filesystem.hpp>
 
 /*Program entry */
 int main(int argc, char* argv[])
@@ -29,6 +30,13 @@ int main(int argc, char* argv[])
     auto& cli = console::CommandLineInterface::GetGlobalInstance();
     cli.ParseArg(argc, argv);
     cli.HandleArg();
+    if(cli.Exists("appdata"))
+    {
+        cli.GetOutputStream() << filesystem::GetWritableFolder().u8string() << std::endl;
+        cli.WinRequestPause();
+        cli.RequestQuit();
+    }
+
     if(cli.QuitRequested())
     {
         #ifdef _WIN32

@@ -88,7 +88,8 @@ namespace srose::console
                 generic.add_options()
                     ("help", _("srose.cli.generic.help").c_str())
                     ("version", _("srose.cli.generic.version").c_str())
-                    ("build-info", _("srose.cli.generic.build").c_str());
+                    ("build-info", _("srose.cli.generic.build").c_str())
+                    ("appdata", "Print the path of the data directory");
 
                 po::options_description language(_("srose.cli.lang"), line_length);
                 language.add_options()
