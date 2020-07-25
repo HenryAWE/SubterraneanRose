@@ -7,6 +7,60 @@
 
 import os, sys
 import struct
+import xml.dom.minidom as xmldoc
+
+
+
+class data_compiler:
+    @staticmethod
+    def compile_I32(value:int):
+        if value >= 4294967295:
+            raise ValueError("Value too larege")
+        return struct.Struct("<I").pack(value)
+    @staticmethod
+    def compile_cxxstr(value:str):
+        # Length
+        if not value:
+            return data_compiler.compile_I32(0)
+        bstr = value.encode()
+        # Data
+        return data_compiler.compile_I32(len(bstr))+bstr
+    @staticmethod
+    def compile_srstrtree(subid, value):
+        # Identifier
+        bstr = data_compiler.compile_cxxstr(subid)
+        # Data
+        bstr += data_compiler.compile_cxxstr(value[1])
+        # Children count
+        count = len(value[0])
+        bstr += data_compiler.compile_I32(count)
+        # Children
+        for it in value[0].items():
+            bstr += data_compiler.compile_srstrtree(it[0], it[1])
+        return bstr
+
+
+
+class config_compiler:
+    def __init__(self, verbosity):
+        self.verbosity = verbosity
+
+    def parse_file(self, file):
+        if self.verbosity >= 1:
+            print("[config_compiler] Loading file \"%s\"" % file)
+        doc = xmldoc.parse(file)
+        info = doc.getElementsByTagName("info")
+        self.id = info[0].getElementsByTagName("id")[0].firstChild.data
+        if self.verbosity >=2:
+            print("[config_compiler]: id = ", self.id)
+        self.name = info[0].getElementsByTagName("name")[0].firstChild.data
+        if self.verbosity >=2:
+            print("[config_compiler]: name = ", self.name)
+
+    def output(self, stream):
+        stream.write(b"@inf")
+        stream.write(data_compiler.compile_cxxstr(self.id))
+        stream.write(data_compiler.compile_cxxstr(self.name))
 
 
 
@@ -95,37 +149,12 @@ class script_compiler:
             result &= self.parse_string(string, basename, line_number, compile, display)
         return result
 
-    @staticmethod
-    def compile_I32(value:int):
-        if value >= 4294967295:
-            raise ValueError("Value too larege")
-        return struct.Struct("<I").pack(value)
-    @staticmethod
-    def compile_cxxstr(value:str):
-        # Length
-        if not value:
-            return script_compiler.compile_I32(0)
-        bstr = value.encode()
-        # Data
-        return script_compiler.compile_I32(len(bstr))+bstr
-    @staticmethod
-    def compile_srstrtree(subid, value):
-        # Identifier
-        bstr = script_compiler.compile_cxxstr(subid)
-        # Data
-        bstr += script_compiler.compile_cxxstr(value[1])
-        # Children count
-        count = len(value[0])
-        bstr += script_compiler.compile_I32(count)
-        # Children
-        for it in value[0].items():
-            bstr += script_compiler.compile_srstrtree(it[0], it[1])
-        return bstr
-
     def output(self, stream):
         stream.write(b'@txt')
+        top_level_id_count = len(self.text)
+        stream.write(data_compiler.compile_I32(top_level_id_count))
         for it in self.text.items():
-            stream.write(script_compiler.compile_srstrtree(it[0], it[1]))
+            stream.write(data_compiler.compile_srstrtree(it[0], it[1]))
 
 
 
@@ -137,6 +166,7 @@ class srlc_compiler:
 
     def __init__(self, verbosity = 0):
         self.verbosity = verbosity
+        self.config = config_compiler(verbosity)
         self.script = script_compiler(verbosity)
 
     @staticmethod
@@ -144,6 +174,9 @@ class srlc_compiler:
         stream.write(b'SRLC')
         # Backend version number
         stream.write(struct.Struct("<I").pack(1))
+
+    def load_cfg(self, file):
+        self.config.parse_file(file)
 
     def load_txt(self, files, compile = True, display = False, check = False):
         for file in files:
@@ -160,4 +193,5 @@ class srlc_compiler:
             print("[srlc_compiler] Write to file \"%s\"" % file)
 
         self.write_header(stream)
+        self.config.output(stream)
         self.script.output(stream)

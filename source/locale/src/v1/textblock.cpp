@@ -24,7 +24,9 @@ namespace srose::locale::v1
     {
         try
         {
-            texts = detailed::Decode_SRStrTree(is);
+            std::uint32_t top_level_id_count = detailed::Decode_U32LE(is);
+            for(std::uint32_t i = 0; i < top_level_id_count; ++i)
+                texts.merge(detailed::Decode_SRStrTree(is));
         }
         catch(const std::ios_base::failure& e)
         {

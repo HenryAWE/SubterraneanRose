@@ -3,7 +3,7 @@
 include(SRLC)
 macro(compile_lang lang)
     file(GLOB_RECURSE files "${lang}/*.txt")
-    compile_lc("${CMAKE_BINARY_DIR}/bin/locale/${lang}.srlc" ${files})
+    compile_lc("${CMAKE_BINARY_DIR}/bin/locale/${lang}.srlc" "${CMAKE_CURRENT_SOURCE_DIR}/${lang}/${lang}.xml" ${files})
     install(
         FILES ${CMAKE_BINARY_DIR}/bin/locale/${lang}.srlc
         DESTINATION bin/locale
@@ -27,5 +27,5 @@ endif()
 
 include(SRf2c)
 file(GLOB_RECURSE en_files "en/*.txt")
-compile_lc("${CMAKE_BINARY_DIR}/embedded_en.srlc" ${en_files})
+compile_lc("${CMAKE_BINARY_DIR}/embedded_en.srlc" "${CMAKE_CURRENT_SOURCE_DIR}/en/en.xml" ${en_files})
 file2cstr("${CMAKE_BINARY_DIR}/embedded_en.srlc" "${CMAKE_BINARY_DIR}/embedded_en.inl")

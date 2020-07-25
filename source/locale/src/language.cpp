@@ -9,6 +9,7 @@
 #include <cstring>
 #include <fstream>
 #include <boost/locale.hpp>
+#include "v1/infoblock.hpp"
 #include "v1/textblock.hpp"
 
 
@@ -72,7 +73,6 @@ namespace srose::locale
 
     void Language::Decode(std::istream& is)
     {
-        is.exceptions(std::ios_base::failbit);
         /* Check the header */
         char header[5]{};
         is.read(header, 4);
@@ -83,12 +83,20 @@ namespace srose::locale
         if(backend_version != SROSE_LOCALE_BACKEND_API_VERSION)
             throw std::runtime_error("[locale] Invalid version number");
 
-        char subheader[5]{};
-        is.read(subheader, 4);
         while(is.good())
         {
             using namespace v1;
+            char subheader[5]{};
+            is.read(subheader, 4);
+            if(!is.good())
+                break;
 
+            if(strncmp(subheader, "@inf", 4) == 0)
+            {
+                InfoBlock inf(is);
+                m_iso = inf.id;
+                m_name = inf.name;
+            }
             if(strncmp(subheader, "@txt", 4) == 0)
             {
                 TextBlock txt(is);

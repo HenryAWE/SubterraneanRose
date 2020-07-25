@@ -17,6 +17,7 @@ class option(IntEnum):
 parser = argparse.ArgumentParser(description="Compiler Options")
 parser.add_argument("--verbosity", "-v", action="count", default=0)
 parser.add_argument("--input", "-i", help="Input file(s)", nargs='+', required=True)
+parser.add_argument("--config", "-c", help="Configuration", required=False)
 parser.add_argument("--output", "-o", help="Output")
 parser.add_argument("--action", choices=["check", "compile"], default="compile")
 if len(sys.argv)<=1:
@@ -37,6 +38,8 @@ if args.action == "compile":
 cl = srlc.compiler.srlc_compiler(args.verbosity)
 compile = mode == option.COMPILE
 display = mode == args.verbosity >= 2
+if args.config:
+    cl.load_cfg(args.config)
 cl.load_txt(args.input, compile, display, mode == option.CHECK)
 if compile:
     cl.output(args.output)
