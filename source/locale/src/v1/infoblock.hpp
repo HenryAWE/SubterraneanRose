@@ -9,6 +9,7 @@
 
 #include <iosfwd>
 #include <string>
+#include <sr/util/semver.hpp>
 
 
 namespace srose::locale::v1
@@ -22,6 +23,7 @@ namespace srose::locale::v1
 
         std::string id;
         std::string name;
+        util::SemVer version;
 
     private:
         void Decode(std::istream& is);

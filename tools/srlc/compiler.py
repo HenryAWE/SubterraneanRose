@@ -8,6 +8,7 @@
 import os, sys
 import struct
 import xml.dom.minidom as xmldoc
+import re
 
 
 
@@ -50,17 +51,29 @@ class config_compiler:
             print("[config_compiler] Loading file \"%s\"" % file)
         doc = xmldoc.parse(file)
         info = doc.getElementsByTagName("info")
-        self.id = info[0].getElementsByTagName("id")[0].firstChild.data
+        self.parse_info(info[0])
+
+    def parse_info(self, doc):
+        self.id = doc.getElementsByTagName("id")[0].firstChild.data
         if self.verbosity >=2:
             print("[config_compiler]: id = ", self.id)
-        self.name = info[0].getElementsByTagName("name")[0].firstChild.data
+        self.name = doc.getElementsByTagName("name")[0].firstChild.data
         if self.verbosity >=2:
             print("[config_compiler]: name = ", self.name)
+        version_string = doc.getElementsByTagName("version")[0].firstChild.data
+        semver_pattern = "(\\d+)\\.(\\d+)\\.(\\d+)"
+        if not re.match(semver_pattern, version_string):
+            raise ValueError("Invalid version string : " + version_string)
+        result = re.match(semver_pattern, version_string)
+        self.version = (int(result.group(1)), int(result.group(2)), int(result.group(3)))
+
 
     def output(self, stream):
         stream.write(b"@inf")
         stream.write(data_compiler.compile_cxxstr(self.id))
         stream.write(data_compiler.compile_cxxstr(self.name))
+        for i in range(3):
+            stream.write(data_compiler.compile_I32(self.version[i]))
 
 
 
