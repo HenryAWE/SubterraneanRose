@@ -1,4 +1,2 @@
 # 语言信息
-@srose.language.name = "简体中文"
-@srose.language.iso = "zh_CN"
 @srose.language.default = "（加载失败）"

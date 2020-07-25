@@ -113,8 +113,6 @@ namespace srose::locale
 
     void Language::LoadSpecStrings()
     {
-        m_name = gettext("srose.language.name", "Default");
-        m_iso = gettext("srose.language.iso", "C");
         m_default = m_tr.get_value_optional("srose.language.default");
     }
 

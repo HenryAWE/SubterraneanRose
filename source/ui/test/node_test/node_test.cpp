@@ -17,5 +17,5 @@ BOOST_AUTO_TEST_CASE(test_node)
 
     auto i18n_node = std::make_shared<I18nNode>(i18n::GetDefaultLanguage());
     
-    BOOST_TEST(i18n_node->gettext("srose.language.iso") == "en");
+    BOOST_TEST(i18n_node->getptr()->GetId() == "en");
 }

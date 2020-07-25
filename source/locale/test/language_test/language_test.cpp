@@ -20,10 +20,8 @@ BOOST_AUTO_TEST_CASE(test1)
     BOOST_TEST_REQUIRE(default_lc.gettext("srose.language.iso") == "C");
 
     locale::Language en("en.srlc");
-    BOOST_TEST_REQUIRE(en.gettext("srose.language.name") == "English");
     BOOST_TEST_REQUIRE(en.name() == "English");
     BOOST_TEST_REQUIRE(en.iso() == "en");
-    BOOST_TEST_REQUIRE(en.gettext("srose.language.name", "ERROR") == "English");
     BOOST_TEST_REQUIRE(en.gettext("@not.found", "You'll get me") == "You'll get me");
     BOOST_TEST_REQUIRE(en.gettext("test.sub.hello") == "Greeting from sub-directory!");
     BOOST_TEST_REQUIRE(en.default_str().has_value() == false);
@@ -37,9 +35,9 @@ BOOST_AUTO_TEST_CASE(test1)
     boost::locale::generator gen;
     std::locale::global(gen("zh-CN.UTF-8"));
     locale::Language zh_CN("zh-CN.srlc");
-    auto converted = boost::locale::conv::utf_to_utf<wchar_t>(zh_CN.gettext("srose.language.name"));
-    BOOST_TEST_REQUIRE(bool(converted == L"简体中文"));
-    BOOST_TEST_REQUIRE(zh_CN.gettext("srose.language.name") == "简体中文");
+    auto converted = boost::locale::conv::utf_to_utf<wchar_t>(zh_CN.gettext("srose.hello"));
+    BOOST_TEST_REQUIRE(bool(converted == L"你好世界"));
+    BOOST_TEST_REQUIRE(zh_CN.gettext("srose.hello") == "你好世界");
     BOOST_TEST_REQUIRE(zh_CN.name() == "简体中文");
     BOOST_TEST_REQUIRE(zh_CN.gettext("srose.language.default") == "（加载失败）");
     BOOST_TEST_REQUIRE(zh_CN.default_str().has_value());
@@ -77,17 +75,17 @@ void test_stream_operator(std::shared_ptr<srose::locale::Language> lang)
     std::stringstream ss;
     ss.imbue(lang_lc);
     BOOST_TEST_REQUIRE(std::has_facet<TranslationFacet>(ss.getloc()));
-    ss << SRTR("srose.language.name");
-    BOOST_TEST_REQUIRE(ss.str() == "简体中文");
+    ss << SRTR("srose.hello");
+    BOOST_TEST_REQUIRE(ss.str() == "你好世界");
 
     auto origin = std::locale::global(lang_lc);
     BOOST_TEST_REQUIRE(!std::has_facet<TranslationFacet>(origin));
-    BOOST_TEST_REQUIRE(SRTR("srose.language.name").str() == "简体中文");
+    BOOST_TEST_REQUIRE(SRTR("srose.hello").str() == "你好世界");
     std::string not_found = SRTR("@not.found");
     BOOST_TEST_REQUIRE(not_found == *lang->default_str());
 
     std::locale::global(CreateTranslation(origin, lang));
-    BOOST_TEST_REQUIRE(SRTR("srose.language.name").str() == "简体中文");
+    BOOST_TEST_REQUIRE(SRTR("srose.hello").str() == "你好世界");
     std::string not_found_2 = SRTR("@not.found");
     BOOST_TEST_REQUIRE(not_found_2 == *lang->default_str());
 }
