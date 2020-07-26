@@ -10,6 +10,7 @@
 #include <fstream>
 #include <boost/locale.hpp>
 #include "v1/infoblock.hpp"
+#include "v1/actionblock.hpp"
 #include "v1/textblock.hpp"
 
 
@@ -108,6 +109,10 @@ namespace srose::locale
                 m_id = inf.id;
                 m_name = inf.name;
                 m_version = inf.version;
+            }
+            if(strncmp(subheader, "@act", 4) == 0)
+            {
+                ActionBlock act(is);
             }
             if(strncmp(subheader, "@txt", 4) == 0)
             {

@@ -1,8 +1,16 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<info>
-    <id>zh_CN</id>
-    <name>简体中文</name>
-    <version>0.1.0</version>
-    <author>Subterranean Rose</author>
-    <comment></comment>
-</info>
+<locale>
+    <info>
+        <id>zh_CN</id>
+        <name>简体中文</name>
+        <version>0.1.0</version>
+        <author>Subterranean Rose</author>
+        <comment></comment>
+    </info>
+    <action>
+        <text>
+            <error>RETURN_ERROR_STRING</error>
+            <error-string>字符串未定义</error-string>
+        </text>
+    </action>
+</locale>

@@ -19,6 +19,15 @@
 
 namespace srose::locale
 {
+    enum TextErrorAction : std::uint32_t
+    {
+        SRLC_RETURN_EMPTY_STRING = 0,
+        SRLC_RETURN_REQUEST = 1,
+        SRLC_RETURN_ERROR_STRING = 2,
+        SRLC_USE_FALLBACK = 3,
+        SRLC_THROW_EXCEPTION = 4
+    };
+
     class Language : std::enable_shared_from_this<Language>
     {
     public:

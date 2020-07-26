@@ -50,7 +50,8 @@ class config_compiler:
         if self.verbosity >= 1:
             print("[config_compiler] Loading file \"%s\"" % file)
         doc = xmldoc.parse(file)
-        info = doc.getElementsByTagName("info")
+        root = doc.getElementsByTagName("locale")[0]
+        info = root.getElementsByTagName("info")
         self.parse_info(info[0])
 
     def parse_info(self, doc):
@@ -74,6 +75,65 @@ class config_compiler:
         stream.write(data_compiler.compile_cxxstr(self.name))
         for i in range(3):
             stream.write(data_compiler.compile_I32(self.version[i]))
+
+
+
+class action_compiler:
+    def __init__(self, verbosity):
+        self.verbosity = verbosity
+
+    def parse_file(self, file):
+        if self.verbosity >= 1:
+            print("[action_compiler] Loading file \"%s\"" % file)
+        doc = xmldoc.parse(file)
+        root = doc.getElementsByTagName("locale")[0]
+        action = root.getElementsByTagName("action")
+        if len(action) > 0:
+            self.parse_action(action[0])
+        else:
+            self.text_error = 0
+
+    def parse_action(self, doc):
+        text = doc.getElementsByTagName("text")
+        if len(text) > 0:
+            self.parse_text_action(text[0])
+        else:
+            self.text_error = 0 # RETURN_EMPTY_STRING
+
+    def parse_text_action(self, doc):
+        text_error_action_str = doc.getElementsByTagName("error")[0].firstChild.data
+        if text_error_action_str == "RETURN_EMPTY_STRING":
+            self.text_error = 0
+        elif text_error_action_str == "RETURN_REQUEST":
+            self.text_error = 1
+        elif text_error_action_str == "RETURN_ERROR_STRING":
+            self.text_error = 2
+            error_string = doc.getElementsByTagName("error-string")
+            if len(error_string) > 0:
+                self.error_string = error_string[0].firstChild.data
+            else:
+                self.error_string = ""
+        elif text_error_action_str == "USE_FALLBACK":
+            self.text_error = 3
+            self.fallback = doc.getElementsByTagName("fallback")[0].firstChild.data
+        elif text_error_action_str == "THROW_EXCEPTION":
+            self.text_error = 4
+        else:
+            raise ValueError("Unknown text error action: ", text_error_action_str)
+        if self.verbosity >= 2:
+            print("[action_compiler] %s (%d)" % (text_error_action_str, self.text_error))
+            if self.text_error is 2:
+                print("[action_compiler] Error string: ", self.error_string)
+            elif self.text_error is 3:
+                print("[action_compiler] Fallback: ", self.fallback)
+
+    def output(self, stream):
+        stream.write(b"@act")
+        stream.write(data_compiler.compile_I32(self.text_error))
+        if self.text_error is 2: # RETURN_ERROR_STRING
+            stream.write(data_compiler.compile_cxxstr(self.error_string))
+        elif self.text_error is 3: # USE_FALLBACK
+            stream.write(data_compiler.compile_cxxstr(self.fallback))
 
 
 
@@ -180,6 +240,7 @@ class srlc_compiler:
     def __init__(self, verbosity = 0):
         self.verbosity = verbosity
         self.config = config_compiler(verbosity)
+        self.action = action_compiler(verbosity)
         self.script = script_compiler(verbosity)
 
     @staticmethod
@@ -190,6 +251,7 @@ class srlc_compiler:
 
     def load_cfg(self, file):
         self.config.parse_file(file)
+        self.action.parse_file(file)
 
     def load_txt(self, files, compile = True, display = False, check = False):
         for file in files:
@@ -207,4 +269,5 @@ class srlc_compiler:
 
         self.write_header(stream)
         self.config.output(stream)
+        self.action.output(stream)
         self.script.output(stream)
