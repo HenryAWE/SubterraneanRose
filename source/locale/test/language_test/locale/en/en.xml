@@ -7,4 +7,10 @@
         <author>Subterranean Rose</author>
         <comment></comment>
     </info>
+    <action>
+        <text>
+            <error>RETURN_ERROR_STRING</error>
+            <error-string>Undefined</error-string>
+        </text>
+    </action>
 </locale>

@@ -48,6 +48,54 @@ namespace srose::locale
         Decode(is);
     }
 
+    std::string Language::GetText(std::string_view path)
+    {
+        return GetTextWith(path, m_text_error);
+    }
+    std::string Language::GetTextWith(std::string_view path, TextErrorAction action)
+    {
+        auto opt = GetTextOptional(path);
+        if(opt)
+            return std::move(*opt);
+
+        switch(action)
+        {
+        default:
+        case SRLC_RETURN_EMPTY_STRING:
+            return std::string();
+
+        case SRLC_RETURN_REQUEST:
+            return std::string(path);
+
+        case SRLC_RETURN_ERROR_STRING:
+            if(m_error_string)
+                return *m_error_string;
+            else
+                throw std::invalid_argument("[locale] m_error_string == std::nullopt");
+
+        case SRLC_USE_FALLBACK:
+            if(m_fallback)
+                return m_fallback->GetText(path);
+            else
+                throw std::invalid_argument("[locale] m_fallback == nullptr");
+
+        case SRLC_THROW_EXCEPTION:
+            throw std::out_of_range("[locale] Path \"" + std::string(path) + "\" not found");
+        }
+    }
+    std::string Language::GetTextOr(std::string_view path, std::string_view alternative)
+    {
+        auto opt = GetTextOptional(path);
+        if(opt)
+            return std::move(*opt);
+        else
+            return std::string(alternative);
+    }
+    std::optional<std::string> Language::GetTextOptional(std::string_view path)
+    {
+        return m_text.get_value_optional(path);
+    }
+
     std::string Language::gettext(std::string_view path)
     {
         if(m_default.has_value())
@@ -213,6 +261,6 @@ namespace srose::locale
 
     std::string TranslationHelper::str() const
     {
-        return std::use_facet<TranslationFacet>(std::locale()).get().gettext(path);
+        return std::use_facet<TranslationFacet>(std::locale()).get().GetText(path);
     }
 } // namespace srose::locale

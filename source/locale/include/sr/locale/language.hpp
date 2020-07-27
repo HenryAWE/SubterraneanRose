@@ -47,6 +47,11 @@ namespace srose::locale
         explicit Language(const filesystem::path& file);
         explicit Language(std::istream& is);
 
+        std::string GetText(std::string_view path);
+        std::string GetTextWith(std::string_view path, TextErrorAction action);
+        std::string GetTextOr(std::string_view path, std::string_view alternative);
+        std::optional<std::string> GetTextOptional(std::string_view path);
+
         [[nodiscard]]
         std::string gettext(std::string_view path);
         struct use_fallback_t {};
@@ -66,6 +71,12 @@ namespace srose::locale
         constexpr const util::string_tree<std::string>& GetTextStringTree() const noexcept { return m_text; }
         [[nodiscard]]
         const std::optional<std::string>& default_str() const noexcept { return m_default; }
+        [[nodiscard]]
+        TextErrorAction GetTextErrorAction() const noexcept { return m_text_error; }
+        [[nodiscard]]
+        const std::optional<std::string>& GetErrorString() const noexcept { return m_error_string; }
+        [[nodiscard]]
+        const std::optional<std::string>& GetFallbackId() const noexcept { return m_fallback_id; }
 
         void fallback(std::shared_ptr<Language> value) noexcept { m_fallback.swap(value); }
         [[nodiscard]]
@@ -144,7 +155,7 @@ namespace srose::locale
         {
             auto lc = os.getloc();
             auto& tr = std::use_facet<TranslationFacet>(lc);
-            os << tr.get().gettext(helper.path);
+            os << tr.get().GetText(helper.path);
 
             return os;
         }
