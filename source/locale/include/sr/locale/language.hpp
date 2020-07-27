@@ -60,18 +60,15 @@ namespace srose::locale
         const util::SemVer& GetVersion() const noexcept { return m_version; }
         [[nodiscard]]
         constexpr const util::string_tree<std::string>& GetTextStringTree() const noexcept { return m_text; }
-        [[nodiscard]]
-        const std::optional<std::string>& default_str() const noexcept { return m_default; }
+
         [[nodiscard]]
         TextErrorAction GetTextErrorAction() const noexcept { return m_text_error; }
         [[nodiscard]]
         const std::optional<std::string>& GetErrorString() const noexcept { return m_error_string; }
         [[nodiscard]]
         const std::optional<std::string>& GetFallbackId() const noexcept { return m_fallback_id; }
-
-        void fallback(std::shared_ptr<Language> value) noexcept { m_fallback.swap(value); }
         [[nodiscard]]
-        const std::shared_ptr<Language>& fallback() const noexcept { return m_fallback; }
+        const std::shared_ptr<Language>& GetFallback() const noexcept { return m_fallback; }
 
         void LinkFallback(LanguageSet& langs);
 
@@ -80,7 +77,6 @@ namespace srose::locale
         std::string m_name;
         util::SemVer m_version;
         util::string_tree<std::string> m_text;
-        std::optional<std::string> m_default;
 
         TextErrorAction m_text_error = SRLC_RETURN_EMPTY_STRING;
         std::optional<std::string> m_error_string;
@@ -89,8 +85,6 @@ namespace srose::locale
 
         void Decode(std::istream& is);
         void DecodeTextBlock(std::istream& is);
-
-        void LoadSpecStrings();
     };
 
     struct LanguageComparator

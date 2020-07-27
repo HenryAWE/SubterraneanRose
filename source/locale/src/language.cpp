@@ -19,22 +19,16 @@
 
 namespace srose::locale
 {
-    Language::Language()
-    {
-        m_text.emplace_at("srose.language.name", "Default");
-        m_text.emplace_at("srose.language.iso", "C");
-    }
+    Language::Language() = default;
     Language::Language(const Language& other)
         : m_id(other.m_id),
         m_name(other.m_name),
         m_text(other.m_text),
-        m_default(other.m_default),
         m_fallback(other.m_fallback) {}
     Language::Language(Language&& move) noexcept
         : m_id(std::move(move.m_id)),
         m_name(std::move(move.m_name)),
         m_text(std::move(move.m_text)),
-        m_default(std::move(move.m_default)),
         m_fallback(std::move(move.m_fallback)) {}
     Language::Language(const filesystem::path& file)
     {
@@ -145,17 +139,10 @@ namespace srose::locale
                 m_text.merge(std::move(txt.texts));
             }
         }
-
-        LoadSpecStrings();
     }
     void Language::DecodeTextBlock(std::istream& is)
     {
         m_text.merge(detailed::Decode_SRStrTree(is));
-    }
-
-    void Language::LoadSpecStrings()
-    {
-        m_default = m_text.get_value_optional("srose.language.default");
     }
 
     std::shared_ptr<Language> SearchClosest(LanguageSet& langs, const std::string& id)
