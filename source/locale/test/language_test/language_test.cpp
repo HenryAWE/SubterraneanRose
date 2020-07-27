@@ -15,50 +15,49 @@ BOOST_AUTO_TEST_CASE(test1)
     using namespace srose;
     using namespace srose::util;
 
-    locale::Language default_lc{};
-    BOOST_TEST_REQUIRE(default_lc.gettext("srose.language.name") == "Default");
-    BOOST_TEST_REQUIRE(default_lc.gettext("srose.language.iso") == "C");
-
-    locale::Language en("en.srlc");
-    BOOST_TEST_REQUIRE(en.GetId() == "en");
-    BOOST_TEST_REQUIRE(en.GetName() == "English");
-    BOOST_TEST_REQUIRE(en.gettext("@not.found", "You'll get me") == "You'll get me");
-    BOOST_TEST_REQUIRE(en.gettext("test.sub.hello") == "Greeting from sub-directory!");
-    BOOST_TEST_REQUIRE(en.default_str().has_value() == false);
+    auto en = std::make_shared<locale::Language>("en.srlc");
+    BOOST_TEST_REQUIRE(en->GetId() == "en");
+    BOOST_TEST_REQUIRE(en->GetName() == "English");
+    BOOST_TEST_REQUIRE(en->gettext("@not.found", "You'll get me") == "You'll get me");
+    BOOST_TEST_REQUIRE(en->gettext("test.sub.hello") == "Greeting from sub-directory!");
+    BOOST_TEST_REQUIRE(en->default_str().has_value() == false);
     try
     {
-        (void)en.gettext("@not.found");
+        (void)en->gettext("@not.found");
         BOOST_FAIL("Should not reach this line");
     }
     catch(const string_tree_base::path_not_found&) {}
 
     boost::locale::generator gen;
     std::locale::global(gen("zh-CN.UTF-8"));
-    locale::Language zh_CN("zh-CN.srlc");
-    auto converted = boost::locale::conv::utf_to_utf<wchar_t>(zh_CN.gettext("srose.hello"));
+    auto zh_CN = std::make_shared<locale::Language>("zh-CN.srlc");
+    auto converted = boost::locale::conv::utf_to_utf<wchar_t>(zh_CN->gettext("srose.hello"));
     BOOST_TEST_REQUIRE(bool(converted == L"你好世界"));
-    BOOST_TEST_REQUIRE(zh_CN.gettext("srose.hello") == "你好世界");
-    BOOST_TEST_REQUIRE(zh_CN.GetName() == "简体中文");
-    BOOST_TEST_REQUIRE(zh_CN.gettext("srose.language.default") == "（加载失败）");
-    BOOST_TEST_REQUIRE(zh_CN.default_str().has_value());
-    BOOST_TEST_REQUIRE(bool(*zh_CN.default_str() == "（加载失败）"));
+    BOOST_TEST_REQUIRE(zh_CN->gettext("srose.hello") == "你好世界");
+    BOOST_TEST_REQUIRE(zh_CN->GetName() == "简体中文");
+    BOOST_TEST_REQUIRE(zh_CN->gettext("srose.language.default") == "（加载失败）");
+    BOOST_TEST_REQUIRE(zh_CN->default_str().has_value());
+    BOOST_TEST_REQUIRE(bool(*zh_CN->default_str() == "（加载失败）"));
     try
     {
         // Testing default string
-        BOOST_TEST_REQUIRE(zh_CN.gettext("@not.found") == "（加载失败）");
+        BOOST_TEST_REQUIRE(zh_CN->gettext("@not.found") == "（加载失败）");
     }
     catch(const string_tree_base::path_not_found&)
     {
         BOOST_FAIL("Should not reach this line");
     }
 
-    // Testing fallback
-    zh_CN.fallback(std::make_shared<locale::Language>(en));
-    BOOST_TEST_REQUIRE(en.gettext("only.exist.in.English") == "This will only appear in English");
-    BOOST_TEST_REQUIRE(zh_CN.gettext("only.exist.in.English", zh_CN.use_fallback) == "This will only appear in English");
-    BOOST_TEST_REQUIRE(zh_CN.gettext("@not.found", zh_CN.use_fallback) == *zh_CN.default_str());
+    locale::LanguageSet lang_set;
+    lang_set.insert(en);
+    lang_set.insert(zh_CN);
 
-    test_stream_operator(std::make_shared<locale::Language>(std::move(zh_CN)));
+    // Testing fallback
+    zh_CN->LinkFallback(lang_set);
+    BOOST_TEST_REQUIRE(en->gettext("only.exist.in.English") == "This will only appear in English");
+    BOOST_TEST_REQUIRE(zh_CN->gettext("only.exist.in.English", zh_CN->use_fallback) == "This will only appear in English");
+
+    test_stream_operator(zh_CN);
 }
 
 void test_stream_operator(std::shared_ptr<srose::locale::Language> lang)

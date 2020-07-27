@@ -84,6 +84,15 @@ namespace srose::locale
         return opt.has_value() ? *opt : std::string(alternate);
     }
 
+    void Language::LinkFallback(LanguageSet& langs)
+    {
+        if(!m_fallback_id)
+            return;
+        auto result = SearchClosest(langs, *m_fallback_id);
+        if(result)
+            m_fallback.swap(result);
+    }
+
     void Language::Decode(std::istream& is)
     {
         /* Check the header */
@@ -114,6 +123,9 @@ namespace srose::locale
             if(strncmp(subheader, "@act", 4) == 0)
             {
                 ActionBlock act(is);
+                m_text_error = act.text_error;
+                m_error_string = act.error_string;
+                m_fallback_id = act.fallback;
             }
             if(strncmp(subheader, "@txt", 4) == 0)
             {

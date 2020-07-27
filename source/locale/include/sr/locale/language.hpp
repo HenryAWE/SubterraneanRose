@@ -19,6 +19,9 @@
 
 namespace srose::locale
 {
+    // Forward declaration
+    class Language;
+
     enum TextErrorAction : std::uint32_t
     {
         SRLC_RETURN_EMPTY_STRING = 0,
@@ -28,30 +31,16 @@ namespace srose::locale
         SRLC_THROW_EXCEPTION = 4
     };
 
+    struct LanguageComparator;
+
+    using LanguageSet = std::set<
+        std::shared_ptr<Language>,
+        LanguageComparator
+    >;
+
     class Language : std::enable_shared_from_this<Language>
     {
     public:
-        struct Comparator
-        {
-            typedef void is_transparent;
-
-            template <typename T, typename U>
-            bool operator()(T&& lhs, U&& rhs) const noexcept
-            {
-                return View(lhs) < View(rhs);
-            }
-
-        private:
-            [[nodiscard]]
-            static constexpr std::string_view View(std::string_view value) noexcept { return value; }
-            [[nodiscard]]
-            static std::string_view View(const Language& value) noexcept { return value.GetId(); }
-            static std::string_view View(const std::shared_ptr<Language>& value)
-            {
-                return value ? value->GetId() : std::string_view();
-            }
-        };
-
         Language();
         Language(const Language& other);
         Language(Language&& move) noexcept;
@@ -82,6 +71,8 @@ namespace srose::locale
         [[nodiscard]]
         const std::shared_ptr<Language>& fallback() const noexcept { return m_fallback; }
 
+        void LinkFallback(LanguageSet& langs);
+
     private:
         std::string m_id;
         std::string m_name;
@@ -89,6 +80,9 @@ namespace srose::locale
         util::string_tree<std::string> m_text;
         std::optional<std::string> m_default;
 
+        TextErrorAction m_text_error = SRLC_RETURN_EMPTY_STRING;
+        std::optional<std::string> m_error_string;
+        std::optional<std::string> m_fallback_id;
         std::shared_ptr<Language> m_fallback;
 
         void Decode(std::istream& is);
@@ -97,10 +91,26 @@ namespace srose::locale
         void LoadSpecStrings();
     };
 
-    using LanguageSet = std::set<
-        std::shared_ptr<Language>,
-        Language::Comparator
-    >;
+    struct LanguageComparator
+    {
+        typedef void is_transparent;
+
+        template <typename T, typename U>
+        bool operator()(T&& lhs, U&& rhs) const noexcept
+        {
+            return View(lhs) < View(rhs);
+        }
+
+    private:
+        [[nodiscard]]
+        static constexpr std::string_view View(std::string_view value) noexcept { return value; }
+        [[nodiscard]]
+        static std::string_view View(const Language& value) noexcept { return value.GetId(); }
+        static std::string_view View(const std::shared_ptr<Language>& value)
+        {
+            return value ? value->GetId() : std::string_view();
+        }
+    };
 
     std::shared_ptr<Language> SearchClosest(LanguageSet& langs, const std::string& id);
 

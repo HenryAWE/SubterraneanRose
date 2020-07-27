@@ -7,4 +7,10 @@
         <author>Subterranean Rose</author>
         <comment></comment>
     </info>
+    <action>
+        <text>
+            <error>USE_FALLBACK</error>
+            <fallback>en</fallback>
+        </text>
+    </action>
 </locale>
