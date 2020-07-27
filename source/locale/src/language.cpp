@@ -96,42 +96,6 @@ namespace srose::locale
         return m_text.get_value_optional(path);
     }
 
-    std::string Language::gettext(std::string_view path)
-    {
-        if(m_default.has_value())
-        {
-            auto opt = m_text.get_value_optional(path);
-            assert(m_default.has_value());
-            return opt.has_value()? *opt : *m_default;
-        }
-        else
-        {
-            return m_text.get_value(path);
-        }
-    }
-    std::string Language::gettext(std::string_view path, use_fallback_t)
-    {
-        auto opt = m_text.get_value_optional(path);
-        if(opt.has_value())
-            return std::move(*opt);
-
-        if(m_fallback)
-        {
-            opt = m_fallback->m_text.get_value_optional(path);
-            if(opt.has_value())
-                return std::move(*opt);
-        }
-
-        if(!m_default.has_value())
-            throw util::string_tree_base::path_not_found("path not found");
-        return *m_default;
-    }
-    std::string Language::gettext(std::string_view path, std::string_view alternate)
-    {
-        auto opt = m_text.get_value_optional(path);
-        return opt.has_value() ? *opt : std::string(alternate);
-    }
-
     void Language::LinkFallback(LanguageSet& langs)
     {
         if(!m_fallback_id)

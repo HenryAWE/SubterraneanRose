@@ -57,7 +57,7 @@ namespace srose::ui
 
     std::string I18nNode::gettext(std::string_view id)
     {
-        return m_lang->gettext(id);
+        return m_lang->GetText(id);
     }
 
     void I18nNode::LoadI18nData() {}

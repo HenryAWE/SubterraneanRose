@@ -82,7 +82,7 @@ namespace srose::console
             {
                 constexpr unsigned int line_length = UINT_MAX;
 
-                auto _ = [this](std::string_view path) { return language->gettext(path); };
+                auto _ = [this](std::string_view path) { return language->GetText(path); };
 
                 po::options_description generic(_("srose.cli.generic"), line_length);
                 generic.add_options()

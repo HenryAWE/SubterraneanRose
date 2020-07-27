@@ -53,15 +53,6 @@ namespace srose::locale
         std::optional<std::string> GetTextOptional(std::string_view path);
 
         [[nodiscard]]
-        std::string gettext(std::string_view path);
-        struct use_fallback_t {};
-        static constexpr use_fallback_t use_fallback{};
-        [[nodiscard]]
-        std::string gettext(std::string_view path, use_fallback_t);
-        [[nodiscard]]
-        std::string gettext(std::string_view path, std::string_view alternate);
-
-        [[nodiscard]]
         const std::string& GetId() const noexcept { return m_id; }
         [[nodiscard]]
         const std::string& GetName() const noexcept { return m_name; }
