@@ -102,6 +102,8 @@ namespace srose::locale
         Language::Comparator
     >;
 
+    std::shared_ptr<Language> SearchClosest(LanguageSet& langs, const std::string& id);
+
     std::locale SRSCALL CreateTranslation(const std::locale& in, std::shared_ptr<Language> lang);
 
     class TranslationFacet : public std::locale::facet

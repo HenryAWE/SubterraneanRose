@@ -8,6 +8,7 @@
 #include <sr/locale/parser.hpp>
 #include <cstring>
 #include <fstream>
+#include <regex>
 #include <boost/locale.hpp>
 #include "v1/infoblock.hpp"
 #include "v1/actionblock.hpp"
@@ -131,6 +132,63 @@ namespace srose::locale
     void Language::LoadSpecStrings()
     {
         m_default = m_text.get_value_optional("srose.language.default");
+    }
+
+    std::shared_ptr<Language> SearchClosest(LanguageSet& langs, const std::string& id)
+    {
+        using namespace std;
+
+        const regex id_pattern = regex(R"(^([a-z]*)(?:[_-]([A-Z]*))?.*)");
+        if(!regex_match(id, id_pattern)) // Format error
+            return nullptr;
+        const string id_language = regex_replace(id, id_pattern, "$1");
+        const string id_country = regex_replace(id, id_pattern, "$2");
+
+        vector<pair<LanguageSet::iterator /*lang*/, int /*weight*/>> weights;
+        weights.reserve(langs.size());
+        for(auto i = langs.begin(); i != langs.end(); ++i)
+            weights.push_back(pair(i, 0));
+        for(auto& [lang, weight] : weights)
+        { // Calculate weights
+            if(!*lang) // nullptr
+                continue;
+
+            const string lang_id = (*lang)->GetId();
+
+            const string lang_language = regex_replace(lang_id, id_pattern, "$1");
+            if(lang_language == id_language)
+                ++weight;
+
+            if(id_country.empty())
+                continue;
+            const string lang_country = regex_replace(lang_id, id_pattern, "$2");
+            if(lang_country.empty())
+                continue;
+            if(lang_country == id_country)
+                ++weight;
+        }
+
+        // Chose the most suitable locale based on the weight
+        weights.erase(
+            std::unique(weights.begin(), weights.end()),
+            weights.end()
+        );
+        if(weights.size() == 0)
+            return nullptr;
+        std::sort(
+            weights.begin(), weights.end(),
+            [](auto& r, auto& l)->bool { return r.second > l.second; }
+        );
+        weights.erase(
+            std::remove_if(
+                weights.begin(), weights.end(),
+                [](auto& i)->bool { return i.second == 0; }
+            ),
+            weights.end()
+        ); 
+        if(weights.size() == 0)
+            return nullptr;
+        return std::move(*weights[0].first);
     }
 
     std::locale SRSCALL CreateTranslation(const std::locale& in, std::shared_ptr<Language> lang)

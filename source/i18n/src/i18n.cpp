@@ -95,51 +95,10 @@ namespace srose::i18n
 
     std::shared_ptr<locale::Language> GetNearestLanguage(std::string locale_name)
     {
-        using namespace std;
-        regex locale_pattern = regex(R"(^([a-z]*)(?:[_-]([A-Z]*))?.*)");
-        if(!regex_match(locale_name, locale_pattern)) // Format error
-            return g_default_lang;
-        string language_name = regex_replace(locale_name, locale_pattern, "$1");
-        string country_name = regex_replace(locale_name, locale_pattern, "$2");
-
-        std::vector<std::pair<std::string /*name*/, int /*weight*/>> lcs_weight;
-        lcs_weight.reserve(g_lang_set.size());
-        std::for_each(
-            g_lang_set.begin(), g_lang_set.end(),
-            [&lcs_weight](auto& in){ lcs_weight.push_back(pair(in->GetId(), 0)); }
-        );
-        for(auto& [name, weight] : lcs_weight)
-        { // Calculate locale's weight
-            std::string_view view = name;
-            if(view=="C" || view.size()==0) continue;
-            std::size_t sep_pos = view.find_first_of("_-");
-            if(view.substr(0, sep_pos) == language_name)
-                ++weight;
-            if(sep_pos==view.npos || sep_pos==view.size()) continue;
-            ++sep_pos;
-            if(view.substr(sep_pos)==country_name)
-                ++weight;
-        }
-
-        // Chose the most suitable locale based on the weight
-        lcs_weight.erase(
-            std::unique(lcs_weight.begin(), lcs_weight.end()),
-            lcs_weight.end()
-        );
-        if(lcs_weight.size() == 0) return g_default_lang;
-        std::sort(
-            lcs_weight.begin(), lcs_weight.end(),
-            [](auto& r, auto& l)->bool { return r.second>l.second; }
-        );
-        lcs_weight.erase(
-            std::remove_if(
-                lcs_weight.begin(), lcs_weight.end(),
-                [](auto& i)->bool { return i.second==0; }
-            ),
-            lcs_weight.end()
-        ); 
-        if(lcs_weight.size() == 0) return g_default_lang;
-        return *g_lang_set.find(lcs_weight[0].first);
+        auto result = locale::SearchClosest(g_lang_set, locale_name);
+        if(!result)
+            result = g_default_lang;
+        return std::move(result);
     }
 
     const locale::LanguageSet& GetLanguageSet() noexcept
