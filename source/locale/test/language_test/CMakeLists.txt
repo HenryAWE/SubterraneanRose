@@ -11,6 +11,9 @@ target_link_libraries(language_test PRIVATE "srose-locale")
 target_link_libraries(language_test PRIVATE Boost::locale)
 compile_lc("${CMAKE_CURRENT_BINARY_DIR}/en.srlc" "${CMAKE_CURRENT_SOURCE_DIR}/locale/en/en.xml" "${CMAKE_CURRENT_SOURCE_DIR}/locale/en/test.txt" "${CMAKE_CURRENT_SOURCE_DIR}/locale/en/sub/test-sub.txt")
 compile_lc("${CMAKE_CURRENT_BINARY_DIR}/zh-CN.srlc" "${CMAKE_CURRENT_SOURCE_DIR}/locale/zh-CN/zh-CN.xml" "${CMAKE_CURRENT_SOURCE_DIR}/locale/zh-CN/test.zh-CN.txt")
+compile_lc("${CMAKE_CURRENT_BINARY_DIR}/a.srlc" "${CMAKE_CURRENT_SOURCE_DIR}/locale/circular/a.xml" "${CMAKE_CURRENT_SOURCE_DIR}/locale/circular/dummy.txt")
+compile_lc("${CMAKE_CURRENT_BINARY_DIR}/b.srlc" "${CMAKE_CURRENT_SOURCE_DIR}/locale/circular/b.xml" "${CMAKE_CURRENT_SOURCE_DIR}/locale/circular/dummy.txt")
+compile_lc("${CMAKE_CURRENT_BINARY_DIR}/c.srlc" "${CMAKE_CURRENT_SOURCE_DIR}/locale/circular/c.xml" "${CMAKE_CURRENT_SOURCE_DIR}/locale/circular/dummy.txt")
 
 add_test(
     NAME "TestLanguage"

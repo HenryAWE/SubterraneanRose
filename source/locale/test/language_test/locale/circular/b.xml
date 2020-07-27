@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<locale>
+    <info>
+        <id>zh_CN</id>
+        <name>Locale B (zh_CN)</name>
+        <version>0.1.0</version>
+        <author>Subterranean Rose</author>
+        <comment></comment>
+    </info>
+    <action>
+        <text>
+            <error>USE_FALLBACK</error>
+            <fallback>C</fallback>
+        </text>
+    </action>
+</locale>

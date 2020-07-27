@@ -1,0 +1,2 @@
+# Dummy file for testing circular dependency checking
+@dummy.text = "dummy"

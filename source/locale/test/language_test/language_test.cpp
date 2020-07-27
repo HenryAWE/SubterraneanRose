@@ -90,3 +90,34 @@ void test_stream_operator(std::shared_ptr<srose::locale::Language> lang)
     std::string use_fallback_2 = SRTR("@use.fallback");
     BOOST_TEST_REQUIRE(use_fallback_2 == "Undefined");
 }
+
+BOOST_AUTO_TEST_CASE(test_circular_dependency_checking)
+{
+    using namespace srose;
+    using namespace srose::locale;
+
+    auto a = std::make_shared<locale::Language>("a.srlc");
+    auto b = std::make_shared<locale::Language>("b.srlc");
+    auto c = std::make_shared<locale::Language>("c.srlc");
+
+    BOOST_TEST(a->GetTextWith("dummy.text", locale::SRLC_THROW_EXCEPTION) == "dummy");
+    BOOST_TEST(b->GetTextWith("dummy.text", locale::SRLC_THROW_EXCEPTION) == "dummy");
+    BOOST_TEST(c->GetTextWith("dummy.text", locale::SRLC_THROW_EXCEPTION) == "dummy");
+
+    locale::LanguageSet lang_set;
+    lang_set.insert(a);
+    lang_set.insert(b);
+    lang_set.insert(c);
+
+    bool reached = false;
+    try
+    {
+        a->LinkFallback(lang_set);
+        b->LinkFallback(lang_set);
+        reached = true;
+        c->LinkFallback(lang_set);
+        BOOST_FAIL("Unreachable");
+    }
+    catch(const std::logic_error&) {}
+    BOOST_TEST(reached == true);
+}

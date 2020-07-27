@@ -90,13 +90,37 @@ namespace srose::locale
         return m_text.get_value_optional(path);
     }
 
+    void Language::LinkFallback(std::shared_ptr<Language> lang)
+    {
+        if(lang.get() == this)
+            return;
+        if(lang == nullptr)
+        {
+            m_fallback.reset();
+            return;
+        }
+
+        // Check for circular dependency
+        std::vector<Language*> history;
+        auto current = lang.get();
+        while(current)
+        {
+            if(current->GetTextErrorAction() != SRLC_USE_FALLBACK)
+                break;
+            else if(current == this)
+                throw std::logic_error("[locale] Circular dependency");
+            current = current->m_fallback.get();
+        }
+
+        m_fallback.swap(lang);
+    }
     void Language::LinkFallback(LanguageSet& langs)
     {
         if(!m_fallback_id)
             return;
         auto result = SearchClosest(langs, *m_fallback_id);
         if(result)
-            m_fallback.swap(result);
+           LinkFallback(std::move(result));
     }
 
     void Language::Decode(std::istream& is)

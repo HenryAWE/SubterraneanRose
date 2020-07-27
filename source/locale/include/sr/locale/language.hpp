@@ -70,6 +70,7 @@ namespace srose::locale
         [[nodiscard]]
         const std::shared_ptr<Language>& GetFallback() const noexcept { return m_fallback; }
 
+        void LinkFallback(std::shared_ptr<Language> lang);
         void LinkFallback(LanguageSet& langs);
 
     private:
