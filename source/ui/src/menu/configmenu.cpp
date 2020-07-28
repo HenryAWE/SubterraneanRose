@@ -169,7 +169,16 @@ namespace srose::ui
         ImGui::SameLine();
         ImGui::TextDisabled("(%s)", i18n::GetDefaultLanguage()->GetId().c_str());
         auto& version = i18n::GetDefaultLanguage()->GetVersion();
-        ImGui::Text("%d.%d.%d", version.major(), version.minor(), version.patch());
+        ImGui::Text(
+            "%s - %d.%d.%d",
+            i18n::GetDefaultLanguage()->GetAuthor().c_str(),
+            version.major(), version.minor(), version.patch()
+        );
+        auto& comment = i18n::GetDefaultLanguage()->GetComment();
+        if(!comment.empty())
+            ImGui::TextUnformatted(&comment[0], &comment[0] + comment.length());
+        else
+            ImGui::TextDisabled("(No comment)");
     }
     void ConfigPanel::Content_Developer()
     {

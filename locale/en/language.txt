@@ -1,2 +1,0 @@
-# Language Information
-@srose.language.default = "Load failed"
