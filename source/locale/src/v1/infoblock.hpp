@@ -24,6 +24,8 @@ namespace srose::locale::v1
         std::string id;
         std::string name;
         util::SemVer version;
+        std::string author;
+        std::string comment;
 
     private:
         void Decode(std::istream& is);

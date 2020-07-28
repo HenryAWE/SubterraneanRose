@@ -4,8 +4,8 @@
         <id>C</id>
         <name>Locale A (C)</name>
         <version>0.1.0</version>
-        <author>Subterranean Rose</author>
-        <comment></comment>
+        <!-- <author>Subterranean Rose</author> -->
+        <comment>Hello world</comment>
     </info>
     <action>
         <text>

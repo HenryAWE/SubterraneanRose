@@ -4,6 +4,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/tools/assertion.hpp>
 #include <sr/locale/language.hpp>
+#include <sr/util/semver_io.hpp>
 #include <locale>
 #include <boost/locale.hpp>
 
@@ -19,6 +20,9 @@ BOOST_AUTO_TEST_CASE(test1)
     BOOST_TEST_REQUIRE(en->GetTextErrorAction() == locale::SRLC_RETURN_ERROR_STRING);
     BOOST_TEST_REQUIRE(en->GetId() == "en");
     BOOST_TEST_REQUIRE(en->GetName() == "English");
+    BOOST_TEST_REQUIRE(en->GetVersion() == util::SemVer(0, 1, 0));
+    BOOST_TEST_REQUIRE(en->GetAuthor() == "Subterranean Rose");
+    BOOST_TEST_REQUIRE(en->GetComment() == "");
     BOOST_TEST_REQUIRE(en->GetTextOr("@not.found", "You'll get me") == "You'll get me");
     BOOST_TEST_REQUIRE(en->GetText("test.sub.hello") == "Greeting from sub-directory!");
     BOOST_TEST_REQUIRE(en->GetErrorString().has_value());
@@ -40,6 +44,8 @@ BOOST_AUTO_TEST_CASE(test1)
     BOOST_TEST_REQUIRE(bool(converted == L"你好世界"));
     BOOST_TEST_REQUIRE(zh_CN->GetText("srose.hello") == "你好世界");
     BOOST_TEST_REQUIRE(zh_CN->GetName() == "简体中文");
+    BOOST_TEST_REQUIRE(zh_CN->GetAuthor() == "Subterranean Rose");
+    BOOST_TEST_REQUIRE(zh_CN->GetComment() == "这是注释");
     try
     {
         // Testing default string
@@ -99,6 +105,14 @@ BOOST_AUTO_TEST_CASE(test_circular_dependency_checking)
     auto a = std::make_shared<locale::Language>("a.srlc");
     auto b = std::make_shared<locale::Language>("b.srlc");
     auto c = std::make_shared<locale::Language>("c.srlc");
+
+    BOOST_TEST(a->GetAuthor() == "Unknown");
+    BOOST_TEST(b->GetAuthor() == "Unknown");
+    BOOST_TEST(c->GetAuthor() == "Unknown");
+
+    BOOST_TEST(a->GetComment() == "Hello world");
+    BOOST_TEST(b->GetComment() == "Hello world");
+    BOOST_TEST(c->GetComment() == "Hello world");
 
     BOOST_TEST(a->GetTextWith("dummy.text", locale::SRLC_THROW_EXCEPTION) == "dummy");
     BOOST_TEST(b->GetTextWith("dummy.text", locale::SRLC_THROW_EXCEPTION) == "dummy");

@@ -27,6 +27,8 @@ namespace srose::locale::v1
             version.major() = detailed::Decode_U32LE(is);
             version.minor() = detailed::Decode_U32LE(is);
             version.patch() = detailed::Decode_U32LE(is);
+            author = detailed::Decode_CxxStr(is);
+            comment = detailed::Decode_CxxStr(is);
         }
         catch(std::ios_base::failure&) {}
     }

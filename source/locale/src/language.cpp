@@ -146,9 +146,11 @@ namespace srose::locale
             if(strncmp(subheader, "@inf", 4) == 0)
             {
                 InfoBlock inf(is);
-                m_id = inf.id;
-                m_name = inf.name;
+                m_id = std::move(inf.id);
+                m_name = std::move(inf.name);
                 m_version = inf.version;
+                m_author = std::move(inf.author);
+                m_comment = std::move(inf.comment);
             }
             if(strncmp(subheader, "@act", 4) == 0)
             {

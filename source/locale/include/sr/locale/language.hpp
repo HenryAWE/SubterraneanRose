@@ -59,6 +59,11 @@ namespace srose::locale
         [[nodiscard]]
         const util::SemVer& GetVersion() const noexcept { return m_version; }
         [[nodiscard]]
+        const std::string& GetAuthor() const noexcept { return m_author; }
+        [[nodiscard]]
+        const std::string& GetComment() const noexcept { return m_comment; }
+
+        [[nodiscard]]
         constexpr const util::string_tree<std::string>& GetTextStringTree() const noexcept { return m_text; }
 
         [[nodiscard]]
@@ -77,6 +82,9 @@ namespace srose::locale
         std::string m_id;
         std::string m_name;
         util::SemVer m_version;
+        std::string m_author;
+        std::string m_comment;
+
         util::string_tree<std::string> m_text;
 
         TextErrorAction m_text_error = SRLC_RETURN_EMPTY_STRING;

@@ -67,7 +67,16 @@ class config_compiler:
             raise ValueError("Invalid version string : " + version_string)
         result = re.match(semver_pattern, version_string)
         self.version = (int(result.group(1)), int(result.group(2)), int(result.group(3)))
-
+        author = doc.getElementsByTagName("author")
+        if len(author) > 0:
+            self.author = author[0].firstChild.data
+        else:
+            self.author = "Unknown"
+        comment = doc.getElementsByTagName("comment")
+        if len(comment) > 0:
+            self.comment = comment[0].firstChild.data
+        else:
+            self.comment = ""
 
     def output(self, stream):
         stream.write(b"@inf")
@@ -75,6 +84,8 @@ class config_compiler:
         stream.write(data_compiler.compile_cxxstr(self.name))
         for i in range(3):
             stream.write(data_compiler.compile_I32(self.version[i]))
+        stream.write(data_compiler.compile_cxxstr(self.author))
+        stream.write(data_compiler.compile_cxxstr(self.comment))
 
 
 
