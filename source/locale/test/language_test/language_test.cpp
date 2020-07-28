@@ -132,6 +132,16 @@ BOOST_AUTO_TEST_CASE(test_circular_dependency_checking)
         c->LinkFallback(lang_set);
         BOOST_FAIL("Unreachable");
     }
-    catch(const std::logic_error&) {}
+    catch(const std::logic_error& e)
+    {
+        BOOST_TEST(reached == true);
+        auto* circular = dynamic_cast<locale::CircularDependency const*>(&e);
+        BOOST_TEST_REQUIRE(circular != nullptr);
+        auto& history = circular->history;
+        BOOST_TEST(history.size() == 3);
+        BOOST_TEST(history[0] == b.get());
+        BOOST_TEST(history[1] == a.get());
+        BOOST_TEST(history[2] == c.get());
+    }
     BOOST_TEST(reached == true);
 }

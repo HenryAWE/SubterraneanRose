@@ -105,10 +105,11 @@ namespace srose::locale
         auto current = lang.get();
         while(current)
         {
+            history.push_back(current);
             if(current->GetTextErrorAction() != SRLC_USE_FALLBACK)
                 break;
             else if(current == this)
-                throw std::logic_error("[locale] Circular dependency");
+                throw CircularDependency("[locale] Circular dependency", std::move(history));
             current = current->m_fallback.get();
         }
 
@@ -170,6 +171,9 @@ namespace srose::locale
     {
         m_text.merge(detailed::Decode_SRStrTree(is));
     }
+
+    CircularDependency::CircularDependency(const std::string& message, std::vector<Language*> history_)
+        : logic_error(message), history(history_) {}
 
     std::shared_ptr<Language> SearchClosest(LanguageSet& langs, const std::string& id)
     {

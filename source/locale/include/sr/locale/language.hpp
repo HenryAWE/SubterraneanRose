@@ -38,6 +38,8 @@ namespace srose::locale
         LanguageComparator
     >;
 
+    class CircularDependency;
+
     class Language : std::enable_shared_from_this<Language>
     {
     public:
@@ -115,6 +117,14 @@ namespace srose::locale
         {
             return value ? value->GetId() : std::string_view();
         }
+    };
+
+    class CircularDependency : public std::logic_error
+    {
+    public:
+        CircularDependency(const std::string& message, std::vector<Language*> history_);
+
+        const std::vector<Language*> history;
     };
 
     std::shared_ptr<Language> SearchClosest(LanguageSet& langs, const std::string& id);
