@@ -14,7 +14,7 @@
 
 namespace srose::filesystem
 {
-    path GetAppData()
+    path GetSysAppData()
     {
         #ifdef _WIN32
         ::LPWSTR appdata = nullptr;

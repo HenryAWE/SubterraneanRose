@@ -11,5 +11,5 @@ namespace srose::filesystem
 {
     using namespace std::filesystem;
 
-    path GetAppData();
+    path GetSysAppData();
 } // namespace srose::filesystem

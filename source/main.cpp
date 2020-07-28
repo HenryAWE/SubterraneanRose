@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     cli.HandleArg();
     if(cli.Exists("appdata"))
     {
-        cli.GetOutputStream() << filesystem::GetWritableFolder().u8string() << std::endl;
+        cli.GetOutputStream() << filesystem::GetAppData().u8string() << std::endl;
         cli.WinRequestPause();
         cli.RequestQuit();
     }

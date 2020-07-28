@@ -5,6 +5,7 @@
  */
 
 #include <sr/filesystem/common.hpp>
+#include <sr/filesystem/platform.hpp>
 
 
 namespace srose::filesystem
@@ -17,12 +18,12 @@ namespace srose::filesystem
     {
         return current_path()/"locale";
     }
-    path GetWritableFolder()
+    path GetAppData()
     {
-        return GetAppData()/"Subterranean Rose";
+        return GetSysAppData()/"Subterranean Rose";
     }
     path GetLogFolder()
     {
-        return GetWritableFolder()/"log";
+        return GetAppData()/"log";
     }
 } // namespace srose::filesystem
