@@ -74,7 +74,10 @@ class config_compiler:
             self.author = "Unknown"
         comment = doc.getElementsByTagName("comment")
         if len(comment) > 0:
-            self.comment = comment[0].firstChild.data
+            if comment[0].firstChild:
+                self.comment = comment[0].firstChild.data
+            else:
+                self.comment = ""
         else:
             self.comment = ""
 
