@@ -16,6 +16,8 @@ namespace srose::filesystem
 
     path GetResourceFolder();
     path GetLocaleFolder();
+    path GetAppData();
+    path GetLogFolder();
 } // namespace srose::filesystem
 
 

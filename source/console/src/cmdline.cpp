@@ -88,7 +88,9 @@ namespace srose::console
                 generic.add_options()
                     ("help", _("srose.cli.generic.help").c_str())
                     ("version", _("srose.cli.generic.version").c_str())
-                    ("build-info", _("srose.cli.generic.build").c_str());
+                    ("build-info", _("srose.cli.generic.build").c_str())
+                    ("explore-appdata,E", "Open the data directory in system explorer")
+                    ("print-appdata", "Print the path of the data directory");
 
                 po::options_description language(_("srose.cli.lang"), line_length);
                 language.add_options()
@@ -192,7 +194,6 @@ namespace srose::console
 
         auto& os = *m_clidata->output;
         auto& vm = m_clidata->vm;
-        detailed::RequestCommandLineOutput(vm);
 
         if(auto& unrecognized = m_clidata->unrecognized; !unrecognized.empty())
         {
@@ -278,6 +279,16 @@ namespace srose::console
         }
     }
 
+    bool CommandLineInterface::Exists(const std::string& name)
+    {
+        return m_clidata->vm.count(name) > 0;
+    }
+
+    void CommandLineInterface::WinRequestOutput(bool force)
+    {
+        detailed::RequestCommandLineOutput(m_clidata->vm, force);
+    }
+
     bool CommandLineInterface::WinPauseRequested() const noexcept
     {
         #ifdef BOOST_WINDOWS
@@ -285,6 +296,11 @@ namespace srose::console
         #else
         return false;
         #endif
+    }
+
+    std::ostream& CommandLineInterface::GetOutputStream()
+    {
+        return *m_clidata->output;
     }
 
     std::string CommandLineInterface::GenerateHelp()

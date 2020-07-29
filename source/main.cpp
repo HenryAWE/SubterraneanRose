@@ -12,6 +12,8 @@
 #include <sr/trace/log.hpp>
 #include <sr/trace/trace.hpp>
 #include <sr/console/cmdline.hpp>
+#include <sr/filesystem/filesystem.hpp>
+#include <sr/util/shell.hpp>
 
 /*Program entry */
 int main(int argc, char* argv[])
@@ -29,14 +31,32 @@ int main(int argc, char* argv[])
     auto& cli = console::CommandLineInterface::GetGlobalInstance();
     cli.ParseArg(argc, argv);
     cli.HandleArg();
+    if(cli.Exists("print-appdata"))
+    {
+        cli.WinRequestOutput(true);
+        cli.GetOutputStream() << filesystem::GetAppData().u8string() << std::endl;
+        cli.WinRequestPause();
+        cli.RequestQuit();
+    }
+    if(cli.Exists("explore-appdata"))
+    {
+        util::OpenInBrowser(filesystem::GetAppData().u8string().c_str());
+        cli.RequestQuit();
+    }
+
     if(cli.QuitRequested())
     {
         #ifdef _WIN32
-        if(cli.WinPauseRequested()) std::system("pause");
+        if(cli.WinPauseRequested())
+        {
+            cli.WinRequestOutput(true);
+            std::system("pause");
+        }
         #endif
         return EXIT_SUCCESS;
     }
 
+    cli.WinRequestOutput();
     if(core::Init(argc, argv, true) != 0)
     { // Init failed
         return EXIT_FAILURE;

@@ -10,6 +10,7 @@
 #include <boost/log/sinks/sync_frontend.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>
 #include <SDL.h>
+#include <sr/filesystem/common.hpp>
 
 
 namespace srose::trace
@@ -31,8 +32,11 @@ namespace srose::trace
             kw::auto_flush = true
         );
 
+        // Sometimes application doesn't have the write permission of the installation directory
+        // Program will crash if it cannot write log data into that directory
+        auto log_file_folder = filesystem::GetLogFolder().string();
         log::add_file_log(
-            kw::file_name = "log/%Y-%m-%d.log",
+            kw::file_name = log_file_folder + "/%Y-%m-%d.log",
             kw::open_mode = std::ios_base::out | std::ios_base::app,
             kw::rotation_size = 1 * 1024 *1024, // 1MB
             kw::max_size = 20 * 1024 * 1024, // 20MB
