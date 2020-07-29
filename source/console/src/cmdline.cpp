@@ -194,7 +194,6 @@ namespace srose::console
 
         auto& os = *m_clidata->output;
         auto& vm = m_clidata->vm;
-        detailed::RequestCommandLineOutput(vm);
 
         if(auto& unrecognized = m_clidata->unrecognized; !unrecognized.empty())
         {
@@ -283,6 +282,11 @@ namespace srose::console
     bool CommandLineInterface::Exists(const std::string& name)
     {
         return m_clidata->vm.count(name) > 0;
+    }
+
+    void CommandLineInterface::WinRequestOutput(bool force)
+    {
+        detailed::RequestCommandLineOutput(m_clidata->vm, force);
     }
 
     bool CommandLineInterface::WinPauseRequested() const noexcept

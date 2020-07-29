@@ -46,6 +46,8 @@ namespace srose::console
 
         bool Exists(const std::string& name);
 
+        void WinRequestOutput(bool force = false);
+
         void RequestQuit(bool req = true) noexcept { m_quit_req = req; }
         bool QuitRequested() const noexcept { return m_quit_req; }
         void WinRequestPause(bool req = true) noexcept { m_win_pause_req = req; }

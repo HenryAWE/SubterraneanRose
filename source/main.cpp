@@ -33,6 +33,7 @@ int main(int argc, char* argv[])
     cli.HandleArg();
     if(cli.Exists("print-appdata"))
     {
+        cli.WinRequestOutput(true);
         cli.GetOutputStream() << filesystem::GetAppData().u8string() << std::endl;
         cli.WinRequestPause();
         cli.RequestQuit();
@@ -46,11 +47,16 @@ int main(int argc, char* argv[])
     if(cli.QuitRequested())
     {
         #ifdef _WIN32
-        if(cli.WinPauseRequested()) std::system("pause");
+        if(cli.WinPauseRequested())
+        {
+            cli.WinRequestOutput(true);
+            std::system("pause");
+        }
         #endif
         return EXIT_SUCCESS;
     }
 
+    cli.WinRequestOutput();
     if(core::Init(argc, argv, true) != 0)
     { // Init failed
         return EXIT_FAILURE;
