@@ -217,6 +217,7 @@ namespace srose::console
         {
             i18n::SelectLanguage(nullptr);
         }
+        os.imbue(std::locale());
 
         if(vm.count("help"))
         {

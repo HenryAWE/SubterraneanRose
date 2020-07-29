@@ -6,6 +6,7 @@
 
 #include <sr/ui/entry.hpp>
 #include <SDL_main.h>
+#include <fmt/core.h>
 #include "initialize.hpp"
 #include <sr/i18n/i18n.hpp>
 #include <sr/core/init.hpp>
@@ -31,6 +32,29 @@ int main(int argc, char* argv[])
     auto& cli = console::CommandLineInterface::GetGlobalInstance();
     cli.ParseArg(argc, argv);
     cli.HandleArg();
+    if(cli.Exists("available-language"))
+    {
+        cli.WinRequestOutput(true);
+
+        auto& os = cli.GetOutputStream();
+        const auto& lang_set = i18n::GetLanguageSet();
+        const auto builtin = i18n::GetBuiltinLanguage();
+        const std::string lcfmt = "{}\t: {}";
+
+        os << SRTR("srose.cli.lang.available.built-in") << std::endl;
+        os << fmt::format(lcfmt, builtin->GetId(), builtin->GetName()) << std::endl;
+
+        os << SRTR("srose.cli.lang.available.installed") << std::endl;
+        for(auto& i : lang_set)
+        {
+            if(i == builtin)
+                continue;
+            os << fmt::format(lcfmt, i->GetId(), i->GetName()) << std::endl;
+        }
+
+        cli.WinRequestPause();
+        cli.RequestQuit();
+    }
     if(cli.Exists("print-appdata"))
     {
         cli.WinRequestOutput(true);
