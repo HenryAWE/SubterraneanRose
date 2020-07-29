@@ -13,6 +13,7 @@
 #include <sr/trace/trace.hpp>
 #include <sr/console/cmdline.hpp>
 #include <sr/filesystem/filesystem.hpp>
+#include <sr/util/shell.hpp>
 
 /*Program entry */
 int main(int argc, char* argv[])
@@ -30,10 +31,15 @@ int main(int argc, char* argv[])
     auto& cli = console::CommandLineInterface::GetGlobalInstance();
     cli.ParseArg(argc, argv);
     cli.HandleArg();
-    if(cli.Exists("appdata"))
+    if(cli.Exists("print-appdata"))
     {
         cli.GetOutputStream() << filesystem::GetAppData().u8string() << std::endl;
         cli.WinRequestPause();
+        cli.RequestQuit();
+    }
+    if(cli.Exists("explore-appdata"))
+    {
+        util::OpenInBrowser(filesystem::GetAppData().u8string().c_str());
         cli.RequestQuit();
     }
 
