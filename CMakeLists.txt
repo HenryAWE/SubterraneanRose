@@ -23,6 +23,8 @@ if(NOT ${SROSE_DISABLE_TEST})
     enable_testing()
 endif()
 
+set(Boost_USE_STATIC_LIBS ON)
+
 # Dependencies
 add_subdirectory(./external)
 
