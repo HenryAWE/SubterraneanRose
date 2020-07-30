@@ -13,6 +13,7 @@
 #include <regex>
 #include <sr/locale/locale.hpp>
 #include <boost/locale.hpp>
+#include <sr/trace/log.hpp>
 
 
 extern std::stringstream GetEmbeddedEnglishLang();
@@ -62,9 +63,17 @@ namespace srose::i18n
         for(auto dt : fs::directory_iterator(lcres))
         {
             if(fs::is_directory(dt.path()) || dt.path().extension()!=".srlc") continue;
-            auto lang = std::make_shared<locale::Language>(dt.path());
+            try
+            {
+                auto lang = std::make_shared<locale::Language>(dt.path());
 
-            g_lang_set.insert(std::move(lang));
+                g_lang_set.insert(std::move(lang));
+            }
+            catch(const std::exception&)
+            {
+                BOOST_LOG_TRIVIAL(warning)
+                    << "[i18n] Load \"" << dt.path().u8string() << "\" failed";
+            }
         }
     }
     void SelectLanguage(const char* preferred)

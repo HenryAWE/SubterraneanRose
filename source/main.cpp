@@ -30,54 +30,63 @@ int main(int argc, char* argv[])
     i18n::SelectLanguage();
 
     auto& cli = console::CommandLineInterface::GetGlobalInstance();
-    cli.ParseArg(argc, argv);
-    cli.HandleArg();
-    if(cli.Exists("available-language"))
+    try
     {
-        cli.WinRequestOutput(true);
-
-        auto& os = cli.GetOutputStream();
-        const auto& lang_set = i18n::GetLanguageSet();
-        const auto builtin = i18n::GetBuiltinLanguage();
-        const std::string lcfmt = "{}\t: {}";
-
-        os << SRTR("srose.cli.lang.available.built-in") << std::endl;
-        os << fmt::format(lcfmt, builtin->GetId(), builtin->GetName()) << std::endl;
-
-        os << SRTR("srose.cli.lang.available.installed") << std::endl;
-        for(auto& i : lang_set)
-        {
-            if(i == builtin)
-                continue;
-            os << fmt::format(lcfmt, i->GetId(), i->GetName()) << std::endl;
-        }
-
-        cli.WinRequestPause();
-        cli.RequestQuit();
-    }
-    if(cli.Exists("print-appdata"))
-    {
-        cli.WinRequestOutput(true);
-        cli.GetOutputStream() << filesystem::GetAppData().u8string() << std::endl;
-        cli.WinRequestPause();
-        cli.RequestQuit();
-    }
-    if(cli.Exists("explore-appdata"))
-    {
-        util::OpenInBrowser(filesystem::GetAppData().u8string().c_str());
-        cli.RequestQuit();
-    }
-
-    if(cli.QuitRequested())
-    {
-        #ifdef _WIN32
-        if(cli.WinPauseRequested())
+        cli.ParseArg(argc, argv);
+        cli.HandleArg();
+        if(cli.Exists("available-language"))
         {
             cli.WinRequestOutput(true);
-            std::system("pause");
+
+            auto& os = cli.GetOutputStream();
+            const auto& lang_set = i18n::GetLanguageSet();
+            const auto builtin = i18n::GetBuiltinLanguage();
+            const std::string lcfmt = "{}\t: {}";
+
+            os << SRTR("srose.cli.lang.available.built-in") << std::endl;
+            os << fmt::format(lcfmt, builtin->GetId(), builtin->GetName()) << std::endl;
+
+            os << SRTR("srose.cli.lang.available.installed") << std::endl;
+            for(auto& i : lang_set)
+            {
+                if(i == builtin)
+                    continue;
+                os << fmt::format(lcfmt, i->GetId(), i->GetName()) << std::endl;
+            }
+
+            cli.WinRequestPause();
+            cli.RequestQuit();
         }
-        #endif
-        return EXIT_SUCCESS;
+        if(cli.Exists("print-appdata"))
+        {
+            cli.WinRequestOutput(true);
+            cli.GetOutputStream() << filesystem::GetAppData().u8string() << std::endl;
+            cli.WinRequestPause();
+            cli.RequestQuit();
+        }
+        if(cli.Exists("explore-appdata"))
+        {
+            util::OpenInBrowser(filesystem::GetAppData().u8string().c_str());
+            cli.RequestQuit();
+        }
+
+        if(cli.QuitRequested())
+        {
+            #ifdef _WIN32
+            if(cli.WinPauseRequested())
+            {
+                cli.WinRequestOutput(true);
+                std::system("pause");
+            }
+            #endif
+            return EXIT_SUCCESS;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error)
+            << fmt::format("Exception ({}) thrown by CLI: {}", typeid(e).name(), e.what());
+        return 3;
     }
 
     cli.WinRequestOutput();

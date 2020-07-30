@@ -13,3 +13,4 @@ target_include_directories("srose-i18n" PUBLIC ./include)
 
 target_link_libraries("srose-i18n" PUBLIC "srose-core")
 target_link_libraries("srose-i18n" PUBLIC "srose-locale")
+target_link_libraries("srose-i18n" PRIVATE "srose-trace")
