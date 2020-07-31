@@ -8,6 +8,10 @@
 #define SROSE_UTIL_HEADERS_semver_hpp_
 
 #include <string>
+#ifdef __GNUC__
+#   undef major
+#   undef minor
+#endif
 
 
 namespace srose::util
