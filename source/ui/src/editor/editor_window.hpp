@@ -41,6 +41,8 @@ namespace srose::ui::editor
 
         EditorWindow();
 
+        ~EditorWindow();
+
         void Update() override;
 
         void NewProject();

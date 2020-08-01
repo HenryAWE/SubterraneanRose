@@ -109,6 +109,8 @@ namespace srose::ui::editor
         m_state = std::make_unique<EditorState>(*this);
     }
 
+    EditorWindow::~EditorWindow() = default;
+
     void EditorWindow::Update()
     {
         auto id = BeginID();
