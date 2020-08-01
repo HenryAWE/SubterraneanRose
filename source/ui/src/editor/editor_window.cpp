@@ -6,13 +6,49 @@
 
 #include "editor_window.hpp"
 #include <cassert>
+#include <boost/statechart/state_machine.hpp>
+#include <boost/statechart/simple_state.hpp>
+#include <boost/statechart/termination.hpp>
 #include <imgui.h>
 #include <imguisr.h>
 #include <sr/ui/uimgr.hpp>
+#include <sr/trace/log.hpp>
 
 
 namespace srose::ui::editor
 {
+    namespace sc = boost::statechart;
+    namespace mpl = boost::mpl;
+
+    class EventQuit;
+    class StateIdle;
+    class EditorState : public sc::state_machine<EditorState, StateIdle>
+    {
+    public:
+        EditorState(EditorWindow& editor_) : editor(editor_) {}
+
+        EditorWindow& editor;
+    };
+
+    class StateIdle : public sc::simple_state<StateIdle, EditorState>
+    {
+    public:
+        typedef mpl::list<sc::termination<EventQuit>> reactions;
+
+        StateIdle()
+        {
+            BOOST_LOG_TRIVIAL(info) << "[UI] Enter StateIdle";
+        }
+
+        ~StateIdle()
+        {
+            BOOST_LOG_TRIVIAL(info) << "[UI] Leave StateIdle";
+        }
+    };
+
+    class EventQuit : public sc::event<EventQuit> {};
+
+
     FileMenu::FileMenu(EditorWindow& editor)
         : m_editor(editor) {}
 
@@ -69,6 +105,8 @@ namespace srose::ui::editor
         m_title = gettext("srose.ui.editor");
         m_chkbox_srlc_editor = gettext("srose.ui.srlc-editor") + "##srlc-editor";
         m_button_return = gettext("srose.ui.common.return") + "##return";
+
+        m_state = std::make_unique<EditorState>(*this);
     }
 
     void EditorWindow::Update()
@@ -83,6 +121,7 @@ namespace srose::ui::editor
         if(first_appeared)
         {
             first_appeared = false;
+            m_state->initiate();
         }
 
         UpdateMenuBar();
@@ -93,6 +132,13 @@ namespace srose::ui::editor
             m_show_srlc_editor = m_srlc_editor->visible();
         }
         m_ifile_dialog->Update();
+
+        if(m_state->terminated())
+        {
+            CloseProject();
+            UIManager::GetInstance().PopRootNode();
+            first_appeared = true;
+        }
     }
 
     void EditorWindow::NewProject()
@@ -134,10 +180,7 @@ namespace srose::ui::editor
 
     void EditorWindow::Button_Return()
     {
-        auto& uimgr = UIManager::GetInstance();
-        CloseProject();
-        uimgr.PopRootNode();
-        first_appeared = true;
+        m_state->process_event(EventQuit{});
     }
 
     void EditorWindow::SetWindowTitle()

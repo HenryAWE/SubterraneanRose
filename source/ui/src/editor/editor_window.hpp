@@ -16,6 +16,7 @@
 
 namespace srose::ui::editor
 {
+    class EditorState;
     class EditorWindow;
 
     class FileMenu
@@ -50,6 +51,8 @@ namespace srose::ui::editor
         constexpr const std::shared_ptr<srose::editor::Project>& GetCurrentProject() const noexcept { return m_project; }
 
     private:
+        std::unique_ptr<EditorState> m_state;
+
         static ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_ID> BeginID() noexcept;
 
         std::string m_title;
