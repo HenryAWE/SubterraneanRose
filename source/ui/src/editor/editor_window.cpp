@@ -106,6 +106,7 @@ namespace srose::ui::editor
         {
             CloseProject();
             UIManager::GetInstance().PopRootNode();
+            m_welcome_window.reset();
             first_appeared = true;
         }
     }
@@ -119,6 +120,22 @@ namespace srose::ui::editor
     {
         m_project.reset();
         SetWindowTitle();
+    }
+
+    EditorState& EditorWindow::GetEditorState()
+    {
+        assert(m_state != nullptr);
+        return *m_state;
+    }
+
+    std::shared_ptr<WelcomeWindow> EditorWindow::GetWelcomeWindow()
+    {
+        if(!m_welcome_window)
+        {
+            m_welcome_window = std::make_shared<WelcomeWindow>();
+        }
+
+        return m_welcome_window;
     }
 
     ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_ID> EditorWindow::BeginID() noexcept

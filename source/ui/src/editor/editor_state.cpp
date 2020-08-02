@@ -10,6 +10,22 @@
 
 namespace srose::ui::editor
 {
+    StateWelcomeWindow::StateWelcomeWindow() = default;
+
+    StateWelcomeWindow::~StateWelcomeWindow() = default;
+
+    sc::result StateWelcomeWindow::react(const EventUpdate&)
+    {
+        auto& editor = outermost_context().editor;
+
+        editor.GetWelcomeWindow()->Update();
+
+        if(editor.GetWelcomeWindow()->visible())
+            return discard_event();
+        else
+            return transit<StateIdle>();
+    }
+
     StateIdle::StateIdle()
     {
         BOOST_LOG_TRIVIAL(info) << "[UI] Enter StateIdle";

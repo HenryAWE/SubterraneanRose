@@ -11,6 +11,7 @@
 #include <imguisr.h>
 #include <sr/ui/node.hpp>
 #include <sr/editor/project.hpp>
+#include "welcome.hpp"
 #include "srlc_editor.hpp"
 
 
@@ -52,8 +53,14 @@ namespace srose::ui::editor
         [[nodiscard]]
         constexpr const std::shared_ptr<srose::editor::Project>& GetCurrentProject() const noexcept { return m_project; }
 
+        EditorState& GetEditorState();
+
+        std::shared_ptr<WelcomeWindow> GetWelcomeWindow();
+
     private:
         std::unique_ptr<EditorState> m_state;
+
+        std::shared_ptr<WelcomeWindow> m_welcome_window;
 
         static ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_ID> BeginID() noexcept;
 
