@@ -56,6 +56,28 @@ namespace srose::console
                 }
                 else if(conmode_win32 == "auto")
                 {
+                    std::string envvar;
+                    size_t envvar_len = 0;
+                    if(getenv_s(&envvar_len, nullptr, 0, "SROSE_WIN_CONSOLE") == 0 && envvar_len)
+                    {
+                        // The "envvar_len" include the '\0' at the end of the string
+                        envvar.resize(envvar_len - 1);
+                        getenv_s(&envvar_len, envvar.data(), envvar.size() + 1, "SROSE_WIN_CONSOLE");
+                    }
+
+                    if(envvar == "new")
+                    {
+                        win_helper.alloc = win_helper.release = AllocConsoleWin32();
+                        return;
+                    }
+                    else if(envvar == "attach")
+                    {
+                        win_helper.release = AttachConsoleWin32();
+                        return;
+                    }
+                    else if(!envvar.empty())
+                        return;
+
                     win_helper.release = AttachConsoleWin32();
                     if(!win_helper.release && force)
                         win_helper.alloc = win_helper.release = AllocConsoleWin32();
@@ -293,7 +315,7 @@ namespace srose::console
     bool CommandLineInterface::WinPauseRequested() const noexcept
     {
         #ifdef BOOST_WINDOWS
-        return m_win_pause_req && detailed::win_helper.release;
+        return m_win_pause_req && detailed::win_helper.alloc;
         #else
         return false;
         #endif
