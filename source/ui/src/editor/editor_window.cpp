@@ -8,6 +8,7 @@
 #include <cassert>
 #include <boost/statechart/state_machine.hpp>
 #include <boost/statechart/simple_state.hpp>
+#include <boost/statechart/custom_reaction.hpp>
 #include <boost/statechart/termination.hpp>
 #include <imgui.h>
 #include <imguisr.h>
@@ -20,6 +21,7 @@ namespace srose::ui::editor
     namespace sc = boost::statechart;
     namespace mpl = boost::mpl;
 
+    class EventUpdate;
     class EventQuit;
     class StateIdle;
     class EditorState : public sc::state_machine<EditorState, StateIdle>
@@ -33,7 +35,10 @@ namespace srose::ui::editor
     class StateIdle : public sc::simple_state<StateIdle, EditorState>
     {
     public:
-        typedef mpl::list<sc::termination<EventQuit>> reactions;
+        typedef mpl::list<
+            sc::custom_reaction<EventUpdate>,
+            sc::termination<EventQuit>
+        > reactions;
 
         StateIdle()
         {
@@ -44,8 +49,14 @@ namespace srose::ui::editor
         {
             BOOST_LOG_TRIVIAL(info) << "[UI] Leave StateIdle";
         }
+
+        sc::result react(const EventUpdate&)
+        {
+            return forward_event();
+        }
     };
 
+    class EventUpdate : public sc::event<EventUpdate> {};
     class EventQuit : public sc::event<EventQuit> {};
 
 
@@ -134,6 +145,7 @@ namespace srose::ui::editor
             m_show_srlc_editor = m_srlc_editor->visible();
         }
         m_ifile_dialog->Update();
+        m_state->process_event(EventUpdate{});
 
         if(m_state->terminated())
         {
