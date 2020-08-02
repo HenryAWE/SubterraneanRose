@@ -34,6 +34,7 @@ add_subdirectory(./audio)
 add_subdirectory(./res)
 add_subdirectory(./srose)
 add_subdirectory(./player)
+add_subdirectory(./imguisr)
 add_subdirectory(./editor)
 add_subdirectory(./ui)
 
