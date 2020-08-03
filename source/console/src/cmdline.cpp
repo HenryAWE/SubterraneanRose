@@ -264,27 +264,30 @@ namespace srose::console
         if(vm.count("build-info"))
         {
             detailed::RequestCommandLineOutput(vm, true);
-            os << fmt::format(
-                "Subterranean Rose {}\n"
-                "{} - {}\n"
-                "Branch: {}\n",
-                core::GetVersionString(),
-                core::GitCommitMsg(), core::GitCommitID(),
-                core::GitBranch()
-            );
+            os
+                << fmt::format(
+                    "Subterranean Rose {}\n"
+                    "{} - {}",
+                    core::GetVersionString(),
+                    core::GitCommitMsg(), core::GitCommitID()
+                )
+                << std::endl;
+
             const char* commit_body = core::GitCommitBody();
             if(commit_body[0] != '\0')
             {
                 os << std::endl << commit_body << std::endl;
             }
-            os << std::endl;
+
+            os << std::endl << "Branch: " << core::GitBranch() << std::endl;
 
             const char* build_suffix = core::GetBuildSuffix();
             if(build_suffix[0] != '\0')
             {
-                os << "Build suffix: " <<  build_suffix << std::endl;
+                os << std::endl << "Build suffix: " <<  build_suffix << std::endl;
             }
-            os << std::endl;
+
+            os << std::endl << std::endl;
 
             /* C++ Information */
             os
