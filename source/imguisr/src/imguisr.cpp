@@ -9,17 +9,6 @@
 #   define IMGUI_DEFINE_MATH_OPERATORS
 #endif
 #include <imgui_internal.h>
-#include <SDL.h>
-#include <boost/locale.hpp>
-#include <boost/tokenizer.hpp>
-#ifdef __WINDOWS__
-#   include <comdef.h>
-#   include <atlcomcli.h>
-#   include <ShObjIdl_core.h>
-#   include <SDL_syswm.h>
-#   undef min
-#   undef max
-#endif
 #include <sr/ui/uimgr.hpp>
 #include "filebrowser/filebrowser_imgui.hpp"
 #include "filebrowser/filebrowser_win32.hpp"
@@ -27,15 +16,16 @@
 
 namespace ImGuiSR
 {
-    std::shared_ptr<IFileBrowser> CreateIFileBrowser(bool native)
+    std::shared_ptr<IFileBrowser> CreateIFileBrowser()
     {
-    #ifdef __WINDOWS__
-        if(native)
-            return std::make_shared<INativeFileBrowser>();
-        else
-            return std::make_shared<IImGuiFileBrowser>();
-    #else
         return std::make_shared<IImGuiFileBrowser>();
-    #endif
+    }
+    std::shared_ptr<IFileBrowser> CreateNativeIFileBrowser()
+    {
+        #ifdef _WIN32
+        return std::make_shared<INativeFileBrowser>();
+        #else
+        return nullptr;
+        #endif
     }
 } // namespace ImGuiSR

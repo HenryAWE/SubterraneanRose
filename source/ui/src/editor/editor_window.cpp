@@ -61,7 +61,7 @@ namespace srose::ui::editor
         : Base("srose.editor"),
         m_srlc_editor(std::make_shared<SrlcEditor>()),
         m_filemenu(*this),
-        m_ifile_dialog(ImGuiSR::CreateIFileBrowser(false))
+        m_ifile_dialog(ImGuiSR::CreateIFileBrowser())
     {
         auto& uimgr = UIManager::GetInstance();
         Connect(uimgr.OnImbue);

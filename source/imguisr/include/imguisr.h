@@ -133,7 +133,8 @@ namespace ImGuiSR
         ~IFileBrowser();
     };
 
-    std::shared_ptr<IFileBrowser> CreateIFileBrowser(bool native = true);
+    std::shared_ptr<IFileBrowser> CreateIFileBrowser();
+    std::shared_ptr<IFileBrowser> CreateNativeIFileBrowser();
 } // namespace ImGuiSR
 
 
