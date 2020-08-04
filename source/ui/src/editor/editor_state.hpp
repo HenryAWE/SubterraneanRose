@@ -20,6 +20,7 @@ namespace srose::ui::editor
     namespace sc = boost::statechart;
 
     class EventUpdate;
+    class EventLoadProject;
     class EventCancel;
     class EventResetEditor;
     class EventQuit;
@@ -41,6 +42,7 @@ namespace srose::ui::editor
         typedef boost::mpl::list<
             sc::transition<EventCancel, StateIdle>,
             sc::custom_reaction<EventUpdate>,
+            sc::custom_reaction<EventLoadProject>,
             sc::termination<EventQuit>
         > reactions;
 
@@ -49,6 +51,7 @@ namespace srose::ui::editor
         ~StateWelcomeWindow();
 
         sc::result react(const EventUpdate&);
+        sc::result react(const EventLoadProject& e);
     };
 
     class StateIdle : public sc::simple_state<StateIdle, EditorState>
@@ -65,6 +68,19 @@ namespace srose::ui::editor
     };
 
     class EventUpdate : public sc::event<EventUpdate> {};
+    class EventLoadProject : public sc::event<EventLoadProject>
+    {
+    public:
+        enum LoadFrom : int
+        {
+            LOAD_OPEN_FILE,
+            LOAD_NEW_INSTANCE
+        };
+
+        const LoadFrom from;
+
+        EventLoadProject(LoadFrom from_) : from(from_) {}
+    };
     class EventCancel : public sc::event<EventCancel> {};
     class EventResetEditor : public sc::event<EventResetEditor> {};
     class EventQuit : public sc::event<EventQuit> {};
