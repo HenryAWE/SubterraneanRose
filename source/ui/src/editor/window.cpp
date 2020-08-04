@@ -1,16 +1,16 @@
 /**
- * @file editor_window.cpp
+ * @file window.cpp
  * @author HenryAWE
  * @brief Editor window
  */
 
-#include "editor_window.hpp"
+#include "window.hpp"
 #include <cassert>
 #include <imgui.h>
 #include <imguisr.h>
 #include <sr/ui/uimgr.hpp>
 #include <sr/trace/log.hpp>
-#include "editor_state.hpp"
+#include "state.hpp"
 
 
 namespace srose::ui::editor

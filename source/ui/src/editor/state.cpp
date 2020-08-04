@@ -1,11 +1,11 @@
 /**
- * @file editor_state.cpp
+ * @file state.cpp
  * @author HenryAWE
  * @brief Editor state machine
  */
 
 #include <imgui.h>
-#include "editor_state.hpp"
+#include "state.hpp"
 #ifndef IMGUI_DEFINE_MATH_OPERATORS
 #   define IMGUI_DEFINE_MATH_OPERATORS
 #endif

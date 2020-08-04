@@ -1,18 +1,18 @@
 /**
- * @file editor_state.cpp
+ * @file state.hpp
  * @author HenryAWE
  * @brief Editor state machine
  */
 
-#ifndef SROSE_UI_MENU_editor_state_hpp_
-#define SROSE_UI_MENU_editor_state_hpp_
+#ifndef SROSE_UI_EDITOR_state_hpp_
+#define SROSE_UI_EDITOR_state_hpp_
 
 #include <boost/statechart/state_machine.hpp>
 #include <boost/statechart/simple_state.hpp>
 #include <boost/statechart/transition.hpp>
 #include <boost/statechart/custom_reaction.hpp>
 #include <boost/statechart/termination.hpp>
-#include "editor_window.hpp"
+#include "window.hpp"
 
 
 namespace srose::ui::editor

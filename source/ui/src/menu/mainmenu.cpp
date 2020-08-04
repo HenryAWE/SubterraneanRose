@@ -14,7 +14,6 @@
 #include <sr/filesystem/filesystem.hpp>
 #include <fstream>
 #include <sstream>
-#include "../editor/editor_window.hpp"
 
 
 namespace srose::ui

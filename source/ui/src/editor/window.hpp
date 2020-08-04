@@ -1,11 +1,11 @@
 /**
- * @file editor_window.hpp
+ * @file window.hpp
  * @author HenryAWE
  * @brief Editor window
  */
 
-#ifndef SROSE_UI_GUI_editor_window_hpp_
-#define SROSE_UI_GUI_editor_window_hpp_
+#ifndef SROSE_UI_EDITOR_window_hpp_
+#define SROSE_UI_EDITOR_window_hpp_
 
 #include <sr/ui/property.hpp>
 #include <imguisr.h>

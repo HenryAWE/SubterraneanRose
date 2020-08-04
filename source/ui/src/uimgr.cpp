@@ -11,7 +11,7 @@
 #include "menu/configmenu.hpp"
 #include "menu/about.hpp"
 #include "menu/conwin.hpp"
-#include "editor/editor_window.hpp"
+#include "editor/window.hpp"
 
 
 namespace srose::ui
