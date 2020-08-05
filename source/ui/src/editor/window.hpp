@@ -46,6 +46,7 @@ namespace srose::ui::editor
 
         void Update() override;
 
+        void OpenProject(std::istream& is);
         void NewProject();
         void CloseProject();
         [[nodiscard]]

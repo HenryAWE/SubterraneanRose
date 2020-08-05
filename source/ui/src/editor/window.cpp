@@ -6,6 +6,7 @@
 
 #include "window.hpp"
 #include <cassert>
+#include <boost/archive/text_iarchive.hpp>
 #include <imgui.h>
 #include <imguisr.h>
 #include <sr/ui/uimgr.hpp>
@@ -112,6 +113,21 @@ namespace srose::ui::editor
         }
     }
 
+    void EditorWindow::OpenProject(std::istream& is)
+    {
+        try
+        {
+            auto tmp = std::make_shared<srose::editor::Project>();
+            boost::archive::text_iarchive iar(is);
+            iar >> *tmp;
+            m_project.swap(tmp);
+            SetWindowTitle();
+        }
+        catch(...)
+        {
+            BOOST_LOG_TRIVIAL(error) << "[UI.Editor] Load failed";
+        }
+    }
     void EditorWindow::NewProject()
     {
         m_project = std::make_shared<srose::editor::Project>();

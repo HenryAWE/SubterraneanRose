@@ -6,6 +6,7 @@
 
 #include <imgui.h>
 #include "state.hpp"
+#include <fstream>
 #ifndef IMGUI_DEFINE_MATH_OPERATORS
 #   define IMGUI_DEFINE_MATH_OPERATORS
 #endif
@@ -65,8 +66,15 @@ namespace srose::ui::editor
         switch(e.from)
         {
         case EventLoadProject::LOAD_OPEN_FILE:
-            // TODO
             ifile.SetTitle("Open Project");
+            ifile.SetCallback(
+                [this, &editor](ImGuiSR::IFileBrowser& ifile)
+                {
+                    auto result = ifile.GetResult();
+                    if(result)
+                        editor.OpenProject(std::ifstream(*result));
+                }
+            );
             ifile.Show();
             return discard_event();
 
