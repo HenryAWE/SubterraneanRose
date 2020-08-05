@@ -16,6 +16,7 @@
 
 namespace srose::ui::editor
 {
+    class EditorImpl;
     class EditorState;
     class EditorWindow;
 
@@ -52,9 +53,11 @@ namespace srose::ui::editor
         [[nodiscard]]
         constexpr const std::shared_ptr<srose::editor::Project>& GetCurrentProject() const noexcept { return m_project; }
 
+        EditorImpl& GetEditorImpl();
         EditorState& GetEditorState();
 
     private:
+        std::unique_ptr<EditorImpl> m_impl;
         std::unique_ptr<EditorState> m_state;
 
         static ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_ID> BeginID() noexcept;

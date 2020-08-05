@@ -10,6 +10,7 @@
 #include <imguisr.h>
 #include <sr/ui/uimgr.hpp>
 #include <sr/trace/log.hpp>
+#include "impl.hpp"
 #include "state.hpp"
 
 
@@ -72,6 +73,7 @@ namespace srose::ui::editor
         m_chkbox_srlc_editor = gettext("srose.ui.srlc-editor") + "##srlc-editor";
         m_button_return = gettext("srose.ui.common.return") + "##return";
 
+        m_impl = std::make_unique<EditorImpl>();
         m_state = std::make_unique<EditorState>(*this);
     }
 
@@ -99,8 +101,8 @@ namespace srose::ui::editor
             m_srlc_editor->Update();
             m_show_srlc_editor = m_srlc_editor->visible();
         }
-        m_ifile_dialog->Update();
         m_state->process_event(EventUpdate{});
+        m_impl->Update();
 
         if(m_state->terminated())
         {
@@ -121,6 +123,10 @@ namespace srose::ui::editor
         SetWindowTitle();
     }
 
+    EditorImpl& EditorWindow::GetEditorImpl()
+    {
+        return *m_impl;
+    }
     EditorState& EditorWindow::GetEditorState()
     {
         assert(m_state != nullptr);

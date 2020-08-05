@@ -12,6 +12,7 @@
 #include <imgui_internal.h>
 #include <imguisr.h>
 #include <sr/trace/log.hpp>
+#include "impl.hpp"
 
 
 namespace srose::ui::editor
@@ -59,11 +60,14 @@ namespace srose::ui::editor
     sc::result StateWelcomeWindow::react(const EventLoadProject& e)
     {
         auto& editor = outermost_context().editor;
+        auto& ifile = editor.GetEditorImpl().GetFileOpenDialog();
 
         switch(e.from)
         {
         case EventLoadProject::LOAD_OPEN_FILE:
             // TODO
+            ifile.SetTitle("Open Project");
+            ifile.Show();
             return discard_event();
 
         case EventLoadProject::LOAD_NEW_INSTANCE:
