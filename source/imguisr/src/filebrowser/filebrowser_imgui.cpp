@@ -83,6 +83,8 @@ namespace ImGuiSR
         ImGui::SetNextWindowPosCenter(ImGuiCond_Appearing);
         if(!ImGui::BeginPopupModal(m_id.c_str(), &m_visible, popup_flags))
         {
+            m_result.reset();
+            InvokeCallback();
             return;
         }
         if(ImGui::Button("Current"))
@@ -143,6 +145,7 @@ namespace ImGuiSR
                     m_result = m_current / get<0>(i);
                     m_visible = false;
                     ImGui::CloseCurrentPopup();
+                    InvokeCallback();
                 }
             }
         }

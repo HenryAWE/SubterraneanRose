@@ -131,6 +131,13 @@ namespace ImGuiSR
         IFileBrowser();
 
         ~IFileBrowser();
+
+        typedef std::function<void(IFileBrowser&)> Callback;
+        void SetCallback(Callback callback);
+        void InvokeCallback();
+
+    private:
+        Callback m_callback;
     };
 
     std::shared_ptr<IFileBrowser> CreateIFileBrowser();

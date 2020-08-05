@@ -72,6 +72,9 @@ namespace ImGuiSR
             {
                 if(hr != HRESULT_FROM_WIN32(ERROR_CANCELLED))
                     _com_raise_error(hr);
+
+                m_result.reset();
+                m_callback_invoked = false;
                 return;
             }
             CComPtr<IShellItem> item;
@@ -83,8 +86,16 @@ namespace ImGuiSR
             using guard_t = std::unique_ptr<wchar_t, std::function<void(wchar_t*)>>;
             guard_t guard(name, [](wchar_t* p){ ::CoTaskMemFree(p); });
             m_result = name;
+            m_callback_invoked = false;
         }
-        void INativeFileBrowser::Update() {}
+        void INativeFileBrowser::Update()
+        {
+            if(!m_callback_invoked)
+            {
+                m_callback_invoked = true;
+                InvokeCallback();
+            }
+        }
 
         bool INativeFileBrowser::visible() const
         {

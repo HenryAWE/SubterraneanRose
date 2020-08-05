@@ -26,6 +26,7 @@ namespace ImGuiSR
     {
         IFileOpenDialog* m_dialog;
         ::HWND m_owner = nullptr;
+        bool m_callback_invoked = true;
 
         void CreateComInstance();
 
