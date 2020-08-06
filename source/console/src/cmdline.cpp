@@ -108,21 +108,21 @@ namespace srose::console
 
                 po::options_description generic(_("srose.cli.generic"), line_length);
                 generic.add_options()
-                    ("help,?", _("srose.cli.generic.help").c_str())
-                    ("version", _("srose.cli.generic.version").c_str())
-                    ("build-info", _("srose.cli.generic.build").c_str())
-                    ("explore-appdata,E", _("srose.cli.generic.explore-appdata").c_str())
-                    ("print-appdata", _("srose.cli.generic.print-appdata").c_str());
+                    ("help,?", po::bool_switch(), _("srose.cli.generic.help").c_str())
+                    ("version", po::bool_switch(), _("srose.cli.generic.version").c_str())
+                    ("build-info", po::bool_switch(), _("srose.cli.generic.build").c_str())
+                    ("explore-appdata,E", po::bool_switch(), _("srose.cli.generic.explore-appdata").c_str())
+                    ("print-appdata",po::bool_switch(),  _("srose.cli.generic.print-appdata").c_str());
 
                 po::options_description language(_("srose.cli.lang"), line_length);
                 language.add_options()
                     ("language,L", po::value<std::string>()->value_name("name")->default_value("auto"), _("srose.cli.lang.language").c_str())
-                    ("lang-available", _("srose.cli.lang.available").c_str());
+                    ("lang-available", po::bool_switch(), _("srose.cli.lang.available").c_str());
 
                 po::options_description display(_("srose.cli.display"), line_length);
                 display.add_options()
-                    ("display-fullscreen,F", _("srose.cli.display.fullscreen").c_str())
-                    ("display-vsync,V", _("srose.cli.display.vsync").c_str());
+                    ("display-fullscreen,F", po::bool_switch(), _("srose.cli.display.fullscreen").c_str())
+                    ("display-vsync,V", po::bool_switch(), _("srose.cli.display.vsync").c_str());
                 
                 po::options_description video(_("srose.cli.video"), line_length);
                 video.add_options()
@@ -241,14 +241,14 @@ namespace srose::console
         }
         os.imbue(std::locale());
 
-        if(vm.count("help"))
+        if(GetBool("help"))
         {
             detailed::RequestCommandLineOutput(vm, true);
             os << "Subterranean Rose CLI\n" << GenerateHelp() << endl;
             WinRequestPause();
             RequestQuit();
         }
-        if(vm.count("version"))
+        if(GetBool("version"))
         {
             detailed::RequestCommandLineOutput(vm, true);
             os
@@ -261,7 +261,7 @@ namespace srose::console
             WinRequestPause();
             RequestQuit();
         }
-        if(vm.count("build-info"))
+        if(GetBool("build-info"))
         {
             detailed::RequestCommandLineOutput(vm, true);
             os
@@ -309,9 +309,21 @@ namespace srose::console
     {
         return m_clidata->vm.count(name) > 0;
     }
+    std::size_t CommandLineInterface::Count(const std::string& name)
+    {
+        return m_clidata->vm.count(name);
+    }
+    bool CommandLineInterface::GetBool(const std::string& name)
+    {
+        return m_clidata->vm[name].as<bool>();
+    }
     int CommandLineInterface::GetInt(const std::string& name)
     {
         return m_clidata->vm[name].as<int>();
+    }
+    std::string CommandLineInterface::GetString(const std::string& name)
+    {
+        return m_clidata->vm[name].as<std::string>();
     }
 
     void CommandLineInterface::WinRequestOutput(bool force)
@@ -343,9 +355,9 @@ namespace srose::console
 
     std::string CommandLineInterface::GetPreferredLanguage()
     {
-        if(m_clidata->vm.count("language"))
+        if(Exists("language"))
         {
-            std::string lang = m_clidata->vm["language"].as<std::string>();
+            std::string lang = GetString("language");
             return lang=="auto" ? std::string() : std::move(lang);
         }
         else
@@ -355,11 +367,11 @@ namespace srose::console
     }
     bool CommandLineInterface::FullscreenRequired()
     {
-        return m_clidata->vm.count("fullscreen");
+        return GetBool("display-fullscreen");
     }
     bool CommandLineInterface::VSyncRequired()
     {
-        return m_clidata->vm.count("vsync");
+        return GetBool("display-vsync");
     }
 } // namespace srose::console
 

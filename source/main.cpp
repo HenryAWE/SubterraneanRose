@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     {
         cli.ParseArg(argc, argv);
         cli.HandleArg();
-        if(cli.Exists("lang-available"))
+        if(cli.GetBool("lang-available"))
         {
             cli.WinRequestOutput(true);
 
@@ -93,14 +93,14 @@ int main(int argc, char* argv[])
             cli.WinRequestPause();
             cli.RequestQuit();
         }
-        if(cli.Exists("print-appdata"))
+        if(cli.GetBool("print-appdata"))
         {
             cli.WinRequestOutput(true);
             cli.GetOutputStream() << filesystem::GetAppData().u8string() << std::endl;
             cli.WinRequestPause();
             cli.RequestQuit();
         }
-        if(cli.Exists("explore-appdata"))
+        if(cli.GetBool("explore-appdata"))
         {
             util::OpenInBrowser(filesystem::GetAppData().u8string().c_str());
             cli.RequestQuit();
