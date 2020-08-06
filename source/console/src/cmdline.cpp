@@ -104,11 +104,11 @@ namespace srose::console
             {
                 constexpr unsigned int line_length = UINT_MAX;
 
-                auto _ = [this](std::string_view path) { return language->GetText(path); };
+                auto _ = [this](std::string_view path) { return language->GetTextWith(path, locale::SRLC_RETURN_REQUEST); };
 
                 po::options_description generic(_("srose.cli.generic"), line_length);
                 generic.add_options()
-                    ("help", _("srose.cli.generic.help").c_str())
+                    ("help,?", _("srose.cli.generic.help").c_str())
                     ("version", _("srose.cli.generic.version").c_str())
                     ("build-info", _("srose.cli.generic.build").c_str())
                     ("explore-appdata,E", "Open the data directory in system explorer")
@@ -116,17 +116,17 @@ namespace srose::console
 
                 po::options_description language(_("srose.cli.lang"), line_length);
                 language.add_options()
-                    ("language", po::value<std::string>()->value_name("name")->default_value("auto"), _("srose.cli.lang.language").c_str())
-                    ("available-language", _("srose.cli.lang.available").c_str());
+                    ("language,L", po::value<std::string>()->value_name("name")->default_value("auto"), _("srose.cli.lang.language").c_str())
+                    ("lang-available", _("srose.cli.lang.available").c_str());
 
                 po::options_description display(_("srose.cli.display"), line_length);
                 display.add_options()
-                    ("fullscreen,F", _("srose.cli.display.fullscreen").c_str())
-                    ("vsync,V", "Enable vertical synchronization");
+                    ("display-fullscreen,F", _("srose.cli.display.fullscreen").c_str())
+                    ("display-vsync,V", "Enable vertical synchronization");
                 
                 po::options_description video(_("srose.cli.video"), line_length);
                 video.add_options()
-                    ("get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), _("srose.cli.get-display-mode").c_str());
+                    ("video-get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), _("srose.cli.video.get-display-mode").c_str());
 
                 #ifdef __WINDOWS__
                 po::options_description win32("Windows", line_length);

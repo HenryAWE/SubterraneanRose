@@ -15,10 +15,10 @@
 @srose.cli.display.fullscreen = "Fullscreen"
 
 @srose.cli.video = "Video"
-@srose.cli.get-display-mode = "Get all available display mode(s) of the specific display"
-@srose.cli.get-display-mode.display-name = "Display-{:02d} Name: {}"
-@srose.cli.get-display-mode.display-mode-count = "Display mode count: {}"
-@srose.cli.get-display-mode.format-desc = "Mode\tBits per Pixel - Format Name\tWidth x Height @Refresh Rate"
-@srose.cli.get-display-mode.format = "{:03d}:\t{}bpp - {}\t\t{} x {} @{}Hz"
+@srose.cli.video.get-display-mode = "Get all available display mode(s) of the specific display"
+@srose.cli.video.get-display-mode.display-name = "Display-{:02d} Name: {}"
+@srose.cli.video.get-display-mode.display-mode-count = "Display mode count: {}"
+@srose.cli.video.get-display-mode.format-desc = "Mode\tBits per Pixel - Format Name\tWidth x Height @Refresh Rate"
+@srose.cli.video.get-display-mode.format = "{:03d}:\t{}bpp - {}\t\t{} x {} @{}Hz"
 
 @srose.cli.total = "Allowed options"

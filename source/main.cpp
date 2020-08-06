@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     {
         cli.ParseArg(argc, argv);
         cli.HandleArg();
-        if(cli.Exists("available-language"))
+        if(cli.Exists("lang-available"))
         {
             cli.WinRequestOutput(true);
 
