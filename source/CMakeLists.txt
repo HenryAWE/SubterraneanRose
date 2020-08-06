@@ -40,7 +40,7 @@ add_subdirectory(./ui)
 
 
 # Executable
-set(sr_exec_src_list main.cpp initialize.cpp)
+aux_source_directory(./ sr_exec_src_list)
 if(MSVC)
     include(SRoseGitInfo)
     sr_git_log(commit_id_abbr_str "%h")

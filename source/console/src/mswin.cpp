@@ -49,7 +49,7 @@ namespace srose::console
             InitializeConsoleWin32();
             RedirectIOWin32();
             ::SetConsoleOutputCP(CP_UTF8);
-            ::WriteConsoleA(::GetStdHandle(STD_OUTPUT_HANDLE), "\n", 1, nullptr, nullptr);
+            ::WriteConsoleW(::GetStdHandle(STD_OUTPUT_HANDLE), L"\n", 1, nullptr, nullptr);
         }
 
         return g_attached;
@@ -59,6 +59,7 @@ namespace srose::console
         g_attached = ::AllocConsole();
         if(g_attached)
         {
+            ::SetConsoleTitleW(L"Subterranean Rose CLI");
             InitializeConsoleWin32();
             RedirectIOWin32();
         }

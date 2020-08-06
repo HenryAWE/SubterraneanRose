@@ -56,6 +56,28 @@ namespace srose::console
                 }
                 else if(conmode_win32 == "auto")
                 {
+                    std::string envvar;
+                    size_t envvar_len = 0;
+                    if(getenv_s(&envvar_len, nullptr, 0, "SROSE_WIN_CONSOLE") == 0 && envvar_len)
+                    {
+                        // The "envvar_len" include the '\0' at the end of the string
+                        envvar.resize(envvar_len - 1);
+                        getenv_s(&envvar_len, envvar.data(), envvar.size() + 1, "SROSE_WIN_CONSOLE");
+                    }
+
+                    if(envvar == "new")
+                    {
+                        win_helper.alloc = win_helper.release = AllocConsoleWin32();
+                        return;
+                    }
+                    else if(envvar == "attach")
+                    {
+                        win_helper.release = AttachConsoleWin32();
+                        return;
+                    }
+                    else if(!envvar.empty())
+                        return;
+
                     win_helper.release = AttachConsoleWin32();
                     if(!win_helper.release && force)
                         win_helper.alloc = win_helper.release = AllocConsoleWin32();
@@ -82,34 +104,34 @@ namespace srose::console
             {
                 constexpr unsigned int line_length = UINT_MAX;
 
-                auto _ = [this](std::string_view path) { return language->GetText(path); };
+                auto _ = [this](std::string_view path) { return language->GetTextWith(path, locale::SRLC_RETURN_REQUEST); };
 
                 po::options_description generic(_("srose.cli.generic"), line_length);
                 generic.add_options()
-                    ("help", _("srose.cli.generic.help").c_str())
-                    ("version", _("srose.cli.generic.version").c_str())
-                    ("build-info", _("srose.cli.generic.build").c_str())
-                    ("explore-appdata,E", "Open the data directory in system explorer")
-                    ("print-appdata", "Print the path of the data directory");
+                    ("help,?", po::bool_switch(), _("srose.cli.generic.help").c_str())
+                    ("version", po::bool_switch(), _("srose.cli.generic.version").c_str())
+                    ("build-info", po::bool_switch(), _("srose.cli.generic.build").c_str())
+                    ("explore-appdata,E", po::bool_switch(), _("srose.cli.generic.explore-appdata").c_str())
+                    ("print-appdata",po::bool_switch(),  _("srose.cli.generic.print-appdata").c_str());
 
                 po::options_description language(_("srose.cli.lang"), line_length);
                 language.add_options()
-                    ("language", po::value<std::string>()->value_name("name")->default_value("auto"), _("srose.cli.lang.language").c_str())
-                    ("available-language", _("srose.cli.lang.available").c_str());
+                    ("language,L", po::value<std::string>()->value_name("name")->default_value("auto"), _("srose.cli.lang.language").c_str())
+                    ("lang-available", po::bool_switch(), _("srose.cli.lang.available").c_str());
 
                 po::options_description display(_("srose.cli.display"), line_length);
                 display.add_options()
-                    ("fullscreen,F", _("srose.cli.display.fullscreen").c_str())
-                    ("vsync,V", "Enable vertical synchronization");
+                    ("display-fullscreen,F", po::bool_switch(), _("srose.cli.display.fullscreen").c_str())
+                    ("display-vsync,V", po::bool_switch(), _("srose.cli.display.vsync").c_str());
                 
                 po::options_description video(_("srose.cli.video"), line_length);
                 video.add_options()
-                    ("get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), _("srose.cli.get-display-mode").c_str());
+                    ("video-get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), _("srose.cli.video.get-display-mode").c_str());
 
                 #ifdef __WINDOWS__
-                po::options_description win32("Windows", line_length);
+                po::options_description win32(_("srose.cli.win").c_str(), line_length);
                 win32.add_options()
-                    ("win-console", po::value<std::string>()->value_name("mode")->default_value("auto"), "Windows console");
+                    ("win-console", po::value<std::string>()->value_name("mode")->default_value("auto"), _("srose.cli.win.console").c_str());
                 #endif
 
                 return po::options_description(_("srose.cli.total"), line_length)
@@ -219,14 +241,14 @@ namespace srose::console
         }
         os.imbue(std::locale());
 
-        if(vm.count("help"))
+        if(GetBool("help"))
         {
             detailed::RequestCommandLineOutput(vm, true);
             os << "Subterranean Rose CLI\n" << GenerateHelp() << endl;
             WinRequestPause();
             RequestQuit();
         }
-        if(vm.count("version"))
+        if(GetBool("version"))
         {
             detailed::RequestCommandLineOutput(vm, true);
             os
@@ -239,30 +261,33 @@ namespace srose::console
             WinRequestPause();
             RequestQuit();
         }
-        if(vm.count("build-info"))
+        if(GetBool("build-info"))
         {
             detailed::RequestCommandLineOutput(vm, true);
-            os << fmt::format(
-                "Subterranean Rose {}\n"
-                "{} - {}\n"
-                "Branch: {}\n",
-                core::GetVersionString(),
-                core::GitCommitMsg(), core::GitCommitID(),
-                core::GitBranch()
-            );
+            os
+                << fmt::format(
+                    "Subterranean Rose {}\n"
+                    "{} - {}",
+                    core::GetVersionString(),
+                    core::GitCommitMsg(), core::GitCommitID()
+                )
+                << std::endl;
+
             const char* commit_body = core::GitCommitBody();
             if(commit_body[0] != '\0')
             {
                 os << std::endl << commit_body << std::endl;
             }
-            os << std::endl;
+
+            os << std::endl << "Branch: " << core::GitBranch() << std::endl;
 
             const char* build_suffix = core::GetBuildSuffix();
             if(build_suffix[0] != '\0')
             {
-                os << "Build suffix: " <<  build_suffix << std::endl;
+                os << std::endl << "Build suffix: " <<  build_suffix << std::endl;
             }
-            os << std::endl;
+
+            os << std::endl << std::endl;
 
             /* C++ Information */
             os
@@ -284,6 +309,22 @@ namespace srose::console
     {
         return m_clidata->vm.count(name) > 0;
     }
+    std::size_t CommandLineInterface::Count(const std::string& name)
+    {
+        return m_clidata->vm.count(name);
+    }
+    bool CommandLineInterface::GetBool(const std::string& name)
+    {
+        return m_clidata->vm[name].as<bool>();
+    }
+    int CommandLineInterface::GetInt(const std::string& name)
+    {
+        return m_clidata->vm[name].as<int>();
+    }
+    std::string CommandLineInterface::GetString(const std::string& name)
+    {
+        return m_clidata->vm[name].as<std::string>();
+    }
 
     void CommandLineInterface::WinRequestOutput(bool force)
     {
@@ -293,7 +334,7 @@ namespace srose::console
     bool CommandLineInterface::WinPauseRequested() const noexcept
     {
         #ifdef BOOST_WINDOWS
-        return m_win_pause_req && detailed::win_helper.release;
+        return m_win_pause_req && detailed::win_helper.alloc;
         #else
         return false;
         #endif
@@ -314,9 +355,9 @@ namespace srose::console
 
     std::string CommandLineInterface::GetPreferredLanguage()
     {
-        if(m_clidata->vm.count("language"))
+        if(Exists("language"))
         {
-            std::string lang = m_clidata->vm["language"].as<std::string>();
+            std::string lang = GetString("language");
             return lang=="auto" ? std::string() : std::move(lang);
         }
         else
@@ -326,11 +367,11 @@ namespace srose::console
     }
     bool CommandLineInterface::FullscreenRequired()
     {
-        return m_clidata->vm.count("fullscreen");
+        return GetBool("display-fullscreen");
     }
     bool CommandLineInterface::VSyncRequired()
     {
-        return m_clidata->vm.count("vsync");
+        return GetBool("display-vsync");
     }
 } // namespace srose::console
 
@@ -338,6 +379,7 @@ namespace srose::console
 
 #include <sr/console/cmdline.hpp>
 #include <iostream>
+#include <stdexcept>
 #ifdef _WIN32
 #   define WIN32_LEAN_AND_MEAN 1
 #   include <Windows.h>
@@ -356,6 +398,12 @@ namespace srose::console
             CLIData(std::ostream* os) noexcept : output(os) {}
             ~CLIData() noexcept = default;
         };
+
+        [[noreturn]]
+        static void Unimplemented()
+        {
+            throw std::runtime_error("[Console] Unimplemented");
+        }
     } // namespace detailed
     
 
@@ -381,21 +429,50 @@ namespace srose::console
     {
         if(m_argc > 1)
         {
-            auto help = GenerateHelp();
+            bool quit = true;
+            const char* title = "The command line interface has been disabled";
+            auto msg = GenerateHelp();
             #ifdef _WIN32
-            ::MessageBoxA(
+            msg += "\n\nContinue?";
+            quit = IDCANCEL == ::MessageBoxA(
                     nullptr,
-                    help.c_str(),
-                    "The command line interface has been disabled",
-                    MB_OK | MB_ICONINFORMATION
+                    msg.c_str(),
+                    title,
+                    MB_OKCANCEL | MB_ICONINFORMATION
             );
             #else
-            *m_clidata->output << help << std::endl;
+            GetOutputStream()
+                << "\033[1m" << title << "\033[0m" << std::endl
+                << msg << std::endl;
             #endif
 
-            RequestQuit();
+            if(quit)
+                RequestQuit();
         }
     }
+
+    bool CommandLineInterface::Exists(const std::string& name)
+    {
+        return false;
+    }
+    std::size_t CommandLineInterface::Count(const std::string& name)
+    {
+        return 0;
+    }
+    bool CommandLineInterface::GetBool(const std::string& name)
+    {
+        return false;
+    }
+    int CommandLineInterface::GetInt(const std::string& name)
+    {
+        detailed::Unimplemented();
+    }
+    std::string CommandLineInterface::GetString(const std::string& name)
+    {
+        detailed::Unimplemented();
+    }
+
+    void CommandLineInterface::WinRequestOutput(bool force) {}
 
     bool CommandLineInterface::WinPauseRequested() const noexcept
     {
@@ -404,6 +481,11 @@ namespace srose::console
         #else
         return false;
         #endif
+    }
+
+    std::ostream& CommandLineInterface::GetOutputStream()
+    {
+        return *m_clidata->output;
     }
 
     std::string CommandLineInterface::GenerateHelp()
@@ -416,7 +498,7 @@ namespace srose::console
 
     std::string CommandLineInterface::GetPreferredLanguage()
     {
-        return std::string();
+        return "auto";
     }
     bool CommandLineInterface::FullscreenRequired()
     {

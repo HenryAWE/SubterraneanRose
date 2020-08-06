@@ -4,6 +4,8 @@
 @srose.cli.generic.help = "This message"
 @srose.cli.generic.version = "Version information"
 @srose.cli.generic.build = "Program build information"
+@srose.cli.generic.explore-appdata = "Open the data directory in system explorer"
+@srose.cli.generic.print-appdata = "Print the path of the data directory"
 
 @srose.cli.lang = "Language"
 @srose.cli.lang.language = "Display language"
@@ -13,12 +15,16 @@
 
 @srose.cli.display = "Display"
 @srose.cli.display.fullscreen = "Fullscreen"
+@srose.cli.display.vsync = "Enable vertical synchronization"
 
 @srose.cli.video = "Video"
-@srose.cli.get-display-mode = "Get all available display mode(s) of the specific display"
-@srose.cli.get-display-mode.display-name = "Display-{:02d} Name: {}"
-@srose.cli.get-display-mode.display-mode-count = "Display mode count: {}"
-@srose.cli.get-display-mode.format-desc = "Mode\tBits per Pixel - Format Name\tWidth x Height @Refresh Rate"
-@srose.cli.get-display-mode.format = "{:03d}:\t{}bpp - {}\t\t{} x {} @{}Hz"
+@srose.cli.video.get-display-mode = "Get all available display mode(s) of the specific display"
+@srose.cli.video.get-display-mode.display-name = "Display-{:02d} Name: {}"
+@srose.cli.video.get-display-mode.display-mode-count = "Display mode count: {}"
+@srose.cli.video.get-display-mode.format-desc = "Mode\tBits per Pixel - Format Name\tWidth x Height @Refresh Rate"
+@srose.cli.video.get-display-mode.format = "{:03d}:\t{}bpp - {}\t\t{} x {} @{}Hz"
+
+@srose.cli.win = "Windows"
+@srose.cli.win.console = "Console behavior of the program\nAllowed options: attach, new, ignore and auto\nSee documentation for detailed information"
 
 @srose.cli.total = "Allowed options"

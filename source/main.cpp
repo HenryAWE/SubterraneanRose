@@ -15,6 +15,13 @@
 #include <sr/console/cmdline.hpp>
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/util/shell.hpp>
+#include "video.hpp"
+#ifdef min
+#   undef min
+#endif
+#ifdef max
+#   undef max
+#endif
 
 /*Program entry */
 int main(int argc, char* argv[])
@@ -34,7 +41,7 @@ int main(int argc, char* argv[])
     {
         cli.ParseArg(argc, argv);
         cli.HandleArg();
-        if(cli.Exists("available-language"))
+        if(cli.GetBool("lang-available"))
         {
             cli.WinRequestOutput(true);
 
@@ -57,14 +64,43 @@ int main(int argc, char* argv[])
             cli.WinRequestPause();
             cli.RequestQuit();
         }
-        if(cli.Exists("print-appdata"))
+        if(cli.Exists("video-get-display-mode"))
+        {
+            int disp_index = 0;
+            try{ disp_index = cli.GetInt("video-get-display-mode"); }catch(...){}
+
+            cli.WinRequestOutput(true);
+            if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
+            {
+                cli.GetOutputStream()
+                    << "Initialize SDL VIDEO subsystem failed: "
+                    << SDL_GetError()
+                    << std::endl;
+            }
+            else
+            {
+                try
+                {
+                    Video_GetDisplayMode(std::max(disp_index, 0), cli.GetOutputStream());
+                }
+                catch(...)
+                {
+                    SDL_QuitSubSystem(SDL_INIT_VIDEO);
+                    throw;
+                }
+                SDL_QuitSubSystem(SDL_INIT_VIDEO);
+            }
+            cli.WinRequestPause();
+            cli.RequestQuit();
+        }
+        if(cli.GetBool("print-appdata"))
         {
             cli.WinRequestOutput(true);
             cli.GetOutputStream() << filesystem::GetAppData().u8string() << std::endl;
             cli.WinRequestPause();
             cli.RequestQuit();
         }
-        if(cli.Exists("explore-appdata"))
+        if(cli.GetBool("explore-appdata"))
         {
             util::OpenInBrowser(filesystem::GetAppData().u8string().c_str());
             cli.RequestQuit();
