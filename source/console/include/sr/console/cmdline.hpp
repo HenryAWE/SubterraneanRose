@@ -45,6 +45,7 @@ namespace srose::console
         void HandleArg();
 
         bool Exists(const std::string& name);
+        int GetInt(const std::string& name);
 
         void WinRequestOutput(bool force = false);
 

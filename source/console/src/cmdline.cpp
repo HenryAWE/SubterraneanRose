@@ -309,6 +309,10 @@ namespace srose::console
     {
         return m_clidata->vm.count(name) > 0;
     }
+    int CommandLineInterface::GetInt(const std::string& name)
+    {
+        return m_clidata->vm[name].as<int>();
+    }
 
     void CommandLineInterface::WinRequestOutput(bool force)
     {

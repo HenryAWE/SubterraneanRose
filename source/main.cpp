@@ -15,6 +15,13 @@
 #include <sr/console/cmdline.hpp>
 #include <sr/filesystem/filesystem.hpp>
 #include <sr/util/shell.hpp>
+#include "video.hpp"
+#ifdef min
+#   undef min
+#endif
+#ifdef max
+#   undef max
+#endif
 
 /*Program entry */
 int main(int argc, char* argv[])
@@ -54,6 +61,35 @@ int main(int argc, char* argv[])
                 os << fmt::format(lcfmt, i->GetId(), i->GetName()) << std::endl;
             }
 
+            cli.WinRequestPause();
+            cli.RequestQuit();
+        }
+        if(cli.Exists("video-get-display-mode"))
+        {
+            int disp_index = 0;
+            try{ disp_index = cli.GetInt("video-get-display-mode"); }catch(...){}
+
+            cli.WinRequestOutput(true);
+            if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
+            {
+                cli.GetOutputStream()
+                    << "Initialize SDL VIDEO subsystem failed: "
+                    << SDL_GetError()
+                    << std::endl;
+            }
+            else
+            {
+                try
+                {
+                    Video_GetDisplayMode(std::max(disp_index, 0), cli.GetOutputStream());
+                }
+                catch(...)
+                {
+                    SDL_QuitSubSystem(SDL_INIT_VIDEO);
+                    throw;
+                }
+                SDL_QuitSubSystem(SDL_INIT_VIDEO);
+            }
             cli.WinRequestPause();
             cli.RequestQuit();
         }
