@@ -4,6 +4,8 @@
 @srose.cli.generic.help = "这条文本"
 @srose.cli.generic.version = "版本信息"
 @srose.cli.generic.build = "程序构建信息"
+@srose.cli.generic.explore-appdata = "在系统资源管理器中打开程序数据目录"
+@srose.cli.generic.print-appdata = "打印程序数据目录的路径"
 
 @srose.cli.lang = "语言"
 @srose.cli.lang.language = "显示语言"
@@ -13,6 +15,7 @@
 
 @srose.cli.display = "显示"
 @srose.cli.display.fullscreen = "全屏"
+@srose.cli.display.vsync = "启用垂直同步"
 
 @srose.cli.video = "视频"
 @srose.cli.video.get-display-mode = "获取指定显示器所有可用的显示模式"
@@ -20,5 +23,8 @@
 @srose.cli.video.get-display-mode.display-mode-count = "显示模式数量: {}"
 @srose.cli.video.get-display-mode.format-desc = "模式\t每像素位数 - 格式名\t宽度 x 高度 @刷新率"
 @srose.cli.video.get-display-mode.format = "{:03d}:\t{}bpp - {}\t\t{} x {} @{}Hz"
+
+@srose.cli.win = "Windows"
+@srose.cli.win.console = "程序的命令行行为\n可选项为：attach（附加）、new（新建）、ignore（忽略）和auto（自动）\n详细说明请参见文档"
 
 @srose.cli.total = "可用选项"

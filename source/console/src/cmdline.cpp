@@ -111,8 +111,8 @@ namespace srose::console
                     ("help,?", _("srose.cli.generic.help").c_str())
                     ("version", _("srose.cli.generic.version").c_str())
                     ("build-info", _("srose.cli.generic.build").c_str())
-                    ("explore-appdata,E", "Open the data directory in system explorer")
-                    ("print-appdata", "Print the path of the data directory");
+                    ("explore-appdata,E", _("srose.cli.generic.explore-appdata").c_str())
+                    ("print-appdata", _("srose.cli.generic.print-appdata").c_str());
 
                 po::options_description language(_("srose.cli.lang"), line_length);
                 language.add_options()
@@ -122,16 +122,16 @@ namespace srose::console
                 po::options_description display(_("srose.cli.display"), line_length);
                 display.add_options()
                     ("display-fullscreen,F", _("srose.cli.display.fullscreen").c_str())
-                    ("display-vsync,V", "Enable vertical synchronization");
+                    ("display-vsync,V", _("srose.cli.display.vsync").c_str());
                 
                 po::options_description video(_("srose.cli.video"), line_length);
                 video.add_options()
                     ("video-get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), _("srose.cli.video.get-display-mode").c_str());
 
                 #ifdef __WINDOWS__
-                po::options_description win32("Windows", line_length);
+                po::options_description win32(_("srose.cli.win").c_str(), line_length);
                 win32.add_options()
-                    ("win-console", po::value<std::string>()->value_name("mode")->default_value("auto"), "Windows console");
+                    ("win-console", po::value<std::string>()->value_name("mode")->default_value("auto"), _("srose.cli.win.console").c_str());
                 #endif
 
                 return po::options_description(_("srose.cli.total"), line_length)
