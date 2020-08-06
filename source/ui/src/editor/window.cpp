@@ -25,22 +25,8 @@ namespace srose::ui::editor
         auto menu = ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_Menu>("File");
         if(!menu)
             return;
-        if(ImGui::MenuItem("Open"))
-        {
-            m_editor.m_ifile_dialog->SetTitle("Open Project");
-            m_editor.m_ifile_dialog->Show();
-        }
-        if(ImGui::MenuItem("New"))
-        {
-            m_editor.NewProject();
-        }
         if(m_editor.HasProject())
         {
-            ImGui::Separator();
-            // TODO: Implement these menu items
-            if(ImGui::MenuItem("Save")) {}
-            if(ImGui::MenuItem("Save As")) {}
-            ImGui::Separator();
             if(ImGui::MenuItem("Close"))
             {
                 m_editor.CloseProject();
@@ -61,17 +47,13 @@ namespace srose::ui::editor
 
     EditorWindow::EditorWindow()
         : Base("srose.editor"),
-        m_srlc_editor(std::make_shared<SrlcEditor>()),
-        m_filemenu(*this),
-        m_ifile_dialog(ImGuiSR::CreateIFileBrowser())
+        m_filemenu(*this)
     {
         auto& uimgr = UIManager::GetInstance();
         Connect(uimgr.OnImbue);
-        m_srlc_editor->Connect(uimgr.OnImbue);
         m_filemenu.LoadI18nData(*getptr());
 
         m_title = gettext("srose.ui.editor");
-        m_chkbox_srlc_editor = gettext("srose.ui.srlc-editor") + "##srlc-editor";
         m_button_return = gettext("srose.ui.common.return") + "##return";
 
         m_impl = std::make_unique<EditorImpl>();
@@ -96,12 +78,7 @@ namespace srose::ui::editor
         }
 
         UpdateMenuBar();
-        if(m_show_srlc_editor)
-        {
-            m_srlc_editor->Open();
-            m_srlc_editor->Update();
-            m_show_srlc_editor = m_srlc_editor->visible();
-        }
+
         m_state->process_event(EventUpdate{});
         m_impl->Update();
 
@@ -159,7 +136,6 @@ namespace srose::ui::editor
         Base::LoadI18nData();
 
         m_title = gettext("srose.ui.editor");
-        m_chkbox_srlc_editor = gettext("srose.ui.srlc-editor") + "##srlc-editor";
 
         m_filemenu.LoadI18nData(*getptr());
     }
@@ -171,7 +147,6 @@ namespace srose::ui::editor
             return;
         ImGui::Text(m_title.c_str());
         ImGui::Separator();
-        ImGui::Checkbox(m_chkbox_srlc_editor.c_str(), &m_show_srlc_editor);
         m_filemenu.Update();
     }
 

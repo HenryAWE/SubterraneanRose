@@ -11,7 +11,6 @@
 #include <imguisr.h>
 #include <sr/ui/node.hpp>
 #include <sr/editor/project.hpp>
-#include "srlc_editor.hpp"
 
 
 namespace srose::ui::editor
@@ -64,18 +63,14 @@ namespace srose::ui::editor
         static ImGuiSR::PushGuard<ImGuiSR::ImGuiSR_ID> BeginID() noexcept;
 
         std::string m_title;
-        std::string m_chkbox_srlc_editor;
         void LoadI18nData() override;
 
         void UpdateMenuBar();
-        bool m_show_srlc_editor = false;
-        std::shared_ptr<SrlcEditor> m_srlc_editor;
 
         std::string m_button_return;
         void Button_Return();
 
         FileMenu m_filemenu;
-        std::shared_ptr<ImGuiSR::IFileBrowser> m_ifile_dialog;
 
         void SetWindowTitle();
     };
