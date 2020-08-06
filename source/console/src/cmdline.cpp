@@ -379,6 +379,7 @@ namespace srose::console
 
 #include <sr/console/cmdline.hpp>
 #include <iostream>
+#include <stdexcept>
 #ifdef _WIN32
 #   define WIN32_LEAN_AND_MEAN 1
 #   include <Windows.h>
@@ -397,6 +398,12 @@ namespace srose::console
             CLIData(std::ostream* os) noexcept : output(os) {}
             ~CLIData() noexcept = default;
         };
+
+        [[noreturn]]
+        static void Unimplemented()
+        {
+            throw std::runtime_error("[Console] Unimplemented");
+        }
     } // namespace detailed
     
 
@@ -422,21 +429,50 @@ namespace srose::console
     {
         if(m_argc > 1)
         {
-            auto help = GenerateHelp();
+            bool quit = true;
+            const char* title = "The command line interface has been disabled";
+            auto msg = GenerateHelp();
             #ifdef _WIN32
-            ::MessageBoxA(
+            msg += "\n\nContinue?";
+            quit = IDCANCEL == ::MessageBoxA(
                     nullptr,
-                    help.c_str(),
-                    "The command line interface has been disabled",
-                    MB_OK | MB_ICONINFORMATION
+                    msg.c_str(),
+                    title,
+                    MB_OKCANCEL | MB_ICONINFORMATION
             );
             #else
-            *m_clidata->output << help << std::endl;
+            GetOutputStream()
+                << "\033[1m" << title << "\033[0m" << std::endl
+                << msg << std::endl;
             #endif
 
-            RequestQuit();
+            if(quit)
+                RequestQuit();
         }
     }
+
+    bool CommandLineInterface::Exists(const std::string& name)
+    {
+        return false;
+    }
+    std::size_t CommandLineInterface::Count(const std::string& name)
+    {
+        return 0;
+    }
+    bool CommandLineInterface::GetBool(const std::string& name)
+    {
+        return false;
+    }
+    int CommandLineInterface::GetInt(const std::string& name)
+    {
+        detailed::Unimplemented();
+    }
+    std::string CommandLineInterface::GetString(const std::string& name)
+    {
+        detailed::Unimplemented();
+    }
+
+    void CommandLineInterface::WinRequestOutput(bool force) {}
 
     bool CommandLineInterface::WinPauseRequested() const noexcept
     {
@@ -445,6 +481,11 @@ namespace srose::console
         #else
         return false;
         #endif
+    }
+
+    std::ostream& CommandLineInterface::GetOutputStream()
+    {
+        return *m_clidata->output;
     }
 
     std::string CommandLineInterface::GenerateHelp()
@@ -457,7 +498,7 @@ namespace srose::console
 
     std::string CommandLineInterface::GetPreferredLanguage()
     {
-        return std::string();
+        return "auto";
     }
     bool CommandLineInterface::FullscreenRequired()
     {
