@@ -72,7 +72,10 @@ namespace srose::ui::editor
                 {
                     auto result = ifile.GetResult();
                     if(result)
-                        editor.OpenProject(std::ifstream(*result));
+                    {
+                        std::ifstream ifs(*result);
+                        editor.OpenProject(ifs);
+                    }
                 }
             );
             ifile.Show();
