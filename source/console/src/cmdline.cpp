@@ -12,6 +12,7 @@
 #include <boost/program_options.hpp>
 #include <fmt/core.h>
 #include <sr/core/version_info.hpp>
+#include <sr/util/system.hpp>
 #include <sr/locale/locale.hpp>
 #include <sr/i18n/i18n.hpp>
 #include "mswin.hpp"
@@ -56,14 +57,7 @@ namespace srose::console
                 }
                 else if(conmode_win32 == "auto")
                 {
-                    std::string envvar;
-                    size_t envvar_len = 0;
-                    if(getenv_s(&envvar_len, nullptr, 0, "SROSE_WIN_CONSOLE") == 0 && envvar_len)
-                    {
-                        // The "envvar_len" include the '\0' at the end of the string
-                        envvar.resize(envvar_len - 1);
-                        getenv_s(&envvar_len, envvar.data(), envvar.size() + 1, "SROSE_WIN_CONSOLE");
-                    }
+                    std::string envvar = util::GetEnv("SROSE_WIN_CONSOLE").value_or("");
 
                     if(envvar == "new")
                     {

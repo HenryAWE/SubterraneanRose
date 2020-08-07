@@ -8,6 +8,7 @@ add_library("srose-console" STATIC ${console_src_list})
 target_include_directories("srose-console" PUBLIC ./include)
 
 target_link_libraries("srose-console" PUBLIC "srose-core")
+target_link_libraries("srose-console" PRIVATE "srose-util")
 target_link_libraries("srose-console" PRIVATE "srose-ui")
 target_link_libraries("srose-console" PRIVATE "srose-i18n")
 if(NOT ${SROSE_DISABLE_CLI})
