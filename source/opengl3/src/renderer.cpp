@@ -10,6 +10,7 @@
 #include <imgui_impl_opengl3.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <sr/ui/uimgr.hpp>
+#include <sr/trace/log.hpp>
 #include "gl_assert.h"
 #include "demo.hpp"
 #include "render_system.hpp"
@@ -45,11 +46,9 @@ namespace srose::graphic::opengl3
         m_default_texture.LoadDefaultTexture();
         InitSpriteRenderer();
 
-        SDL_LogInfo(
-            SDL_LOG_CATEGORY_APPLICATION,
-            "[OpenGL3] Renderer Information:\n%s",
-            Information().c_str()
-        );
+        BOOST_LOG_TRIVIAL(info)
+            << "[OpenGL3] Renderer Information:\n"
+            << Information().c_str();
     }
 
     void Renderer::ClearScreen(const glm::vec4& color) noexcept

@@ -9,7 +9,9 @@
 #include <SDL.h>
 #include <SDL_video.h>
 #include <SDL_mixer.h>
+#include <fmt/core.h>
 #include <sr/core/version_info.hpp>
+#include <sr/trace/log.hpp>
 
 
 namespace srose::core
@@ -19,11 +21,9 @@ namespace srose::core
         #define VERSION_NUMBER_2_ARG(x) ((x).major),((x).minor),((x).patch)
         if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
         {
-            SDL_LogError(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[CORE] SDL_Init() failed: %s",
-                SDL_GetError()
-            );
+            BOOST_LOG_TRIVIAL(error)
+                << "[Core] SDL_Init() failed: "
+                << SDL_GetError();
             if(msgbox_on_err)
             {
                 SDL_ShowSimpleMessageBox(
@@ -40,23 +40,20 @@ namespace srose::core
         SDL_version sdl_version_linked;
         SDL_VERSION(&sdl_version);
         SDL_GetVersion(&sdl_version_linked);;
-        SDL_LogInfo(
-            SDL_LOG_CATEGORY_APPLICATION,
-            "[CORE] SDL_Init() successfully initialized\n"
+        BOOST_LOG_TRIVIAL(info) << fmt::format(
+            "[Core] SDL_Init() succeeded\n"
             "SDL Info:\n"
-            "  Version %d.%d.%d\n"
-            "  Runtime Version: %d.%d.%d",
+            "  Version {}.{}.{}\n"
+            "  Runtime Version: {}.{}.{}",
             VERSION_NUMBER_2_ARG(sdl_version),
             VERSION_NUMBER_2_ARG(sdl_version_linked)
         );
 
         if(Mix_Init(MIX_INIT_MP3) == 0)
         {
-            SDL_LogError(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[CORE] Mix_Init() failed %s",
-                Mix_GetError()
-            );
+            BOOST_LOG_TRIVIAL(error)
+                << "[Core] Mix_Init() failed: "
+                << Mix_GetError();
             if(msgbox_on_err)
             {
                 SDL_ShowSimpleMessageBox(
@@ -74,23 +71,20 @@ namespace srose::core
         const SDL_version* mix_version_linked;
         SDL_MIXER_VERSION(&mix_version);
         mix_version_linked = Mix_Linked_Version();
-        SDL_LogInfo(
-            SDL_LOG_CATEGORY_APPLICATION,
-            "[CORE] Mix_Init() successfully initialized\n"
+        BOOST_LOG_TRIVIAL(info) << fmt::format(
+            "[Core] Mix_Init() succeeded\n"
             "SDL_Mixer Info:\n"
-            "  Version %d.%d.%d\n"
-            "  Runtime Version: %d.%d.%d",
+            "  Version {}.{}.{}\n"
+            "  Runtime Version: {}.{}.{}",
             VERSION_NUMBER_2_ARG(mix_version),
             VERSION_NUMBER_2_ARG(*mix_version_linked)
         );
 
         if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
         {
-            SDL_LogError(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[CORE] Mix_OpenAudio() failed %s",
-                Mix_GetError()
-            );
+            BOOST_LOG_TRIVIAL(error)
+                << "[Core] Mix_OpenAudio() failed %s"
+                << Mix_GetError();
             if(msgbox_on_err)
             {
                 SDL_ShowSimpleMessageBox(
@@ -113,10 +107,8 @@ namespace srose::core
     {
         if(!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
         {
-            SDL_LogError(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[CORE] GLAD failed"
-            );
+            BOOST_LOG_TRIVIAL(error)
+                << "[Core] GLAD failed";
 
             return -1;
         }

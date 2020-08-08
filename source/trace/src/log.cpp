@@ -9,6 +9,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup.hpp>
 #include <boost/log/sinks/sync_frontend.hpp>
+#include <boost/log/attributes/named_scope.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>
 #include <SDL.h>
 #include <sr/filesystem/common.hpp>
@@ -31,7 +32,7 @@ namespace srose::trace
         default:
         case log::trivial::severity_level::trace:
         case log::trivial::severity_level::debug:
-            os << "\033[1m";
+            os << "\033[1;37m";
             break;
         case log::trivial::severity_level::info:
             os << "\033[1;32m";
@@ -98,6 +99,7 @@ namespace srose::trace
         );
 
         log::add_common_attributes();
+        log::core::get()->add_global_attribute("Scope", log::attributes::named_scope());
     }
 
     void AddStream(const std::shared_ptr<std::ostream>& os)
@@ -164,9 +166,12 @@ namespace srose::trace
         SDL_LogSetOutputFunction(
             [](void*, int category, SDL_LogPriority priority, const char* message)
             {
-                #define SR_TRACE_DO_LOG(lvl) BOOST_LOG_TRIVIAL(lvl)\
-                    << "[SDL2_Log : " << to_chars(category) << "]\n"\
-                    << message
+                #define SR_TRACE_DO_LOG(lvl) \
+                do{\
+                    BOOST_LOG_TRIVIAL(lvl)\
+                        << '[' << to_chars(category) << (message[0] == '[' ? "]" : "] ")\
+                        << message;\
+                }while(0)
 
                 switch(priority)
                 {

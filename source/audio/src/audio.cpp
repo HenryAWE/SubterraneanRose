@@ -5,7 +5,7 @@
  */
 
 #include <sr/audio/audio.hpp>
-#include <SDL_log.h>
+#include <sr/trace/log.hpp>
 
 
 namespace srose::audio
@@ -20,12 +20,10 @@ namespace srose::audio
         auto tmp = Mix_LoadMUS(file.u8string().c_str());
         if(!tmp)
         {
-            SDL_LogError(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[Audio] Mix_LoadMUS() load file \"%s\" failed: %s",
-                file.u8string().c_str(),
-                Mix_GetError()
-            );
+            BOOST_LOG_TRIVIAL(error)
+                << "[Audio] Mix_LoadMUS(\""
+                << file.u8string()
+                << "\") failed";
             return false;
         }
         if(m_handle) Mix_FreeMusic(m_handle);
@@ -52,12 +50,10 @@ namespace srose::audio
         auto tmp = Mix_LoadWAV(file.u8string().c_str());
         if(!tmp)
         {
-            SDL_LogError(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[Audio] Mix_LoadWAV() load file \"%s\" failed: %s",
-                file.u8string().c_str(),
-                Mix_GetError()
-            );
+            BOOST_LOG_TRIVIAL(error)
+                << "[Audio] Mix_LoadWAV(\""
+                + file.u8string()
+                + "\") failed: ";
             return false;
         }
         if(m_handle) Mix_FreeChunk(m_handle);

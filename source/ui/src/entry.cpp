@@ -13,6 +13,7 @@
 #ifdef __WINDOWS__
 #   include <SDL_syswm.h>
 #endif
+#include <sr/trace/log.hpp>
 #include "main_loop.hpp"
 
 
@@ -28,53 +29,46 @@ namespace srose
             exit_code = BeginMainLoop(window);
         }
         #ifdef __WINDOWS__
-        catch(std::system_error& ex)
+        catch(const std::system_error& e)
         {
             CPINFOEXA info;
             ::GetCPInfoExA(CP_OEMCP, 0, &info);
 
-            std::string what = boost::locale::conv::to_utf<char>(
-                ex.what(),
+            std::string u8what = boost::locale::conv::to_utf<char>(
+                e.what(),
                 "cp" + std::to_string(info.CodePage)
             );
-            SDL_LogError(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[UI] System error \"%s\": %s",
-                typeid(ex).name(),
-                what.c_str()
-            );
+
+            BOOST_LOG_TRIVIAL(fatal)
+                << "Uncaught exception \"" << typeid(e).name() << "\": "
+                << u8what;
+
             SDL_ShowSimpleMessageBox(
                 SDL_MESSAGEBOX_ERROR,
-                typeid(ex).name(),
-                what.c_str(),
+                typeid(e).name(),
+                u8what.c_str(),
                 nullptr
             );
         }
         #endif
-        catch(std::exception& ex)
+        catch(const std::exception& e)
         {
             exit_code = EXIT_FAILURE;
-            SDL_LogError(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[UI] Caught exception \"%s\": %s",
-                typeid(ex).name(),
-                ex.what()
-            );
+            BOOST_LOG_TRIVIAL(fatal)
+                << "Uncaught exception \"" << typeid(e).name() << "\": "
+                << e.what();
             SDL_ShowSimpleMessageBox(
                 SDL_MESSAGEBOX_ERROR,
-                typeid(ex).name(),
-                ex.what(),
+                typeid(e).name(),
+                e.what(),
                 nullptr
             );
         }
         catch(...)
         {
             exit_code = EXIT_FAILURE;
-            SDL_LogError(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[UI] Caught unknown exception"
-            );
-
+            BOOST_LOG_TRIVIAL(fatal)
+                << "Uncaught unknown exception";
             SDL_ShowSimpleMessageBox(
                 SDL_MESSAGEBOX_ERROR,
                 "UNCAUGHT EXCEPTION",
