@@ -5,6 +5,7 @@
  */
 
 #include <sr/trace/log.hpp>
+#include <iomanip> // std::put_time
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup.hpp>
 #include <boost/log/sinks/sync_frontend.hpp>
@@ -17,6 +18,57 @@ namespace srose::trace
 {
     constexpr char SR_LOG_FMT[] = "[%TimeStamp%][%Severity%]: %Message%";
 
+    static void ColoredFormatter(const boost::log::record_view& rec, boost::log::formatting_ostream& os)
+    {
+        using namespace boost;
+
+        auto severity = rec[log::trivial::severity];
+        assert(severity);
+
+        // Set the color
+        switch(severity.get())
+        {
+        default:
+        case log::trivial::severity_level::trace:
+        case log::trivial::severity_level::debug:
+            os << "\033[1m";
+            break;
+        case log::trivial::severity_level::info:
+            os << "\033[1;32m";
+            break;
+        case log::trivial::severity_level::warning:
+            os << "\033[1;33m";
+            break;
+        case log::trivial::severity_level::error:
+            os << "\033[1;31m";
+            break;
+        case log::trivial::severity_level::fatal:
+            os << "\033[1;35m";
+            break;
+        }
+
+        auto timestamp = log::extract<posix_time::ptime>("TimeStamp", rec);
+        if(timestamp)
+        {
+            std::tm ts = posix_time::to_tm(*timestamp);
+            os << '[' << std::put_time(&ts, "%H:%M:%S") << ']';
+        }
+        else
+        {
+            os << "[]";
+        }
+        os << '[' << severity << ']';
+        os << ": ";
+
+        if(severity)
+        {
+            // Restore the color
+            os << "\033[0m";
+        }
+
+        os << rec[log::expressions::smessage];
+    }
+
     void InitializeLogger()
     {
         using namespace boost;
@@ -26,11 +78,11 @@ namespace srose::trace
 
         log::register_simple_formatter_factory<boost::log::trivial::severity_level, char>("Severity");
         
-        log::add_console_log(
+        auto console = log::add_console_log(
             std::cout,
-            kw::format = fmt,
             kw::auto_flush = true
         );
+        console->set_formatter(&ColoredFormatter);
 
         // Sometimes application doesn't have the write permission of the installation directory
         // Program will crash if it cannot write log data into that directory
