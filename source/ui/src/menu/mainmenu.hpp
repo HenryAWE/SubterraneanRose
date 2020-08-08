@@ -29,11 +29,6 @@ namespace srose::ui
         using callback_type = void(MainMenu::*)();
         std::vector<std::pair<std::string, callback_type>> m_buttons;
 
-        std::string m_crash_report_title;
-        std::string m_crash_report_info;
-        bool m_show_stacktrace = false;
-        std::string m_crash_report_stacktrace;
-
         void LoadI18nData() override;
 
         void Button_Editor();

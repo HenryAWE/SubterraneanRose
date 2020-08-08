@@ -10,6 +10,8 @@
 #include <cstdlib>
 #include <csignal>
 #include <SDL.h>
+#include <sr/trace/log.hpp>
+#include <fmt/core.h>
 
 
 namespace srose::trace
@@ -38,19 +40,8 @@ namespace srose::trace
                 #undef SR_GETSIGNAME
             }
 
-            SDL_LogCritical(
-                SDL_LOG_CATEGORY_APPLICATION,
-                "[trace] %s - %d\n%s",
-                signame, sig,
-                rec.c_str()
-            );
-
-            std::ofstream dump("sr-dump.txt");
-            if(dump.good())
-            {
-                dump << rec << std::endl;
-                dump.close();
-            }
+            BOOST_LOG_TRIVIAL(fatal)
+                << fmt::format("{} - {}\n{}", signame, sig, rec);
 
             SDL_ShowSimpleMessageBox(
                 SDL_MESSAGEBOX_ERROR,
