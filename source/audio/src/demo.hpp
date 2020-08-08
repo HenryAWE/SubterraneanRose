@@ -32,7 +32,7 @@ namespace srose::audio
         void UpdateTabBar();
 
         bool m_show_music_demo = true;
-        std::string m_music_location_cache;
+        std::vector<char> m_music_location_cache;
         Music m_music;
         void MusicTabItem();
 
