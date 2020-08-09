@@ -40,6 +40,18 @@ int main(int argc, char* argv[])
     try
     {
         cli.ParseArg(argc, argv);
+        if(cli.QuitRequested())
+        {
+            #ifdef _WIN32
+            if(cli.WinPauseRequested())
+            {
+                cli.WinRequestOutput(true);
+                std::system("pause");
+            }
+            #endif
+            return EXIT_SUCCESS;
+        }
+
         cli.HandleArg();
         if(cli.GetBool("lang-available"))
         {
