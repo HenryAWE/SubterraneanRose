@@ -5,7 +5,7 @@ add_executable(
     semver_test.cpp
 )
 target_link_libraries(semver_test PRIVATE "srose-test")
-target_link_libraries(semver_test PRIVATE "srose-headers")
+target_link_libraries(semver_test PRIVATE "srose-util")
 
 add_test(
     NAME "TestSemver"
