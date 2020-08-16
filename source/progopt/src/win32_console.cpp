@@ -1,11 +1,11 @@
 /**
- * @file mswin.cpp
+ * @file win32_console.cpp
  * @author HenryAWE
  * @brief Console support for Windows
  */
 
 #include <SDL_platform.h>
-#include "mswin.hpp"
+#include "win32_console.hpp"
 #include <stdio.h>
 #ifdef __WINDOWS__
 #   include <Windows.h>
@@ -14,7 +14,7 @@
 
 #if defined(__WINDOWS__) && !defined(SROSE_DISABLE_CLI)
 
-namespace srose::console
+namespace srose::progopt
 {
     ::BOOL g_attached = FALSE;
 
@@ -75,6 +75,6 @@ namespace srose::console
         ReleaseIOWin32();
         g_attached = FALSE;
     }
-} // namespace srose::console
+} // namespace srose::progopt
 
 #endif

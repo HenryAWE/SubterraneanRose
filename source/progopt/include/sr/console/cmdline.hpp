@@ -4,15 +4,15 @@
  * @brief Command line interface
  */
 
-#ifndef SROSE_UI_CONSOLE_cmdline_hpp_
-#define SROSE_UI_CONSOLE_cmdline_hpp_
+#ifndef SROSE_PROGOPT_cmdline_hpp_
+#define SROSE_PROGOPT_cmdline_hpp_
 
 #include <iosfwd>
 #include <string>
 #include <memory>
 
 
-namespace srose::console
+namespace srose::progopt
 {
     namespace detailed
     {
@@ -67,7 +67,7 @@ namespace srose::console
         bool FullscreenRequired();
         bool VSyncRequired();
     };
-} // namespace srose::console
+} // namespace srose::progopt
 
 
 #endif

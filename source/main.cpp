@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
     i18n::LoadAllLanguage(filesystem::GetLocaleFolder());
     i18n::SelectLanguage();
 
-    auto& cli = console::CommandLineInterface::GetGlobalInstance();
+    auto& cli = progopt::CommandLineInterface::GetGlobalInstance();
     try
     {
         cli.ParseArg(argc, argv);

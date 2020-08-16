@@ -15,11 +15,11 @@
 #include <sr/util/system.hpp>
 #include <sr/locale/locale.hpp>
 #include <sr/i18n/i18n.hpp>
-#include "mswin.hpp"
+#include "win32_console.hpp"
 #include "buildinfo.hpp"
 
 
-namespace srose::console
+namespace srose::progopt
 {
     namespace po = boost::program_options;
 
@@ -367,7 +367,7 @@ namespace srose::console
     {
         return GetBool("display-vsync");
     }
-} // namespace srose::console
+} // namespace srose::progopt
 
 #else
 
@@ -380,7 +380,7 @@ namespace srose::console
 #endif
 
 
-namespace srose::console
+namespace srose::progopt
 {
     namespace detailed
     {
@@ -502,6 +502,6 @@ namespace srose::console
     {
         return false;
     }
-} // namespace srose::console
+} // namespace srose::progopt
 
 #endif
