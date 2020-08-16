@@ -7,7 +7,7 @@
 #ifndef SROSE_PROGOPT_cmdline_hpp_
 #define SROSE_PROGOPT_cmdline_hpp_
 
-#include <iosfwd>
+#include <iostream>
 #include <string>
 #include <memory>
 #include <optional>

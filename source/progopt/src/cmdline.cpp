@@ -84,6 +84,13 @@ namespace srose::progopt
                 }
         }
         #else
+        WinConsoleMode ParseWinConsoleMode(
+            std::string_view sv,
+            WinConsoleMode fallback
+        ) noexcept {
+            (void)sv;
+            return fallback;
+        }
         static void RequestConsole(WinConsoleMode wincli_mode, bool fallback) {}
         #endif
 
@@ -164,6 +171,7 @@ namespace srose::progopt
                 {
                     detailed::RequestConsole(cli.m_wincli_mode, true);
                     cli.OutputError(e.what());
+                    os << std::endl;
                     return false;
                 }
 
