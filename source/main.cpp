@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
         cli.HandleArg();
         if(cli.GetBool("lang-available").value_or(false))
         {
-            cli.WinRequestOutput(true);
+            cli.WinRequestConsole(true);
 
             auto& os = cli.GetOutputStream();
             const auto& lang_set = i18n::GetLanguageSet();
@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
             if(!disp_index)
                 goto quit_cli;
 
-            cli.WinRequestOutput(true);
+            cli.WinRequestConsole(true);
             if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
             {
                 cli.GetOutputStream()
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
         }
         if(cli.GetBool("print-appdata").value_or(false))
         {
-            cli.WinRequestOutput(true);
+            cli.WinRequestConsole(true);
             cli.GetOutputStream() << filesystem::GetAppData().u8string() << std::endl;
             cli.WinRequestPause();
             cli.RequestQuit();
@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
             #ifdef _WIN32
             if(cli.WinPauseRequested())
             {
-                cli.WinRequestOutput(true);
+                cli.WinRequestConsole(true);
                 std::system("pause");
             }
             #endif
@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
         return 3;
     }
 
-    cli.WinRequestOutput();
+    cli.WinRequestConsole();
     if(core::Init(argc, argv, true) != 0)
     { // Init failed
         return EXIT_FAILURE;

@@ -20,12 +20,21 @@ namespace srose::progopt
         class CLIData;
     } // namespace detailed
 
+    enum WinConsoleMode : int
+    {
+        SR_WINCLI_IGNORE = 0,
+        SR_WINCLI_ATTACH,
+        SR_WINCLI_ALLOC,
+        SR_WINCLI_AUTO
+    };
+
     /**
      * @brief Command-line interface (CLI)
      */
     class CommandLineInterface
     {
         std::unique_ptr<detailed::CLIData> m_clidata;
+        WinConsoleMode m_wincli_mode;
         bool m_quit_req = false;
         bool m_win_pause_req = false;
         int m_argc = 0;
@@ -61,7 +70,8 @@ namespace srose::progopt
         std::optional<int> GetInt(const std::string& name);
         std::optional<std::string> GetString(const std::string& name);
 
-        void WinRequestOutput(bool force = false);
+        static void WinRequestConsole(WinConsoleMode mode, bool fallback = false);
+        void WinRequestConsole(bool fallback = false);
 
         void RequestQuit(bool req = true) noexcept { m_quit_req = req; }
         bool QuitRequested() const noexcept { return m_quit_req; }
