@@ -29,9 +29,9 @@ namespace srose::locale
             is.read(ret.data(), len);
             return std::move(ret);
         }
-        util::string_tree<std::string> Decode_SRStrTree(std::istream& is)
+        srtl::string_tree<std::string> Decode_SRStrTree(std::istream& is)
         {
-            util::string_tree<std::string> ret;
+            srtl::string_tree<std::string> ret;
 
             std::string subid = Decode_CxxStr(is);
             std::string data = Decode_CxxStr(is);
@@ -48,7 +48,7 @@ namespace srose::locale
         }
     } // namespace detailed
 
-    util::string_tree<std::string> ParseTranslation(std::istream& is)
+    srtl::string_tree<std::string> ParseTranslation(std::istream& is)
     {
         return detailed::Decode_SRStrTree(is);
     }

@@ -2,11 +2,11 @@
 
 #define BOOST_TEST_MODULE string_tree_test
 #include <boost/test/included/unit_test.hpp>
-#include <sr/util/string_tree.hpp>
+#include <srtl/string_tree.hpp>
 #include <iostream>
 
 using namespace std;
-using namespace srose::util;
+using namespace srtl;
 
 BOOST_AUTO_TEST_CASE(test_string_path)
 {
@@ -125,8 +125,6 @@ BOOST_AUTO_TEST_CASE(test_string_tree)
 
 BOOST_AUTO_TEST_CASE(test_assignment)
 {
-    using namespace srose::util;
-
     string_tree<int> origin;
     origin.emplace(2);
     origin["sub"] = 3;

@@ -79,7 +79,7 @@ namespace srose::ui
         return iter->second.data;
     }
 
-    void I18nNode::StringData::Load(const util::string_tree<std::string>& tree)
+    void I18nNode::StringData::Load(const srtl::string_tree<std::string>& tree)
     {
         if(path.has_value())
             data = prefix + tree.get_value(*path) + suffix;

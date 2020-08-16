@@ -4,14 +4,14 @@
  * @brief Forward declaration of the StringTree
  */
 
-#ifndef SROSE_UTIL_HEADERS_string_tree_fwd_hpp_
-#define SROSE_UTIL_HEADERS_string_tree_fwd_hpp_
+#ifndef SRTL_string_tree_fwd_hpp_
+#define SRTL_string_tree_fwd_hpp_
 
 #include <string>
 #include <string_view>
 
 
-namespace srose::util
+namespace srtl
 {
     template <typename T,
          typename CharT,
@@ -21,7 +21,7 @@ namespace srose::util
 
     template <typename T, char Separator = '.'>
     using string_tree = basic_string_tree<T, char, Separator>;
-} // namespace srose::util
+} // namespace srtl
 
 
 #endif

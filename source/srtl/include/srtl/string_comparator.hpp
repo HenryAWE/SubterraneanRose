@@ -4,14 +4,14 @@
  * @brief String comparator
  */
 
-#ifndef SROSE_UTIL_HEADERS_string_comparator_hpp_
-#define SROSE_UTIL_HEADERS_string_comparator_hpp_
+#ifndef SRTL_string_comparator_hpp_
+#define SRTL_string_comparator_hpp_
 
 #include <string>
 #include <string_view>
 
 
-namespace srose::util
+namespace srtl
 {
     template< 
         typename CharT,
@@ -32,7 +32,7 @@ namespace srose::util
             return lhs < rhs;
         }
     };
-} // namespace srose::util
+} // namespace srtl
 
 
 #endif

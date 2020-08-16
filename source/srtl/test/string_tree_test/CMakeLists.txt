@@ -4,7 +4,7 @@ add_executable(
     string_tree_test.cpp
 )
 target_link_libraries(string_tree_test PRIVATE "srose-test")
-target_link_libraries(string_tree_test PRIVATE "srose-headers")
+target_link_libraries(string_tree_test PRIVATE "srose-srtl")
 
 add_test(
     NAME "TestStringTree"

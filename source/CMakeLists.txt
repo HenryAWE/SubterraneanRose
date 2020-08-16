@@ -19,7 +19,7 @@ set(SROSE_RENDER_BACKEND "OpenGL3" CACHE STRING "Choose a render backend from: O
 
 
 # Libraries
-add_subdirectory(./headers)
+add_subdirectory(./srtl)
 add_subdirectory(./trace)
 add_subdirectory(./core)
 add_subdirectory(./util)

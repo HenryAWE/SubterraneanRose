@@ -4,8 +4,8 @@
  * @brief StringTree 
  */
 
-#ifndef SROSE_UTIL_HEADERS_string_tree_hpp_
-#define SROSE_UTIL_HEADERS_string_tree_hpp_
+#ifndef SRTL_string_tree_hpp_
+#define SRTL_string_tree_hpp_
 
 #include <stdexcept>
 #include <map>
@@ -17,7 +17,7 @@
 #include "string_comparator.hpp"
 
 
-namespace srose::util
+namespace srtl
 {
     /* Helper class */
     class string_tree_base
@@ -400,7 +400,7 @@ namespace srose::util
             return current;
         }
     };
-} // namespace srose::util
+} // namespace srtl
 
 
 #endif

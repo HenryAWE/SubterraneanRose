@@ -13,7 +13,7 @@
 #include <set>
 #include <sr/core/macros.hpp>
 #include <sr/filesystem/filesystem.hpp>
-#include <sr/util/string_tree.hpp>
+#include <srtl/string_tree.hpp>
 #include <sr/util/semver.hpp>
 
 
@@ -66,7 +66,7 @@ namespace srose::locale
         const std::string& GetComment() const noexcept { return m_comment; }
 
         [[nodiscard]]
-        constexpr const util::string_tree<std::string>& GetTextStringTree() const noexcept { return m_text; }
+        constexpr const srtl::string_tree<std::string>& GetTextStringTree() const noexcept { return m_text; }
 
         [[nodiscard]]
         TextErrorAction GetTextErrorAction() const noexcept { return m_text_error; }
@@ -87,7 +87,7 @@ namespace srose::locale
         std::string m_author;
         std::string m_comment;
 
-        util::string_tree<std::string> m_text;
+        srtl::string_tree<std::string> m_text;
 
         TextErrorAction m_text_error = SRLC_RETURN_EMPTY_STRING;
         std::optional<std::string> m_error_string;

@@ -8,7 +8,7 @@
 #define SROSE_LOCALE_V1_testblock_hpp_
 
 #include <iosfwd>
-#include <sr/util/string_tree.hpp>
+#include <srtl/string_tree.hpp>
 
 
 namespace srose::locale::v1
@@ -20,7 +20,7 @@ namespace srose::locale::v1
 
         ~TextBlock();
 
-        util::string_tree<std::string> texts;
+        srtl::string_tree<std::string> texts;
 
     private:
         void Decode(std::istream& is);

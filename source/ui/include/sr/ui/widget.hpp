@@ -13,7 +13,7 @@
 #include <optional>
 #include <map>
 #include <boost/noncopyable.hpp>
-#include <sr/util/string_comparator.hpp>
+#include <srtl/string_comparator.hpp>
 #include <sr/i18n/i18n.hpp>
 
 

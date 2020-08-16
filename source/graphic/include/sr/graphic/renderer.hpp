@@ -11,7 +11,7 @@
 #include <stack>
 #include <sr/wm/window.hpp>
 #include <sr/filesystem/filesystem.hpp>
-#include <sr/util/string_tree.hpp>
+#include <srtl/string_tree.hpp>
 #include "image.hpp"
 #include "sprite.hpp"
 #include <sr/player/stage.hpp>
@@ -46,7 +46,7 @@ namespace srose::graphic
         virtual void Render() {};
         virtual void Present() {}
 
-        util::string_tree<std::shared_ptr<Texture>, '/'> textures;
+        srtl::string_tree<std::shared_ptr<Texture>, '/'> textures;
 
         std::unique_ptr<Texture> CreateTexture() { return std::unique_ptr<Texture>(NewTexture()); }
         std::unique_ptr<Texture> CreateScreenTexture(glm::ivec2 size) { return std::unique_ptr<Texture>(NewScreenTexture(size)); }

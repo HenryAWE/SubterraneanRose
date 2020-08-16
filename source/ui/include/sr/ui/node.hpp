@@ -13,7 +13,7 @@
 #include <variant>
 #include <boost/signals2.hpp>
 #include <boost/noncopyable.hpp>
-#include <sr/util/string_comparator.hpp>
+#include <srtl/string_comparator.hpp>
 #include <sr/locale/language.hpp>
 
 
@@ -81,7 +81,7 @@ namespace srose::ui
             StringData(const StringData&) = default;
             StringData(StringData&&) = default;
             StringData(
-                const util::string_tree<std::string>& tree,
+                const srtl::string_tree<std::string>& tree,
                 std::optional<std::string> path_,
                 std::string prefix_,
                 std::string suffix_
@@ -93,9 +93,9 @@ namespace srose::ui
                     data = prefix + suffix;
             }
 
-            void Load(const util::string_tree<std::string>& tree);
+            void Load(const srtl::string_tree<std::string>& tree);
         };
-        std::map<std::string, StringData, util::string_comparator<char>> m_string_data;
+        std::map<std::string, StringData, srtl::string_comparator<char>> m_string_data;
     };
 
     class RootNode : public I18nNode

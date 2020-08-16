@@ -16,7 +16,7 @@
 #include <sr/core/macros.hpp>
 #include <sr/wm/window.hpp>
 #include <sr/filesystem/common.hpp>
-#include <sr/util/string_tree.hpp>
+#include <srtl/string_tree.hpp>
 #include "widget.hpp"
 #include "node.hpp"
 
@@ -28,7 +28,7 @@ namespace srose::ui
         wm::Window* m_window = nullptr;
 
         std::vector<std::shared_ptr<StandaloneNode>> m_standalone;
-        util::string_tree<std::shared_ptr<RootNode>> m_ui_node_tree;
+        srtl::string_tree<std::shared_ptr<RootNode>> m_ui_node_tree;
         std::vector<std::shared_ptr<RootNode>> m_ui_node_stack;
     public:
         UIManager();
@@ -53,7 +53,7 @@ namespace srose::ui
         [[nodiscard]]
         constexpr std::vector<std::shared_ptr<StandaloneNode>>& GetStandaloneNodes() { return m_standalone; }
         [[nodiscard]]
-        constexpr util::string_tree<std::shared_ptr<RootNode>>& GetUINodeTree() { return m_ui_node_tree; }
+        constexpr srtl::string_tree<std::shared_ptr<RootNode>>& GetUINodeTree() { return m_ui_node_tree; }
 
         void PushRootNode(std::shared_ptr<RootNode> node);
         void PopRootNode();
