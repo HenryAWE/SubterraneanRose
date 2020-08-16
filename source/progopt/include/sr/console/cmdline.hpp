@@ -33,6 +33,7 @@ namespace srose::progopt
      */
     class CommandLineInterface
     {
+        friend class detailed::CLIData;
         std::unique_ptr<detailed::CLIData> m_clidata;
         WinConsoleMode m_wincli_mode;
         bool m_quit_req = false;
@@ -88,6 +89,26 @@ namespace srose::progopt
          * @brief Generate help text
          */
         std::string GenerateHelp();
+
+        // Output helpers
+        template <typename T>
+        void ColorizedOutput(const char* escseq, T&& value)
+        {
+            auto& os = GetOutputStream();
+            os << escseq;
+            os << value;
+            os << "\033[0m";
+        }
+        template <typename T>
+        void OutputWarning(T&& value)
+        {
+            ColorizedOutput("\033[33m", std::forward<T>(value));
+        }
+        template <typename T>
+        void OutputError(T&& value)
+        {
+            ColorizedOutput("\033[1;31m", std::forward<T>(value));
+        }
 
         // Functions for retrieving parsed data
         std::string GetPreferredLanguage();

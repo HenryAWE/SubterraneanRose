@@ -143,7 +143,7 @@ namespace srose::progopt
                     .add(video);
             }
 
-            bool ParseArg(int argc, char* argv[], WinConsoleMode wincli_mode)
+            bool ParseArg(int argc, char* argv[], CommandLineInterface& cli)
             {
                 if(!desc)
                     desc.emplace(BuildDesc());
@@ -162,8 +162,8 @@ namespace srose::progopt
                 }
                 catch(const po::error& e)
                 {
-                    detailed::RequestConsole(wincli_mode, true);
-                    os << e.what() << std::endl;
+                    detailed::RequestConsole(cli.m_wincli_mode, true);
+                    cli.OutputError(e.what());
                     return false;
                 }
 
@@ -219,7 +219,7 @@ namespace srose::progopt
     {
         m_argc = argc;
         m_argv = argv;
-        bool no_error = m_clidata->ParseArg(argc, argv, m_wincli_mode);
+        bool no_error = m_clidata->ParseArg(argc, argv, *this);
         if(!no_error)
         {
             RequestQuit();
@@ -243,10 +243,13 @@ namespace srose::progopt
         if(auto& unrecognized = m_clidata->unrecognized; !unrecognized.empty())
         {
             detailed::RequestConsole(m_wincli_mode, true);
-            os << "Unrecognized option(s): ";
+            std::stringstream ss;
+            ss << "Unrecognized option(s): ";
             for(const auto& i : unrecognized)
-                os << fmt::format("\"{}\" ", i);
-            os << std::endl;
+                ss << fmt::format("\"{}\" ", i);
+            ss << std::endl;
+            OutputError(ss.rdbuf());
+
             RequestQuit();
             WinRequestPause();
             return;
