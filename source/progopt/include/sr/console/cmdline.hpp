@@ -10,6 +10,7 @@
 #include <iosfwd>
 #include <string>
 #include <memory>
+#include <optional>
 
 
 namespace srose::progopt
@@ -41,14 +42,14 @@ namespace srose::progopt
          */
         static CommandLineInterface& GetGlobalInstance();
 
-        void ParseArg(int argc, char* argv[]);
+        bool ParseArg(int argc, char* argv[]);
         void HandleArg();
 
         bool Exists(const std::string& name);
         std::size_t Count(const std::string& name);
-        bool GetBool(const std::string& name);
-        int GetInt(const std::string& name);
-        std::string GetString(const std::string& name);
+        std::optional<bool> GetBool(const std::string& name);
+        std::optional<int> GetInt(const std::string& name);
+        std::optional<std::string> GetString(const std::string& name);
 
         void WinRequestOutput(bool force = false);
 

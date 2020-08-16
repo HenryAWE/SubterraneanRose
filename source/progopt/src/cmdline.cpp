@@ -173,6 +173,18 @@ namespace srose::progopt
                 desc.emplace(BuildDesc());
             }
         };
+
+        template <typename T>
+        std::optional<T> GetValueImpl(po::variables_map& vm, const std::string& name)
+        {
+            try
+            {
+                return vm.at(name).as<T>();
+            }
+            catch(...) {}
+
+            return std::nullopt;
+        }
     } // namespace detailed
 
     CommandLineInterface::CommandLineInterface()
@@ -193,7 +205,7 @@ namespace srose::progopt
         return instance;
     }
 
-    void CommandLineInterface::ParseArg(int argc, char* argv[])
+    bool CommandLineInterface::ParseArg(int argc, char* argv[])
     {
         m_argc = argc;
         m_argv = argv;
@@ -203,6 +215,8 @@ namespace srose::progopt
             RequestQuit();
             WinRequestPause();
         }
+
+        return no_error;
     }
     void CommandLineInterface::HandleArg()
     {
@@ -235,14 +249,14 @@ namespace srose::progopt
         }
         os.imbue(std::locale());
 
-        if(GetBool("help"))
+        if(GetBool("help").value_or(false))
         {
             detailed::RequestCommandLineOutput(vm, true);
             os << "Subterranean Rose CLI\n" << GenerateHelp() << endl;
             WinRequestPause();
             RequestQuit();
         }
-        if(GetBool("version"))
+        if(GetBool("version").value_or(false))
         {
             detailed::RequestCommandLineOutput(vm, true);
             os
@@ -255,7 +269,7 @@ namespace srose::progopt
             WinRequestPause();
             RequestQuit();
         }
-        if(GetBool("build-info"))
+        if(GetBool("build-info").value_or(false))
         {
             detailed::RequestCommandLineOutput(vm, true);
             os
@@ -307,17 +321,17 @@ namespace srose::progopt
     {
         return m_clidata->vm.count(name);
     }
-    bool CommandLineInterface::GetBool(const std::string& name)
+    std::optional<bool> CommandLineInterface::GetBool(const std::string& name)
     {
-        return m_clidata->vm[name].as<bool>();
+        return detailed::GetValueImpl<bool>(m_clidata->vm, name);
     }
-    int CommandLineInterface::GetInt(const std::string& name)
+    std::optional<int> CommandLineInterface::GetInt(const std::string& name)
     {
-        return m_clidata->vm[name].as<int>();
+        return detailed::GetValueImpl<int>(m_clidata->vm, name);
     }
-    std::string CommandLineInterface::GetString(const std::string& name)
+    std::optional<std::string> CommandLineInterface::GetString(const std::string& name)
     {
-        return m_clidata->vm[name].as<std::string>();
+        return detailed::GetValueImpl<std::string>(m_clidata->vm, name);
     }
 
     void CommandLineInterface::WinRequestOutput(bool force)
@@ -349,23 +363,17 @@ namespace srose::progopt
 
     std::string CommandLineInterface::GetPreferredLanguage()
     {
-        if(Exists("language"))
-        {
-            std::string lang = GetString("language");
-            return lang=="auto" ? std::string() : std::move(lang);
-        }
-        else
-        {
-            return std::string();
-        }
+
+        std::string lang = GetString("language").value_or("auto");
+        return lang == "auto" ? std::string() : std::move(lang);
     }
     bool CommandLineInterface::FullscreenRequired()
     {
-        return GetBool("display-fullscreen");
+        return GetBool("display-fullscreen").value_or(false);
     }
     bool CommandLineInterface::VSyncRequired()
     {
-        return GetBool("display-vsync");
+        return GetBool("display-vsync").value_or(false);
     }
 } // namespace srose::progopt
 
@@ -453,17 +461,17 @@ namespace srose::progopt
     {
         return 0;
     }
-    bool CommandLineInterface::GetBool(const std::string& name)
+    std::optional<bool> CommandLineInterface::GetBool(const std::string& name)
     {
         return false;
     }
-    int CommandLineInterface::GetInt(const std::string& name)
+    std::optional<int> CommandLineInterface::GetInt(const std::string& name)
     {
-        detailed::Unimplemented();
+        return std::nullopt;
     }
-    std::string CommandLineInterface::GetString(const std::string& name)
+    std::optional<std::string> CommandLineInterface::GetString(const std::string& name)
     {
-        detailed::Unimplemented();
+        return std::nullopt;
     }
 
     void CommandLineInterface::WinRequestOutput(bool force) {}

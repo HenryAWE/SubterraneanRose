@@ -39,21 +39,11 @@ int main(int argc, char* argv[])
     auto& cli = progopt::CommandLineInterface::GetGlobalInstance();
     try
     {
-        cli.ParseArg(argc, argv);
-        if(cli.QuitRequested())
-        {
-            #ifdef _WIN32
-            if(cli.WinPauseRequested())
-            {
-                cli.WinRequestOutput(true);
-                std::system("pause");
-            }
-            #endif
-            return EXIT_SUCCESS;
-        }
+        if(cli.ParseArg(argc, argv) == false)
+            goto quit_cli;
 
         cli.HandleArg();
-        if(cli.GetBool("lang-available"))
+        if(cli.GetBool("lang-available").value_or(false))
         {
             cli.WinRequestOutput(true);
 
@@ -78,8 +68,9 @@ int main(int argc, char* argv[])
         }
         if(cli.Exists("video-get-display-mode"))
         {
-            int disp_index = 0;
-            try{ disp_index = cli.GetInt("video-get-display-mode"); }catch(...){}
+            auto disp_index = cli.GetInt("video-get-display-mode");
+            if(!disp_index)
+                goto quit_cli;
 
             cli.WinRequestOutput(true);
             if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
@@ -93,7 +84,7 @@ int main(int argc, char* argv[])
             {
                 try
                 {
-                    Video_GetDisplayMode(std::max(disp_index, 0), cli.GetOutputStream());
+                    Video_GetDisplayMode(std::max(*disp_index, 0), cli.GetOutputStream());
                 }
                 catch(...)
                 {
@@ -105,19 +96,20 @@ int main(int argc, char* argv[])
             cli.WinRequestPause();
             cli.RequestQuit();
         }
-        if(cli.GetBool("print-appdata"))
+        if(cli.GetBool("print-appdata").value_or(false))
         {
             cli.WinRequestOutput(true);
             cli.GetOutputStream() << filesystem::GetAppData().u8string() << std::endl;
             cli.WinRequestPause();
             cli.RequestQuit();
         }
-        if(cli.GetBool("explore-appdata"))
+        if(cli.GetBool("explore-appdata").value_or(false))
         {
             util::OpenInBrowser(filesystem::GetAppData().u8string().c_str());
             cli.RequestQuit();
         }
 
+    quit_cli:
         if(cli.QuitRequested())
         {
             #ifdef _WIN32
