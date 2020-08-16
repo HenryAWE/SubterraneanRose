@@ -21,7 +21,7 @@ namespace srose::progopt
     } // namespace detailed
 
     /**
-     * @brief CLI
+     * @brief Command-line interface (CLI)
      */
     class CommandLineInterface
     {
@@ -42,7 +42,17 @@ namespace srose::progopt
          */
         static CommandLineInterface& GetGlobalInstance();
 
+        /**
+         * @brief Parse the argument of the command line
+         * 
+         * @param argc Argument count
+         * @param argv Argument values
+         * @return Will return false if any error occurred 
+         */
         bool ParseArg(int argc, char* argv[]);
+        /**
+         * @brief Handle some simple argument
+         */
         void HandleArg();
 
         bool Exists(const std::string& name);
@@ -58,9 +68,15 @@ namespace srose::progopt
         void WinRequestPause(bool req = true) noexcept { m_win_pause_req = req; }
         bool WinPauseRequested() const noexcept;
 
+        /**
+         * @brief Get the output stream of the CLI
+         */
         std::ostream& GetOutputStream();
 
         // Helpers
+        /**
+         * @brief Generate help text
+         */
         std::string GenerateHelp();
 
         // Functions for retrieving parsed data
