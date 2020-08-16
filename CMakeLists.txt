@@ -19,6 +19,15 @@ project(
 
 option(SROSE_DISABLE_TEST "Disable test cases" OFF)
 
+# Compile options
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Force UTF-8
+add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+# Make sure macro "__cplusplus" is correctly defined
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>")
+
 if(NOT ${SROSE_DISABLE_TEST})
     enable_testing()
 endif()
