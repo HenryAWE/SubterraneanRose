@@ -36,15 +36,17 @@ namespace srose::progopt
         friend class detailed::CLIData;
         std::unique_ptr<detailed::CLIData> m_clidata;
         WinConsoleMode m_wincli_mode;
+        bool m_vtseq_avail = false; // Is virtual terminal sequence available
         bool m_quit_req = false;
         bool m_win_pause_req = false;
         int m_argc = 0;
         char** m_argv = nullptr;
-    public:
+
         CommandLineInterface();
         explicit CommandLineInterface(std::ostream& os);
         CommandLineInterface(const CommandLineInterface&) = delete;
 
+    public:
         ~CommandLineInterface();
 
         /**
@@ -62,8 +64,10 @@ namespace srose::progopt
         bool ParseArg(int argc, char* argv[]);
         /**
          * @brief Handle some simple argument
+         *
+         * @return Will return false if any error occurred 
          */
-        void HandleArg();
+        bool HandleArg();
 
         bool Exists(const std::string& name);
         std::size_t Count(const std::string& name);
@@ -71,7 +75,6 @@ namespace srose::progopt
         std::optional<int> GetInt(const std::string& name);
         std::optional<std::string> GetString(const std::string& name);
 
-        static void WinRequestConsole(WinConsoleMode mode, bool fallback = false);
         void WinRequestConsole(bool fallback = false);
 
         void RequestQuit(bool req = true) noexcept { m_quit_req = req; }
@@ -95,9 +98,11 @@ namespace srose::progopt
         void ColorizedOutput(const char* escseq, T&& value)
         {
             auto& os = GetOutputStream();
-            os << escseq;
+            if(m_vtseq_avail)
+                os << escseq;
             os << value;
-            os << "\033[0m";
+            if(m_vtseq_avail)
+                os << "\033[0m";
         }
         template <typename T>
         void OutputWarning(T&& value)

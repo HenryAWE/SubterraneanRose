@@ -42,7 +42,8 @@ int main(int argc, char* argv[])
         if(cli.ParseArg(argc, argv) == false)
             goto quit_cli;
 
-        cli.HandleArg();
+        if(cli.HandleArg() != true)
+            goto quit_cli;
         if(cli.GetBool("lang-available").value_or(false))
         {
             cli.WinRequestConsole(true);

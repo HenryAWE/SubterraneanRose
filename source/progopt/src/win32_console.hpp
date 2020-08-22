@@ -12,8 +12,8 @@
 
 namespace srose::progopt
 {
-    bool AttachConsoleWin32() noexcept;
-    bool AllocConsoleWin32() noexcept;
+    bool AttachConsoleWin32(bool& vt) noexcept;
+    bool AllocConsoleWin32(bool& vt) noexcept;
 
     void ReleaseConsoleWin32() noexcept;
 } // namespace srose::progopt

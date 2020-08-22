@@ -8,6 +8,7 @@
 #include "win32_console.hpp"
 #include <stdio.h>
 #ifdef __WINDOWS__
+#   define WIN32_LEAN_AND_MEAN 1
 #   include <Windows.h>
 #endif
 
@@ -18,19 +19,29 @@ namespace srose::progopt
 {
     ::BOOL g_attached = FALSE;
 
-    static void InitializeConsoleWin32() noexcept
+    static void InitializeConsoleWin32(bool& vt, bool input) noexcept
     {
         ::SetConsoleOutputCP(CP_UTF8);
+        if(input)
+            ::SetConsoleCP(CP_UTF8);
         ::HANDLE console = ::GetStdHandle(STD_OUTPUT_HANDLE);
         ::DWORD mode = 0;
-        ::GetConsoleMode(console, &mode);
+        if(::GetConsoleMode(console, &mode) == 0)
+            return;
+        if(mode & ENABLE_VIRTUAL_TERMINAL_PROCESSING)
+        {
+            vt = true;
+            return;
+        }
         mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-        ::SetConsoleMode(console, mode);
+        if(::SetConsoleMode(console, mode) != 0)
+            vt = true;
     }
-    static void RedirectIOWin32() noexcept
+    static void RedirectIOWin32(bool input) noexcept
     {
         FILE* dummy = nullptr;
-        freopen_s(&dummy, "conin$", "r+t", stdin);
+        if(input)
+            freopen_s(&dummy, "conin$", "r+t", stdin);
         freopen_s(&dummy, "conout$", "w+t", stdout);
         freopen_s(&dummy, "conout$", "w+t", stderr);
     }
@@ -41,27 +52,27 @@ namespace srose::progopt
         fclose(stderr);
     }
 
-    bool AttachConsoleWin32() noexcept
+    bool AttachConsoleWin32(bool& vt) noexcept
     {
         g_attached = ::AttachConsole(ATTACH_PARENT_PROCESS);
         if(g_attached)
         {
-            InitializeConsoleWin32();
-            RedirectIOWin32();
+            InitializeConsoleWin32(vt, false);
+            RedirectIOWin32(false);
             ::SetConsoleOutputCP(CP_UTF8);
             ::WriteConsoleW(::GetStdHandle(STD_OUTPUT_HANDLE), L"\n", 1, nullptr, nullptr);
         }
 
         return g_attached;
     }
-    bool AllocConsoleWin32() noexcept
+    bool AllocConsoleWin32(bool& vt) noexcept
     {
         g_attached = ::AllocConsole();
         if(g_attached)
         {
             ::SetConsoleTitleW(L"Subterranean Rose CLI");
-            InitializeConsoleWin32();
-            RedirectIOWin32();
+            InitializeConsoleWin32(vt, true);
+            RedirectIOWin32(true);
         }
 
         return g_attached;

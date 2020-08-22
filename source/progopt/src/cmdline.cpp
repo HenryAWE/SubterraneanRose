@@ -7,6 +7,9 @@
 #ifndef SROSE_DISABLE_CLI
 
 #include <sr/console/cmdline.hpp>
+#ifndef _WIN32
+#   include <unistd.h> // isatty
+#endif
 #include <iostream>
 #include <sstream>
 #include <boost/program_options.hpp>
@@ -51,12 +54,12 @@ namespace srose::progopt
         };
         static WinConsoleHostHelper win_helper;
 
-        static void RequestConsole(WinConsoleMode wincli_mode, bool fallback)
+        static void RequestConsole(WinConsoleMode wincli_mode, bool fallback, bool& vt)
         {
             if(wincli_mode == SR_WINCLI_ALLOC)
-                win_helper.alloc = win_helper.release = AllocConsoleWin32();
+                win_helper.alloc = win_helper.release = AllocConsoleWin32(vt);
             else if(wincli_mode == SR_WINCLI_ATTACH)
-                win_helper.release = AttachConsoleWin32();
+                win_helper.release = AttachConsoleWin32(vt);
             else if(wincli_mode == SR_WINCLI_AUTO)
             {
                 wincli_mode = ParseWinConsoleMode(
@@ -66,21 +69,21 @@ namespace srose::progopt
 
                 if(wincli_mode == SR_WINCLI_ALLOC)
                 {
-                    win_helper.alloc = win_helper.release = AllocConsoleWin32();
+                    win_helper.alloc = win_helper.release = AllocConsoleWin32(vt);
                     return;
                 }
                 else if(wincli_mode == SR_WINCLI_ATTACH)
                 {
-                    win_helper.release = AttachConsoleWin32();
+                    win_helper.release = AttachConsoleWin32(vt);
                     return;
                 }
                 else if(wincli_mode == SR_WINCLI_IGNORE)
                     return;
 
                 // wincli_mode == SR_WINCLI_AUTO
-                win_helper.release = AttachConsoleWin32();
+                win_helper.release = AttachConsoleWin32(vt);
                 if(!win_helper.release && fallback)
-                    win_helper.alloc = win_helper.release = AllocConsoleWin32();
+                    win_helper.alloc = win_helper.release = AllocConsoleWin32(vt);
                 }
         }
         #else
@@ -91,7 +94,7 @@ namespace srose::progopt
             (void)sv;
             return fallback;
         }
-        static void RequestConsole(WinConsoleMode wincli_mode, bool fallback) {}
+        static void RequestConsole(...) noexcept {}
         #endif
 
         class CLIData
@@ -169,7 +172,7 @@ namespace srose::progopt
                 }
                 catch(const po::error& e)
                 {
-                    detailed::RequestConsole(cli.m_wincli_mode, true);
+                    cli.WinRequestConsole(true);
                     cli.OutputError(e.what());
                     os << std::endl;
                     return false;
@@ -205,8 +208,10 @@ namespace srose::progopt
     CommandLineInterface::CommandLineInterface(std::ostream& os)
         #ifdef _WIN32
         : m_wincli_mode(SR_WINCLI_AUTO),
+        m_vtseq_avail(false),
         #else
         : m_wincli_mode(SR_WINCLI_IGNORE),
+        m_vtseq_avail(isatty(STDOUT_FILENO)),
         #endif
         m_clidata(std::make_unique<detailed::CLIData>(
             &os,
@@ -236,7 +241,7 @@ namespace srose::progopt
 
         return no_error;
     }
-    void CommandLineInterface::HandleArg()
+    bool CommandLineInterface::HandleArg()
     {
         using std::endl;
 
@@ -250,7 +255,7 @@ namespace srose::progopt
 
         if(auto& unrecognized = m_clidata->unrecognized; !unrecognized.empty())
         {
-            detailed::RequestConsole(m_wincli_mode, true);
+            WinRequestConsole(true);
             std::stringstream ss;
             ss << "Unrecognized option(s): ";
             for(const auto& i : unrecognized)
@@ -260,7 +265,7 @@ namespace srose::progopt
 
             RequestQuit();
             WinRequestPause();
-            return;
+            return false;
         }
 
         std::string preferred = GetPreferredLanguage();
@@ -337,6 +342,8 @@ namespace srose::progopt
             WinRequestPause();
             RequestQuit();
         }
+
+        return true;
     }
 
     bool CommandLineInterface::Exists(const std::string& name)
@@ -360,15 +367,9 @@ namespace srose::progopt
         return detailed::GetValueImpl<std::string>(m_clidata->vm, name);
     }
 
-    // static version
-    void CommandLineInterface::WinRequestConsole(WinConsoleMode mode, bool fallback)
-    {
-        detailed::RequestConsole(mode, fallback);
-    }
     void CommandLineInterface::WinRequestConsole(bool fallback)
     {
-        // Use the parsed data to invoke the static version
-        WinRequestConsole(m_wincli_mode, fallback);
+        detailed::RequestConsole(m_wincli_mode, fallback, m_vtseq_avail);
     }
 
     bool CommandLineInterface::WinPauseRequested() const noexcept
