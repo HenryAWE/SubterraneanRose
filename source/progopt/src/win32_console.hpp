@@ -7,8 +7,7 @@
 #ifndef SROSE_PROGOPT_win32_console_hpp_
 #define SROSE_PROGOPT_win32_console_hpp_
 
-#include <SDL_platform.h>
-#if defined(__WINDOWS__) && !defined(SROSE_DISABLE_CLI)
+#if defined(_WIN32) && !defined(SROSE_DISABLE_CLI)
 
 namespace srose::progopt
 {

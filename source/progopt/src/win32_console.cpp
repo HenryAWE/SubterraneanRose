@@ -4,16 +4,15 @@
  * @brief Console support for Windows
  */
 
-#include <SDL_platform.h>
 #include "win32_console.hpp"
 #include <stdio.h>
-#ifdef __WINDOWS__
+#ifdef _WIN32
 #   define WIN32_LEAN_AND_MEAN 1
 #   include <Windows.h>
 #endif
 
 
-#if defined(__WINDOWS__) && !defined(SROSE_DISABLE_CLI)
+#if defined(_WIN32) && !defined(SROSE_DISABLE_CLI)
 
 namespace srose::progopt
 {

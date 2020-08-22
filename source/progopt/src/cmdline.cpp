@@ -28,7 +28,7 @@ namespace srose::progopt
 
     namespace detailed
     {
-        #ifdef BOOST_WINDOWS
+        #ifdef _WIN32
         WinConsoleMode ParseWinConsoleMode(
             std::string_view sv,
             WinConsoleMode fallback
@@ -137,7 +137,7 @@ namespace srose::progopt
                 video.add_options()
                     ("video-get-display-mode", po::value<int>()->value_name("index")->implicit_value(0), _("srose.cli.video.get-display-mode").c_str());
 
-                #ifdef __WINDOWS__
+                #ifdef _WIN32
                 po::options_description win32(_("srose.cli.win").c_str(), line_length);
                 win32.add_options()
                     ("win-console", po::value<std::string>()->value_name("mode")->default_value("auto"), _("srose.cli.win.console").c_str());
@@ -145,7 +145,7 @@ namespace srose::progopt
 
                 return po::options_description(_("srose.cli.total"), line_length)
                     .add(generic)
-                #ifdef __WINDOWS__
+                #ifdef _WIN32
                     .add(win32)
                 #endif
                     .add(language)
@@ -374,7 +374,7 @@ namespace srose::progopt
 
     bool CommandLineInterface::WinPauseRequested() const noexcept
     {
-        #ifdef BOOST_WINDOWS
+        #ifdef _WIN32
         return m_win_pause_req && detailed::win_helper.alloc;
         #else
         return false;
