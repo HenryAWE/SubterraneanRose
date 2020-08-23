@@ -4,8 +4,8 @@
  * @brief Initializer
  */
 
-#ifndef SROSE_UI_initialize_hpp_
-#define SROSE_UI_initialize_hpp_
+#ifndef SROSE_initialize_hpp_
+#define SROSE_initialize_hpp_
 
 #include <sr/wm/window.hpp>
 #include <sr/filesystem/filesystem.hpp>

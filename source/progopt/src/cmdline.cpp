@@ -6,7 +6,7 @@
 
 #ifndef SROSE_DISABLE_CLI
 
-#include <sr/console/cmdline.hpp>
+#include <sr/progopt/cmdline.hpp>
 #ifndef _WIN32
 #   include <unistd.h> // isatty
 #endif
@@ -495,7 +495,7 @@ namespace srose::progopt
 
 #else
 
-#include <sr/console/cmdline.hpp>
+#include <sr/progopt/cmdline.hpp>
 #include <iostream>
 #include <stdexcept>
 #ifdef _WIN32

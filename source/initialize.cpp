@@ -17,7 +17,7 @@
 #include <sr/srose/app.hpp>
 #include <sr/wm/event.hpp>
 #include <sr/graphic/renderer.hpp>
-#ifdef __WINDOWS__
+#ifdef _WIN32
 #   include <comdef.h>
 #   include <combaseapi.h>
 #endif
@@ -53,7 +53,7 @@ namespace srose
 
     void InitializeAllSystems(wm::Window& window)
     {
-    #ifdef __WINDOWS__
+    #ifdef _WIN32
         if(::HRESULT hr = ::CoInitialize(nullptr); FAILED(hr))
             _com_raise_error(hr);
     #endif
@@ -73,7 +73,7 @@ namespace srose
         res::DestroyResourceManager();
         audio::DestroyAudioManager();
         wm::DestroyInputManager();
-    #ifdef __WINDOWS__
+    #ifdef _WIN32
         ::CoUninitialize();
     #endif
     }

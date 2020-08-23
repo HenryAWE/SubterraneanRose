@@ -7,7 +7,7 @@
 #ifndef SROSE_maincli_hpp_
 #define SROSE_maincli_hpp_
 
-#include <sr/console/cmdline.hpp>
+#include <sr/progopt/cmdline.hpp>
 
 
 namespace srose
