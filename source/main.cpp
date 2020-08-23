@@ -12,16 +12,8 @@
 #include <sr/core/init.hpp>
 #include <sr/trace/log.hpp>
 #include <sr/trace/trace.hpp>
-#include <sr/console/cmdline.hpp>
-#include <sr/filesystem/filesystem.hpp>
-#include <sr/util/shell.hpp>
-#include "video.hpp"
-#ifdef min
-#   undef min
-#endif
-#ifdef max
-#   undef max
-#endif
+#include "maincli.hpp"
+
 
 /*Program entry */
 int main(int argc, char* argv[])
@@ -41,74 +33,9 @@ int main(int argc, char* argv[])
     {
         if(cli.ParseArg(argc, argv) == false)
             goto quit_cli;
-
         if(cli.HandleArg() != true)
             goto quit_cli;
-        if(cli.GetBool("lang-available").value_or(false))
-        {
-            cli.WinRequestConsole(true);
-
-            auto& os = cli.GetOutputStream();
-            const auto& lang_set = i18n::GetLanguageSet();
-            const auto builtin = i18n::GetBuiltinLanguage();
-            const std::string lcfmt = "{}\t: {}";
-
-            os << SRTR("srose.cli.lang.available.built-in") << std::endl;
-            os << fmt::format(lcfmt, builtin->GetId(), builtin->GetName()) << std::endl;
-
-            os << SRTR("srose.cli.lang.available.installed") << std::endl;
-            for(auto& i : lang_set)
-            {
-                if(i == builtin)
-                    continue;
-                os << fmt::format(lcfmt, i->GetId(), i->GetName()) << std::endl;
-            }
-
-            cli.WinRequestPause();
-            cli.RequestQuit();
-        }
-        if(cli.Exists("video-get-display-mode"))
-        {
-            auto disp_index = cli.GetInt("video-get-display-mode");
-            if(!disp_index)
-                goto quit_cli;
-
-            cli.WinRequestConsole(true);
-            if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
-            {
-                cli.GetOutputStream()
-                    << "Initialize SDL VIDEO subsystem failed: "
-                    << SDL_GetError()
-                    << std::endl;
-            }
-            else
-            {
-                try
-                {
-                    Video_GetDisplayMode(std::max(*disp_index, 0), cli.GetOutputStream());
-                }
-                catch(...)
-                {
-                    SDL_QuitSubSystem(SDL_INIT_VIDEO);
-                    throw;
-                }
-                SDL_QuitSubSystem(SDL_INIT_VIDEO);
-            }
-            cli.WinRequestPause();
-            cli.RequestQuit();
-        }
-        if(cli.GetBool("print-appdata").value_or(false))
-        {
-            cli.WinRequestConsole(true);
-            cli.GetOutputStream() << filesystem::GetAppData().u8string() << std::endl;
-            cli.WinRequestPause();
-            cli.RequestQuit();
-        }
-        if(cli.GetBool("explore-appdata").value_or(false))
-        {
-            util::OpenInBrowser(filesystem::GetAppData().u8string().c_str());
-            cli.RequestQuit();
-        }
+        HandleConsoleArg(cli);
 
     quit_cli:
         if(cli.QuitRequested())
@@ -127,6 +54,11 @@ int main(int argc, char* argv[])
     {
         BOOST_LOG_TRIVIAL(error)
             << fmt::format("Exception ({}) thrown by CLI: {}", typeid(e).name(), e.what());
+        return 3;
+    }
+    catch(...)
+    {
+        BOOST_LOG_TRIVIAL(error) << "Exception (Unknown) thrown by CLI";
         return 3;
     }
 

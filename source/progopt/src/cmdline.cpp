@@ -13,7 +13,7 @@
 #include <iostream>
 #include <sstream>
 #include <boost/program_options.hpp>
-#include <fmt/core.h>
+#include <fmt/format.h>
 #include <sr/core/version_info.hpp>
 #include <sr/util/system.hpp>
 #include <sr/locale/locale.hpp>
@@ -169,16 +169,17 @@ namespace srose::progopt
                     po::notify(vm);
 
                     unrecognized = po::collect_unrecognized(parsed.options, po::include_positional);
+
+                    return true;
                 }
-                catch(const po::error& e)
+                catch(const po::error&)
                 {
                     cli.WinRequestConsole(true);
-                    cli.OutputError(e.what());
+                    HandleError(cli);
                     os << std::endl;
-                    return false;
                 }
 
-                return true;
+                return false;
             }
 
             void UpdateI18nData(std::shared_ptr<locale::Language> new_lang)
@@ -187,6 +188,77 @@ namespace srose::progopt
                     return;
                 language.swap(new_lang);
                 desc.emplace(BuildDesc());
+            }
+
+            std::string GetFormat(po::invalid_command_line_syntax::kind_t kind)
+            {
+                auto _ = [this](std::string_view path) { return language->GetTextWith(path, locale::SRLC_RETURN_REQUEST); };
+
+                typedef po::invalid_command_line_syntax::kind_t kind_t;
+                switch(kind)
+                {
+                case kind_t::missing_parameter:
+                    return _("srose.clierr.syntax.missing-parameter");
+                case kind_t::extra_parameter:
+                    return _("srose.clierr.syntax.extra-parameter");
+                case kind_t::empty_adjacent_parameter:
+                    return _("srose.clierr.syntax.empty-adjacent-parameter");
+                default:
+                    return _("srose.clierr.syntax.unknown");
+                }
+            }
+
+            void HandleError(CommandLineInterface& cli)
+            {
+                auto& os = *output;
+                auto _ = [this](std::string_view path) { return language->GetTextWith(path, locale::SRLC_RETURN_REQUEST); };
+
+                try { throw; }
+                catch(const po::ambiguous_option& e)
+                {
+                    const auto separator = language->GetTextOr("srose.clierr.sep", ", ");
+                    const auto altfmt = language->GetTextOr("srose.clierr.ambiguous.altfmt", "\"--{}\"");
+                    bool first = true;
+                    std::string alttext;
+                    for(auto& i : e.alternatives())
+                    {
+                        if(first) first = false;
+                        else alttext += separator;
+                        alttext += fmt::format(altfmt, i);
+                    }
+
+                    cli.OutputError(fmt::format(_("srose.clierr.ambiguous"),
+                        e.get_option_name(),
+                        alttext
+                    ));
+                }
+                catch(const po::invalid_command_line_syntax& e)
+                {
+                    cli.OutputError(fmt::format(GetFormat(e.kind()),
+                        e.get_option_name()
+                    ));
+                }
+                catch(po::invalid_option_value e)
+                {
+                    e.m_error_template = fmt::format(_("srose.clierr.invalid-option-value"),
+                        "%canonical_option%",
+                        "%value%"
+                    );
+                    cli.OutputError(e.what());
+                }
+                catch(const po::multiple_occurrences& e)
+                {
+                    cli.OutputError(fmt::format(_("srose.clierr.multiple-occurrences"),
+                        e.get_option_name()
+                    ));
+                }
+                catch(const po::error& e)
+                {
+                    cli.OutputError(fmt::format("{} : {}", typeid(e).name(), e.what()));
+                }
+                #ifndef NDEBUG
+                catch(...) { assert(0 && "Unreachable"); }
+                #endif
             }
         };
 
@@ -247,6 +319,7 @@ namespace srose::progopt
 
         auto& os = *m_clidata->output;
         auto& vm = m_clidata->vm;
+        auto _ = [this](std::string_view path) { return m_clidata->language->GetTextWith(path, locale::SRLC_RETURN_REQUEST); };
 
         m_wincli_mode = detailed::ParseWinConsoleMode(
             GetString("win-console").value_or("auto"),
@@ -256,12 +329,22 @@ namespace srose::progopt
         if(auto& unrecognized = m_clidata->unrecognized; !unrecognized.empty())
         {
             WinRequestConsole(true);
-            std::stringstream ss;
-            ss << "Unrecognized option(s): ";
+
+            const auto separator = m_clidata->language->GetTextOr("srose.clierr.sep", ", ");
+            const auto optfmt = m_clidata->language->GetTextOr("srose.clierr.optfmt", "\"--{}\"");
+
+            std::string errtext;
+            bool first = true;
             for(const auto& i : unrecognized)
-                ss << fmt::format("\"{}\" ", i);
-            ss << std::endl;
-            OutputError(ss.rdbuf());
+            {
+                if(first) first = false;
+                else errtext += separator;
+                errtext += fmt::format(optfmt, i);
+            }
+            OutputError(fmt::format(_("srose.clierr.unrecognized"),
+                errtext
+            ));
+            os << std::endl;
 
             RequestQuit();
             WinRequestPause();

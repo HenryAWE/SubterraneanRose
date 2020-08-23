@@ -22,9 +22,21 @@
 @srose.cli.video.get-display-mode.display-name = "显示器-{:02d} 名称: {}"
 @srose.cli.video.get-display-mode.display-mode-count = "显示模式数量: {}"
 @srose.cli.video.get-display-mode.format-desc = "模式\t每像素位数 - 格式名\t宽度 x 高度 @刷新率"
-@srose.cli.video.get-display-mode.format = "{:03d}:\t{}bpp - {}\t\t{} x {} @{}Hz"
+@srose.cli.video.get-display-mode.format = "{:03d}:\t{}bpp - {}\t\t{:>4} x {:>4} @{:<2}Hz"
 
 @srose.cli.win = "Windows"
 @srose.cli.win.console = "程序的命令行行为\n可选项为：attach（附加）、new（新建）、ignore（忽略）和auto（自动）\n详细说明请参见文档"
 
 @srose.cli.total = "可用选项"
+
+# Console errors
+@srose.clierr.sep = "，"
+@srose.clierr.optfmt = "“{}”"
+@srose.clierr.unrecognized = "无法识别的选项：{}"
+@srose.clierr.ambiguous = "选项“{}”有歧义，可以匹配以下选项：{}"
+@srose.clierr.ambiguous.altfmt = "“--{}”"
+@srose.clierr.syntax.missing-parameter = "缺少参数“{}”"
+@srose.clierr.syntax.extra-parameter = "选项“{}”不需要参数"
+@srose.clierr.syntax.empty-adjacent-parameter = "选项“{}”的参数应紧跟在等号之后"
+@srose.clierr.invalid-option-value = "选项“{}”的参数“{}”值非法"
+@srose.clierr.multiple-occurrences = "选项“{}”不能被多次指定"
