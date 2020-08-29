@@ -14,6 +14,7 @@
 #include <sstream>
 #include <boost/program_options.hpp>
 #include <fmt/format.h>
+#include <srtl/stralgo.hpp>
 #include <sr/core/version_info.hpp>
 #include <sr/util/system.hpp>
 #include <sr/locale/locale.hpp>
@@ -218,18 +219,14 @@ namespace srose::progopt
                 {
                     const auto separator = language->GetTextOr("srose.clierr.sep", ", ");
                     const auto altfmt = language->GetTextOr("srose.clierr.ambiguous.altfmt", "\"--{}\"");
-                    bool first = true;
-                    std::string alttext;
+                    std::stringstream ss;
+                    auto alttext = srtl::make_ostream_joiner(ss, separator);
                     for(auto& i : e.alternatives())
-                    {
-                        if(first) first = false;
-                        else alttext += separator;
-                        alttext += fmt::format(altfmt, i);
-                    }
+                        alttext = fmt::format(altfmt, i);
 
                     cli.OutputError(fmt::format(_("srose.clierr.ambiguous"),
                         e.get_option_name(),
-                        alttext
+                        ss.str()
                     ));
                 }
                 catch(const po::invalid_command_line_syntax& e)
@@ -333,16 +330,12 @@ namespace srose::progopt
             const auto separator = m_clidata->language->GetTextOr("srose.clierr.sep", ", ");
             const auto optfmt = m_clidata->language->GetTextOr("srose.clierr.optfmt", "\"--{}\"");
 
-            std::string errtext;
-            bool first = true;
+            std::stringstream ss;
+            auto errtext = srtl::make_ostream_joiner(ss, separator);
             for(const auto& i : unrecognized)
-            {
-                if(first) first = false;
-                else errtext += separator;
-                errtext += fmt::format(optfmt, i);
-            }
+                *errtext = fmt::format(optfmt, i);
             OutputError(fmt::format(_("srose.clierr.unrecognized"),
-                errtext
+                ss.str()
             ));
             os << std::endl;
 
