@@ -20,6 +20,7 @@ parser.add_argument("--input", "-i", help="Input file(s)", nargs='+', required=T
 parser.add_argument("--config", "-c", help="Configuration", required=False)
 parser.add_argument("--output", "-o", help="Output")
 parser.add_argument("--action", choices=["check", "compile"], default="compile")
+parser.add_argument("--incremental", action="store_true", default=False)
 if len(sys.argv)<=1:
     parser.print_help()
     sys.exit(0)
@@ -35,7 +36,7 @@ if args.action == "compile":
         print("[lccl] Compile")
     mode = option.COMPILE
 
-cl = srlc.compiler.srlc_compiler(args.verbosity)
+cl = srlc.compiler.srlc_compiler(args.incremental, args.verbosity)
 compile = mode == option.COMPILE
 display = mode == args.verbosity >= 2
 if args.config:

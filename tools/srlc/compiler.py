@@ -251,8 +251,10 @@ class srlc_compiler:
         print("[srlc_compiler] ERROR: " + info)
         sys.exit()
 
-    def __init__(self, verbosity = 0):
+    def __init__(self, incremental = False, verbosity = 0):
+        self.incremental = incremental
         self.verbosity = verbosity
+        self.mtime = 0.0
         self.config = config_compiler(verbosity)
         self.action = action_compiler(verbosity)
         self.script = script_compiler(verbosity)
@@ -263,17 +265,27 @@ class srlc_compiler:
         # Backend version number
         stream.write(struct.Struct("<I").pack(1))
 
+    def setmtime(self, file):
+        mt = os.path.getmtime(file)
+        if(mt > self.mtime):
+            self.mtime = mt
+
     def load_cfg(self, file):
         self.config.parse_file(file)
         self.action.parse_file(file)
+        self.setmtime(file)
 
     def load_txt(self, files, compile = True, display = False, check = False):
         for file in files:
             result = self.script.load(file, compile, display)
+            self.setmtime(file)
             if not result and check:
                 sys.exit(1)
 
     def output(self, file):
+        ofile_mt = os.path.getmtime(file)
+        if(self.incremental and ofile_mt > self.mtime):
+            return
         stream = open(file, "w+b")
         if not stream.writable:
             self.emit_error("Open file \"%s\" failed" % file)
