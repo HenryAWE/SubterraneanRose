@@ -283,7 +283,9 @@ class srlc_compiler:
                 sys.exit(1)
 
     def output(self, file):
-        ofile_mt = os.path.getmtime(file)
+        ofile_mt = 0.0
+        if(os.path.exists(file)):
+            ofile_mt = os.path.getmtime(file)
         if(self.incremental and ofile_mt > self.mtime):
             return
         stream = open(file, "w+b")
