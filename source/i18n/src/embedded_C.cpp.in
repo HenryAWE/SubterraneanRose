@@ -7,13 +7,13 @@
 #include <sstream>
 #include <utility>
 
-const char embedded_en_locale[] =
-#include "embedded_en.inl"
+const char embedded_C_locale[] =
+#include "embedded_C.inl"
 ;
 
-std::stringstream GetEmbeddedEnglishLang()
+std::stringstream GetEmbeddedLang()
 {
     std::stringstream ss;
-    ss.write(embedded_en_locale, sizeof(embedded_en_locale) - 1);
+    ss.write(embedded_C_locale, sizeof(embedded_C_locale) - 1);
     return std::move(ss);
 }

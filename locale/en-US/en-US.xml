@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <locale>
     <info>
-        <id>en</id>
-        <name>English</name>
+        <id>en_US</id>
+        <name>English(United States)</name>
         <version>0.1.0</version>
         <author>Subterranean Rose</author>
         <comment></comment>

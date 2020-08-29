@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<locale>
+    <info>
+        <id>C</id>
+        <name>C-locale</name>
+        <version>0.1.0</version>
+        <author>Subterranean Rose</author>
+        <comment>Built-in locale for debugging</comment>
+    </info>
+    <action>
+        <text>
+            <error>RETURN_REQUEST</error>
+        </text>
+    </action>
+</locale>

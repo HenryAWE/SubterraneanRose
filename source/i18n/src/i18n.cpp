@@ -16,7 +16,7 @@
 #include <sr/trace/log.hpp>
 
 
-extern std::stringstream GetEmbeddedEnglishLang();
+extern std::stringstream GetEmbeddedLang();
 
 namespace srose::i18n
 {
@@ -29,7 +29,7 @@ namespace srose::i18n
 
     static std::shared_ptr<locale::Language> CreateBuiltinLang()
     {
-        auto ss = GetEmbeddedEnglishLang();
+        auto ss = GetEmbeddedLang();
         return std::make_shared<locale::Language>(ss);
     }
 
