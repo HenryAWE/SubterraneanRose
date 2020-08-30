@@ -10,6 +10,7 @@
 #include <fstream>
 #include <regex>
 #include <boost/locale.hpp>
+#include <sr/trace/log.hpp>
 #include "v1/infoblock.hpp"
 #include "v1/actionblock.hpp"
 #include "v1/textblock.hpp"
@@ -141,6 +142,7 @@ namespace srose::locale
             using namespace v1;
             char subheader[5]{};
             is.read(subheader, 4);
+            std::uint32_t block_size = detailed::Decode_U32LE(is);
             if(!is.good())
                 break;
 
@@ -153,17 +155,27 @@ namespace srose::locale
                 m_author = std::move(inf.author);
                 m_comment = std::move(inf.comment);
             }
-            if(strncmp(subheader, "@act", 4) == 0)
+            else if(strncmp(subheader, "@act", 4) == 0)
             {
                 ActionBlock act(is);
                 m_text_error = act.text_error;
                 m_error_string = act.error_string;
                 m_fallback_id = act.fallback;
             }
-            if(strncmp(subheader, "@txt", 4) == 0)
+            else if(strncmp(subheader, "@txt", 4) == 0)
             {
                 TextBlock txt(is);
                 m_text.merge(std::move(txt.texts));
+            }
+            else
+            {
+                is.seekg(block_size, is.cur);
+                BOOST_LOG_TRIVIAL(warning)
+                    << "[locale] Unknown block header \""
+                    << std::string_view(subheader, 4)
+                    << "\" (size = "
+                    << block_size
+                    << ')';
             }
         }
     }

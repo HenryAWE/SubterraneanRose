@@ -9,6 +9,7 @@ import os, sys
 import struct
 import xml.dom.minidom as xmldoc
 import re
+import io
 
 
 
@@ -83,12 +84,15 @@ class config_compiler:
 
     def output(self, stream):
         stream.write(b"@inf")
-        stream.write(data_compiler.compile_cxxstr(self.id))
-        stream.write(data_compiler.compile_cxxstr(self.name))
+        bs = io.BytesIO()
+        bs.write(data_compiler.compile_cxxstr(self.id))
+        bs.write(data_compiler.compile_cxxstr(self.name))
         for i in range(3):
-            stream.write(data_compiler.compile_I32(self.version[i]))
-        stream.write(data_compiler.compile_cxxstr(self.author))
-        stream.write(data_compiler.compile_cxxstr(self.comment))
+            bs.write(data_compiler.compile_I32(self.version[i]))
+        bs.write(data_compiler.compile_cxxstr(self.author))
+        bs.write(data_compiler.compile_cxxstr(self.comment))
+        stream.write(data_compiler.compile_I32(len(bs.getbuffer())))
+        stream.write(bs.getbuffer())
 
 
 
@@ -143,11 +147,14 @@ class action_compiler:
 
     def output(self, stream):
         stream.write(b"@act")
-        stream.write(data_compiler.compile_I32(self.text_error))
+        bs = io.BytesIO()
+        bs.write(data_compiler.compile_I32(self.text_error))
         if self.text_error is 2: # RETURN_ERROR_STRING
-            stream.write(data_compiler.compile_cxxstr(self.error_string))
+            bs.write(data_compiler.compile_cxxstr(self.error_string))
         elif self.text_error is 3: # USE_FALLBACK
-            stream.write(data_compiler.compile_cxxstr(self.fallback))
+            bs.write(data_compiler.compile_cxxstr(self.fallback))
+        stream.write(data_compiler.compile_I32(len(bs.getbuffer())))
+        stream.write(bs.getbuffer())
 
 
 
@@ -238,10 +245,13 @@ class script_compiler:
 
     def output(self, stream):
         stream.write(b'@txt')
+        bs = io.BytesIO()
         top_level_id_count = len(self.text)
-        stream.write(data_compiler.compile_I32(top_level_id_count))
+        bs.write(data_compiler.compile_I32(top_level_id_count))
         for it in self.text.items():
-            stream.write(data_compiler.compile_srstrtree(it[0], it[1]))
+            bs.write(data_compiler.compile_srstrtree(it[0], it[1]))
+        stream.write(data_compiler.compile_I32(len(bs.getbuffer())))
+        stream.write(bs.getbuffer())
 
 
 
@@ -255,6 +265,7 @@ class srlc_compiler:
         self.incremental = incremental
         self.verbosity = verbosity
         self.mtime = 0.0
+        self.setmtime(__file__)
         self.config = config_compiler(verbosity)
         self.action = action_compiler(verbosity)
         self.script = script_compiler(verbosity)
