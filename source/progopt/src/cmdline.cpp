@@ -446,6 +446,7 @@ namespace srose::progopt
     void CommandLineInterface::WinRequestConsole(bool fallback)
     {
         detailed::RequestConsole(m_wincli_mode, fallback, m_vtseq_avail);
+        GetOutputStream().clear();
     }
 
     bool CommandLineInterface::WinPauseRequested() const noexcept
