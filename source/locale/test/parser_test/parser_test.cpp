@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(test_parser)
         0x6f, 0x6e, 0x64, 0x00, 0x00, 0x00, 0x00,
     };
     ss.write((const char*)tree_data, 39);
-    auto stree = ParseTranslation(ss);
+    auto stree = detailed::Decode_SRStrTree(ss);
     BOOST_REQUIRE(stree.get_value("fi") == "first");
     BOOST_REQUIRE(stree.get_value("fi.se") == "second");
 }

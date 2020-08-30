@@ -47,9 +47,4 @@ namespace srose::locale
             return std::move(ret);
         }
     } // namespace detailed
-
-    srtl::string_tree<std::string> ParseTranslation(std::istream& is)
-    {
-        return detailed::Decode_SRStrTree(is);
-    }
 } // namespace srose::locale

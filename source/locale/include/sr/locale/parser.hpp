@@ -20,8 +20,6 @@ namespace srose::locale
         std::string Decode_CxxStr(std::istream& is);
         srtl::string_tree<std::string> Decode_SRStrTree(std::istream& is);
     } // namespace detailed
-
-    srtl::string_tree<std::string> ParseTranslation(std::istream& is);
 } // namespace srose::locale
 
 
