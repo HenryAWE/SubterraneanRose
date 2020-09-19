@@ -15,8 +15,8 @@ namespace srose
 {
     void SetWorkingDirectory(const char* argv0);
 
-    void InitializeAllSystems(wm::Window& window);
-    void DeinitializeAllSystems(wm::Window& window) noexcept;
+    void InitializeAllSystems(wm::Window& window, bool disable_audio);
+    void DeinitializeAllSystems(wm::Window& window, bool disable_audio) noexcept;
 } // namespace srose
 
 

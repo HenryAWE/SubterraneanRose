@@ -9,6 +9,7 @@
 #include <future>
 #include <SDL.h>
 #include <imgui.h>
+#include <sr/core/init.hpp>
 #include <sr/audio/aumgr.hpp>
 #include <sr/res/resmgr.hpp>
 #include <sr/wm/input.hpp>
@@ -51,7 +52,7 @@ namespace srose
         }
     }
 
-    void InitializeAllSystems(wm::Window& window)
+    void InitializeAllSystems(wm::Window& window, bool disable_audio)
     {
     #ifdef _WIN32
         if(::HRESULT hr = ::CoInitialize(nullptr); FAILED(hr))
@@ -59,19 +60,28 @@ namespace srose
     #endif
         GetApp().LoadUsers();
         auto font_ready = std::async(std::launch::async, LoadFonts);
-        audio::CreateAudioManager();
+
+        if(!disable_audio)
+        {
+            core::InitSDLMixer();
+            audio::CreateAudioManager();
+        }
         res::CreateResourceManager();
         wm::CreateInputManager();
         font_ready.get();
         ui::UIManager::GetInstance().Initialize(window);
     }
-    void DeinitializeAllSystems(wm::Window& window) noexcept
+    void DeinitializeAllSystems(wm::Window& window, bool disable_audio) noexcept
     {
         player::ReleaseUIData();
         window.GetRenderer().ReleaseUIData();
         ui::UIManager::GetInstance().Deinitialize();
         res::DestroyResourceManager();
-        audio::DestroyAudioManager();
+        if(!disable_audio)
+        {
+            audio::DestroyAudioManager();
+            core::QuitSDLMixer();
+        }
         wm::DestroyInputManager();
     #ifdef _WIN32
         ::CoUninitialize();

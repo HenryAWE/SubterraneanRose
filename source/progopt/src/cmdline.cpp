@@ -133,6 +133,10 @@ namespace srose::progopt
                 display.add_options()
                     ("display-fullscreen,F", po::bool_switch(), _("srose.cli.display.fullscreen").c_str())
                     ("display-vsync,V", po::bool_switch(), _("srose.cli.display.vsync").c_str());
+
+                po::options_description audio(_("srose.cli.audio"), line_length);
+                audio.add_options()
+                    ("audio-disable,M", po::bool_switch(), _("srose.cli.audio.disable").c_str());
                 
                 po::options_description video(_("srose.cli.video"), line_length);
                 video.add_options()
@@ -151,6 +155,7 @@ namespace srose::progopt
                 #endif
                     .add(language)
                     .add(display)
+                    .add(audio)
                     .add(video);
             }
 

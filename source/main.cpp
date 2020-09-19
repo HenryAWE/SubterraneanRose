@@ -100,11 +100,18 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    InitializeAllSystems(window);
+    const bool disable_audio = cli.GetBool("audio-disable").value_or(false);
+    if(disable_audio)
+    {
+        cli.OutputWarning("WARNING: Audio system has been disabled!\n");
+        BOOST_LOG_TRIVIAL(info)
+            << "Audio system has been disabled";
+    }
+    InitializeAllSystems(window, disable_audio);
 
     int exit_code = srose::ProgramEntry(window);
 
-    DeinitializeAllSystems(window);
+    DeinitializeAllSystems(window, disable_audio);
     window.Destroy();
     core::Quit();
     return exit_code;

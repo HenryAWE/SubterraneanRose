@@ -17,6 +17,9 @@
 @srose.cli.display.fullscreen = "全屏"
 @srose.cli.display.vsync = "启用垂直同步"
 
+@srose.cli.audio = "音频"
+@srose.cli.audio.disable = "禁用音频系统"
+
 @srose.cli.video = "视频"
 @srose.cli.video.get-display-mode = "获取指定显示器所有可用的显示模式"
 @srose.cli.video.get-display-mode.display-name = "显示器-{:02d} 名称: {}"

@@ -49,23 +49,17 @@ namespace srose::core
             VERSION_NUMBER_2_ARG(sdl_version_linked)
         );
 
+        return 0;
+    }
+
+    void SRSCALL InitSDLMixer()
+    {
         if(Mix_Init(MIX_INIT_MP3) == 0)
         {
-            BOOST_LOG_TRIVIAL(error)
-                << "[Core] Mix_Init() failed: "
-                << Mix_GetError();
-            if(msgbox_on_err)
-            {
-                SDL_ShowSimpleMessageBox(
-                    SDL_MESSAGEBOX_ERROR,
-                    "Mix_Init() failed",
-                    SDL_GetError(),
-                    nullptr
-                );
-            }
-
-            SDL_Quit();
-            return 1;
+            throw std::runtime_error(
+                std::string("[Core] Mix_Init() failed: ") +
+                Mix_GetError()
+            );
         }
         SDL_version mix_version;
         const SDL_version* mix_version_linked;
@@ -82,25 +76,17 @@ namespace srose::core
 
         if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
         {
-            BOOST_LOG_TRIVIAL(error)
-                << "[Core] Mix_OpenAudio() failed %s"
-                << Mix_GetError();
-            if(msgbox_on_err)
-            {
-                SDL_ShowSimpleMessageBox(
-                    SDL_MESSAGEBOX_ERROR,
-                    "Mix_OpenAudio() failed",
-                    SDL_GetError(),
-                    nullptr
-                );
-            }
-
-            Mix_Quit();
-            SDL_Quit();
-            return 1;
+            throw std::runtime_error(
+                std::string("[Core] Mix_OpenAudio() failed: ") +
+                Mix_GetError()
+            );
         }
+    }
 
-        return 0;
+    void SRSCALL QuitSDLMixer() noexcept
+    {
+        Mix_CloseAudio();
+        Mix_Quit();
     }
 
     int SRSCALL InitGL() noexcept
@@ -118,8 +104,6 @@ namespace srose::core
 
     void SRSCALL QuitSDL() noexcept
     {
-        Mix_CloseAudio();
-        Mix_Quit();
         SDL_Quit();
     }
 

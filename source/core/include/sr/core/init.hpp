@@ -20,6 +20,8 @@ namespace srose::core
      * @return int Zero for success, other value means an error occurred
      */
     int SRSCALL InitSDL(bool msgbox_on_err) noexcept;
+    void SRSCALL InitSDLMixer();
+    void SRSCALL QuitSDLMixer() noexcept;
 
     /**
      * @brief Deinitialize SDL and other SDL library

@@ -17,6 +17,9 @@
 @srose.cli.display.fullscreen = "Fullscreen"
 @srose.cli.display.vsync = "Enable vertical synchronization"
 
+@srose.cli.audio = "Audio"
+@srose.cli.audio.disable = "Disable audio system"
+
 @srose.cli.video = "Video"
 @srose.cli.video.get-display-mode = "Get all available display mode(s) of the specific display"
 @srose.cli.video.get-display-mode.display-name = "Display-{:02d} Name: {}"
