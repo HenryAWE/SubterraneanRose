@@ -1,4 +1,4 @@
-# SubterraneanRose Wrapper for ImGui
+# ImGui extensions and wrappers of the Subterranean Rose Project
 
 aux_source_directory(./src imguisr_src_list)
 aux_source_directory(./src/filebrowser imguisr_filebrowser_src_list)

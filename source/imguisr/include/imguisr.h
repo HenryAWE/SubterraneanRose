@@ -1,11 +1,11 @@
 /**
  * @file imguisr.h
  * @author HenryAWE
- * @brief ImGui extensions
+ * @brief ImGui extensions and wrappers of the Subterranean Rose Project
  */
 
-#ifndef SROSE_WM_IMGUISR_imguisr_h_
-#define SROSE_WM_IMGUISR_imguisr_h_
+#ifndef SROSE_IMGUISR_imguisr_h_
+#define SROSE_IMGUISR_imguisr_h_
 
 #include <functional>
 #include <utility>
