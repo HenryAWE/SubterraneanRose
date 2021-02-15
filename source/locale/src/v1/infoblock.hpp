@@ -22,6 +22,7 @@ namespace srose::locale::v1
         ~InfoBlock();
 
         std::string id;
+        bool is_complete;
         std::string name;
         util::SemVer version;
         std::string author;

@@ -23,6 +23,7 @@ namespace srose::locale::v1
         try
         {
             id = detailed::Decode_CxxStr(is);
+            is_complete = detailed::Decode_Bool(is);
             name = detailed::Decode_CxxStr(is);
             version.major() = detailed::Decode_U32LE(is);
             version.minor() = detailed::Decode_U32LE(is);

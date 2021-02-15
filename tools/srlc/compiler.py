@@ -15,6 +15,9 @@ import io
 
 class data_compiler:
     @staticmethod
+    def compile_bool(value:bool):
+        return struct.Struct("<B").pack(value)
+    @staticmethod
     def compile_I32(value:int):
         if value >= 4294967295:
             raise ValueError("Value too larege")
@@ -56,23 +59,34 @@ class config_compiler:
         self.parse_info(info[0])
 
     def parse_info(self, doc):
+        # Locale ID
         self.id = doc.getElementsByTagName("id")[0].firstChild.data
         if self.verbosity >=2:
             print("[config_compiler]: id = ", self.id)
+        # Is complete locale
+        is_complete = doc.getElementsByTagName("is_complete")
+        if len(is_complete) > 0 and is_complete[0].firstChild:
+            self.is_complete = bool(is_complete[0].firstChild.data)
+        else:
+            self.is_complete = True
+        # Locale name
         self.name = doc.getElementsByTagName("name")[0].firstChild.data
         if self.verbosity >=2:
             print("[config_compiler]: name = ", self.name)
+        # Locale version
         version_string = doc.getElementsByTagName("version")[0].firstChild.data
         semver_pattern = "(\\d+)\\.(\\d+)\\.(\\d+)"
         if not re.match(semver_pattern, version_string):
             raise ValueError("Invalid version string : " + version_string)
         result = re.match(semver_pattern, version_string)
         self.version = (int(result.group(1)), int(result.group(2)), int(result.group(3)))
+        # Author
         author = doc.getElementsByTagName("author")
         if len(author) > 0:
             self.author = author[0].firstChild.data
         else:
             self.author = "Unknown"
+        # Comment
         comment = doc.getElementsByTagName("comment")
         if len(comment) > 0:
             if comment[0].firstChild:
@@ -86,6 +100,7 @@ class config_compiler:
         stream.write(b"@inf")
         bs = io.BytesIO()
         bs.write(data_compiler.compile_cxxstr(self.id))
+        bs.write(data_compiler.compile_bool(self.is_complete))
         bs.write(data_compiler.compile_cxxstr(self.name))
         for i in range(3):
             bs.write(data_compiler.compile_I32(self.version[i]))

@@ -13,6 +13,12 @@ namespace srose::locale
 {
     namespace detailed
     {
+        bool Decode_Bool(std::istream& is)
+        {
+            bool ret;
+            is.read((char*)&ret, sizeof(ret));
+            return boost::endian::little_to_native(ret);
+        }
         std::uint32_t Decode_U32LE(std::istream& is)
         {
             std::uint32_t ret;
