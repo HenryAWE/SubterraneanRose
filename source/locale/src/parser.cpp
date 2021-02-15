@@ -17,7 +17,7 @@ namespace srose::locale
         {
             bool ret;
             is.read((char*)&ret, sizeof(ret));
-            return boost::endian::little_to_native(ret);
+            return ret;
         }
         std::uint32_t Decode_U32LE(std::istream& is)
         {
