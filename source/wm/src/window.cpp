@@ -163,6 +163,11 @@ namespace srose::wm
     {
         assert(!m_imctx);
         m_imctx = ImGui::CreateContext();
+        auto& io = ImGui::GetIO();
+
+        // Disable built-in settings save/load functions of ImGui
+        io.IniFilename = nullptr;
+
         if(!ImGui_ImplSDL2_InitForOpenGL(handle(), glctx()))
             throw std::runtime_error("[WN] ImGui_ImplSDL2_InitForOpenGL() failed");
         m_renderer->InitImGuiRenderer();

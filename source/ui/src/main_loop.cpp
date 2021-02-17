@@ -11,9 +11,11 @@
 #include <sr/ui/uimgr.hpp>
 #include <sr/wm/input.hpp>
 #include <sr/graphic/renderer.hpp>
+#include <imgui_ini.hpp>
 
 
 static bool g_loop = true;
+static std::filesystem::path imgui_ini;
 
 void DoMainLoop(srose::wm::Window& window)
 {
@@ -37,6 +39,7 @@ void DoMainLoop(srose::wm::Window& window)
         throw;
     }
     window.EndImGuiFrame();
+    ImGuiSR::SaveImGuiSettingsDataToDisk(imgui_ini);
 
     /*Rendering */
     renderer.ClearScreen();
@@ -51,6 +54,8 @@ int SRSCALL BeginMainLoop(srose::wm::Window& window, int fps)
 
     g_loop = true;
     auto frame_sec(1000ms / static_cast<float>(fps));
+    imgui_ini = ImGuiSR::GetIniDataFile();
+    ImGuiSR::LoadImGuiSettingsDataFromDisk(imgui_ini);
 
     while(g_loop)
     {
@@ -60,5 +65,6 @@ int SRSCALL BeginMainLoop(srose::wm::Window& window, int fps)
         this_thread::sleep_until(time_begin + frame_sec);
     }
 
+    filesystem::path().swap(imgui_ini);
     return EXIT_SUCCESS;
 }
