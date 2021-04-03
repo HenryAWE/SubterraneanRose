@@ -31,16 +31,16 @@ namespace srose::locale
         m_name(std::move(move.m_name)),
         m_text(std::move(move.m_text)),
         m_fallback(std::move(move.m_fallback)) {}
-    Language::Language(const filesystem::path& file)
+    Language::Language(const filesystem::path& file, bool info_only)
     {
         std::ifstream ifs(file, std::ios_base::binary);
         if(!ifs.good())
             throw std::runtime_error("[locale] Load " + file.u8string() + " failed");
-        Decode(ifs);
+        Decode(ifs, info_only);
     }
     Language::Language(std::istream& is)
     {
-        Decode(is);
+        Decode(is, true);
     }
 
     std::string Language::GetText(std::string_view path)
@@ -125,8 +125,10 @@ namespace srose::locale
            LinkFallback(std::move(result));
     }
 
-    void Language::Decode(std::istream& is)
+    void Language::Decode(std::istream& is, bool info_only)
     {
+        using namespace v1;
+
         /* Check the header */
         char header[5]{};
         is.read(header, 4);
@@ -137,9 +139,28 @@ namespace srose::locale
         if(backend_version != SROSE_LOCALE_BACKEND_API_VERSION)
             throw std::runtime_error("[locale] Invalid version number");
 
+        if(info_only)
+        {
+            char subheader[4]{};
+            is.read(subheader, 4);
+            if(strncmp(subheader, "@inf", 4) != 0)
+                throw std::exception("[locale] Missing @inf block");
+
+            InfoBlock inf(is);
+            m_id = std::move(inf.id);
+            m_info_only = !inf.is_complete;
+            m_name = std::move(inf.name);
+            m_version = inf.version;
+            m_author = std::move(inf.author);
+            m_comment = std::move(inf.comment);
+
+            m_info_only = true;
+
+            return;
+        }
+
         while(is.good())
         {
-            using namespace v1;
             char subheader[5]{};
             is.read(subheader, 4);
             std::uint32_t block_size = detailed::Decode_U32LE(is);
@@ -150,10 +171,14 @@ namespace srose::locale
             {
                 InfoBlock inf(is);
                 m_id = std::move(inf.id);
+                m_info_only = !inf.is_complete;
                 m_name = std::move(inf.name);
                 m_version = inf.version;
                 m_author = std::move(inf.author);
                 m_comment = std::move(inf.comment);
+                
+                if(m_info_only)
+                    break;
             }
             else if(strncmp(subheader, "@act", 4) == 0)
             {
@@ -161,11 +186,13 @@ namespace srose::locale
                 m_text_error = act.text_error;
                 m_error_string = act.error_string;
                 m_fallback_id = act.fallback;
+                m_info_only = false;
             }
             else if(strncmp(subheader, "@txt", 4) == 0)
             {
                 TextBlock txt(is);
                 m_text.merge(std::move(txt.texts));
+                m_info_only = false;
             }
             else
             {

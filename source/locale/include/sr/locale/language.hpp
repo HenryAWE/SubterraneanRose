@@ -46,13 +46,16 @@ namespace srose::locale
         Language();
         Language(const Language& other);
         Language(Language&& move) noexcept;
-        explicit Language(const filesystem::path& file);
+        explicit Language(const filesystem::path& file, bool info_only = false);
         explicit Language(std::istream& is);
 
         std::string GetText(std::string_view path);
         std::string GetTextWith(std::string_view path, TextErrorAction action);
         std::string GetTextOr(std::string_view path, std::string_view alternative);
         std::optional<std::string> GetTextOptional(std::string_view path);
+
+        [[nodiscard]]
+        bool InfoOnly() const noexcept { return m_info_only; }
 
         [[nodiscard]]
         const std::string& GetId() const noexcept { return m_id; }
@@ -81,6 +84,8 @@ namespace srose::locale
         void LinkFallback(LanguageSet& langs);
 
     private:
+        bool m_info_only = true;
+
         std::string m_id;
         std::string m_name;
         util::SemVer m_version;
@@ -94,7 +99,7 @@ namespace srose::locale
         std::optional<std::string> m_fallback_id;
         std::shared_ptr<Language> m_fallback;
 
-        void Decode(std::istream& is);
+        void Decode(std::istream& is, bool info_only);
         void DecodeTextBlock(std::istream& is);
     };
 
