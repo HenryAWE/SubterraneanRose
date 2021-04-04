@@ -47,7 +47,7 @@ namespace srose::locale
         Language(const Language& other);
         Language(Language&& move) noexcept;
         explicit Language(const filesystem::path& file, bool info_only = false);
-        explicit Language(std::istream& is);
+        explicit Language(std::istream& is, bool info_only = false);
 
         std::string GetText(std::string_view path);
         std::string GetTextWith(std::string_view path, TextErrorAction action);

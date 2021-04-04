@@ -38,9 +38,9 @@ namespace srose::locale
             throw std::runtime_error("[locale] Load " + file.u8string() + " failed");
         Decode(ifs, info_only);
     }
-    Language::Language(std::istream& is)
+    Language::Language(std::istream& is, bool info_only)
     {
-        Decode(is, true);
+        Decode(is, info_only);
     }
 
     std::string Language::GetText(std::string_view path)
@@ -144,7 +144,9 @@ namespace srose::locale
             char subheader[4]{};
             is.read(subheader, 4);
             if(strncmp(subheader, "@inf", 4) != 0)
-                throw std::exception("[locale] Missing @inf block");
+                throw std::runtime_error("[locale] Missing @inf block");
+
+            std::uint32_t block_size = detailed::Decode_U32LE(is);
 
             InfoBlock inf(is);
             m_id = std::move(inf.id);
