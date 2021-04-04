@@ -12,6 +12,14 @@ jobs:
       with:
         fetch-depth: 1
 
+    # Manually install Boost (See: https://github.com/actions/virtual-environments/issues/2667)
+    - name: Install Boost
+      shell: powershell
+      run: |
+          $Url = "https://sourceforge.net/projects/boost/files/boost-binaries/1.72.0/boost_1_72_0-msvc-14.2-64.exe"
+          (New-Object System.Net.WebClient).DownloadFile($Url, "$env:TEMP\boost.exe")
+          Start-Process -Wait -FilePath "$env:TEMP\boost.exe" "/SILENT","/SP-","/SUPPRESSMSGBOXES","/DIR=C:\hostedtoolcache\windows\Boost\1.72.0\x86_64"
+
     - name: Install Dependencies
       shell: powershell
       run: |
@@ -28,11 +36,11 @@ jobs:
       run: |
         mkdir build
         cd build
-        set BOOST_ROOT=%BOOST_ROOT_1_72_0%
+        set BOOST_ROOT=C:\hostedtoolcache\windows\Boost\1.72.0\x86_64
         cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release ^
           -DSDL2_PATH=%GITHUB_WORKSPACE%/deps/SDL2-2.0.12 ^
           -DSDL2_MIXER_PATH=%GITHUB_WORKSPACE%/deps/SDL2_mixer-2.0.4 ^
-          -DBOOST_ROOT=%BOOST_ROOT_1_72_0% ^
+          -DBOOST_ROOT=C:\hostedtoolcache\windows\Boost\1.72.0\x86_64 ^
           -DCMAKE_TOOLCHAIN_FILE=%VCPKG_INSTALLATION_ROOT%/scripts/buildsystems/vcpkg.cmake ^
           ..
         cmake --build . --config Release
